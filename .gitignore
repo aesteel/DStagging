@@ -47,3 +47,8 @@ po/*~
 
 # RStudio Connect folder
 rsconnect/
+
+# large folders related to outputs but not edited code
+/figures/
+/outputData/
+/intermedData/

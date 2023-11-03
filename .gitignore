@@ -49,6 +49,6 @@ po/*~
 rsconnect/
 
 # large folders related to outputs but not edited code
-/figures/
-/outputData/
-/intermedData/
+figures/
+outputData/
+intermedData/

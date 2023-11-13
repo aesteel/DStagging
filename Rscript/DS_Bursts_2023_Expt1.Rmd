@@ -10,7 +10,6 @@ knitr::opts_chunk$set(echo = TRUE)
 
 library(tidyverse)
 library(lme4)
-library(rethinking)
 library(circular)
 library(patchwork)
 library(MuMIn)
@@ -49,6 +48,13 @@ filestart <- unique(trial_specs$raspPI_filestart)
  # remove trials without proper data file or terrible results that break the code
     #filestart = filestart[!(filestart %in% c("WSContam2022_Whit_R02_07_26_2022"))]
 
+# read in necropsy data
+necro_dat <- read.csv("../rawData/Burst_Expt1_DS2023_NecropsyData.csv")
+ necro_dat$trialID = paste0("T",sprintf("%02.0f",necro_dat$trialID))
+ 
+ # add to trial_specs
+ trial_specs = merge(trial_specs, necro_dat[,c("trialID","sex","eggStage","tagID")], 
+                                               all.x=T, by="trialID")
 
 ```
 
@@ -58,7 +64,8 @@ There are endless ways to use the burst events from one individual to estimate a
 ```{r create empty df for collection}
 
 # create empty dataframe to record mean of top 3 burst velocities, after removing top 1; for each burst of each fish
-burst.topvels = data.frame(treatmentrep = "EMPTY", burstID = NA, burstQual = as.factor(NA),
+burst.topvels = data.frame(treatmentrep = "EMPTY", burstID = NA, 
+                           burstQual = as.factor(NA),
                           n_vels = NA, n_avg = NA, n_dropped = NA, start_side = NA,
                           mn.topburstvels = NA, sd.topburstvels = NA, CV.topburstvels.perc = NA)
 
@@ -68,7 +75,8 @@ mean.topvels = data.frame(treatmentrep = filestart,
                           mnburstGoodFair = NA, sdburstGoodFair = NA, nburstGoodFair = NA)
 
 # create empty data frame to record gates with top 25% of inter-gate speeds within a single burst event; will use this to check that our 70cm tunnel is long enough for these fish
-fastPos.comp = data.frame(treatmentrep = "EMPTY", burstID = as.factor(NA), burstQual = NA, 
+fastPos.comp = data.frame(treatmentrep = "EMPTY", burstID = as.factor(NA), 
+                          burstQual = NA, 
                           fastVel = NA, fastGate = as.factor(NA), fastPos = NA)
 
 # create empty data frame to collect the burst events that were recorded but not used in analysis (usually false-triggers); need to check and confirm the filtering critera are working well
@@ -96,7 +104,7 @@ spp.yr.dataoutputfolder = "Bursts_Outputdata_Expt1_DS2023" # this folder should 
 #### Here is the EPIC LOOP ####
 # for learning or troubleshooting, assign f to 1 (or 2 or 3 etc) then run each line within the loop directly and see what it does/where it's broken
 
-for(f in 80:length(filestart)) {
+for(f in 1:length(filestart)) {
   print(f) # useful for troubleshooting later, when things break
      filename = as.character(dir(paste0("../rawData/",spp.yr.rawfilepath), 
                                  pattern=filestart[f]))
@@ -132,6 +140,7 @@ for(f in 80:length(filestart)) {
      metadat = trial_specs[trial_specs$raspPI_filestart==filestart[f],]
       # ensure metadat is ordered by burst number
       metadat = metadat[order(metadat$burstnumb),]
+      
      
        
   #### filter out gate trips not made by fish, using metadata ('stalledAt')
@@ -443,7 +452,7 @@ fastPos.comp2$fastGate = factor(fastPos.comp2$fastGate,
 
 
 # add metadata and fix formatting
-trial_specs_unique = unique(trial_specs[,c("raspPI_filestart","trialID","treatment", "spp","acclimstart","triallength","holdingtank","tunneltemp","fl_mm","mass_g")])
+trial_specs_unique = unique(trial_specs[,c("raspPI_filestart","trialID","treatment", "spp","acclimstart","triallength","holdingtank","tunneltemp","sex","eggStage","fl_mm","mass_g")])
 
 mean.topvels2 = merge(mean.topvels, trial_specs_unique, all.x=T, by.x="treatmentrep", by.y="raspPI_filestart") 
 

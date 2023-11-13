@@ -462,6 +462,9 @@ mean.topvels2 = mean.topvels2[!is.na(mean.topvels2$sdburstGoodFair),]
 # add BL/s column
 mean.topvels2$mnburstGoodFair_bls = mean.topvels2$mnburstGoodFair/(mean.topvels2$fl_mm/10) 
 
+# adjust 'eggStage' for males; NA will break model code later
+mean.topvels2$eggStage[mean.topvels2$sex=="m"] <- 99
+
 ```
 
 ```{r plots to evaluate study design}
@@ -490,7 +493,22 @@ mean.topvels2$mnburstGoodFair_bls = mean.topvels2$mnburstGoodFair/(mean.topvels2
     xlab("TrialID") + ylab("Est Burst Velocity (cm/s)")+
     theme_bw()   
   
-  # look at trial length within a concentration, and look at participation and burst speed
+  # look at speed and sex and egg stage
+  ggplot(mean.topvels2, aes(x=factor(eggStage), y=nburstGoodFair)) + 
+    geom_boxplot() + 
+    geom_jitter(width=.15) +
+    xlab("Egg Stage") + ylab("N 'Good' bursts")+
+    facet_wrap(~sex, scales="free") + 
+    theme_bw()   
+  
+  ggplot(mean.topvels2, aes(x=factor(eggStage), y=mnburstGoodFair_bls)) + 
+    geom_boxplot()+
+    geom_jitter(width=.15) +
+    xlab("Egg Stage") + ylab("Est Burst Velocity (bl/s)")+
+    facet_wrap(~sex, scales="free") + 
+    theme_bw()   
+  
+  # look at trial length within a treatment, and look at participation and burst speed
   ggplot(mean.topvels2, aes(y=triallength, x=treatment, fill=treatment)) + 
       geom_boxplot() + 
       scale_fill_manual(values=c("grey90","grey70",
@@ -820,16 +838,18 @@ simplemod = lm(mnburstGoodFair_bls~treatment, data = filtered.moddat)
 ```  
   
 ```{r full stats model for comparison}  
+filtered.moddat = filter(mean.topvels2, nburstGoodFair>3)
+
 # kitchen sink model for dredging (explore effects of study design/constraints)
 
-fullmod = lm(mnburstGoodFair_bls ~ treatment + nburstGoodFair + tunneltemp + fl_mm + triallength, data = filtered.moddat, na.action="na.fail" ) # could (should?) make this a lmer with holding tank as the random effect, but makes inference harder later
+fullmod = lm(mnburstGoodFair_bls ~ treatment + nburstGoodFair + tunneltemp + fl_mm + triallength + sex*eggStage, data = filtered.moddat, na.action="na.fail" ) # could (should?) make this a lmer with holding tank as the random effect, but makes inference harder later
 
  plot(fullmod) # looks good!
  
  summary(aov(fullmod)) # tunneltemp significant, nburst close
  
  dredge(fullmod)
-   # best model with only treatment and tunnel temp
+   # best model with only treatment and tunnel temp (but none really good; weight here only 6.6%)
    # 2nd best (dAIC = 0.70) adds nburst
    # 3rd best (dAIC = 1.1) drops treatment *most parsimonious within dAIC<2
  
@@ -851,13 +871,13 @@ summarize(group_by(filter(mean.topvels2, nburstGoodFair>3), treatment),
 
  
  
-fullmod.participant= lm(nburstGoodFair ~ treatment + triallength + tunneltemp + fl_mm, data = filtered.moddat, na.action="na.fail")
+fullmod.participant= lm(nburstGoodFair ~ treatment + triallength + tunneltemp + fl_mm + sex + eggStage, data = filtered.moddat, na.action="na.fail")
  plot(fullmod.participant) # not super clean, but probably okay
  summary(aov(fullmod.participant)) # no effects are significant
  
 dredge(fullmod.participant)  
- # best model only tunnel temp (and intercept)
- # second best with only intercept (dAIC=0.72) *most parsimonious within dAIC<2
+ # best model only tunnel temp (and intercept) - weight = 15%
+ # second best with only intercept (dAIC=0.72, weight = 10%) *most parsimonious within dAIC<2
  
 ```
  

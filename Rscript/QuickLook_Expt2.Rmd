@@ -1,0 +1,275 @@
+---
+title: "Delta Smelt Temp Tagging; Expt 2"
+author: "Anna Steel"
+date: "2023-08-02"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(patchwork)
+library(lme4)
+```
+
+# Temperature Experiment Data Visualization
+
+## Read in data
+```{r cars}
+# taglist = read.csv("/Volumes/GoogleDrive/My Drive/2022 Delta Smelt Tagging/DataCollection/DStagging_Expt2_DStemp2023/Expt2_DStemp_ValidTags.csv")
+#  # convert from dataframe to vector
+#  taglist = taglist[,1]
+#  # includes all tags received from Daniel Deng; only 96 used in this study
+
+metadat = read.csv("/Volumes/GoogleDrive/My Drive/2022 Delta Smelt Tagging/DataCollection/DStagging_Expt2_DStemp2023/Expt2_DStemp_TaggedFishMetadata.csv")
+ # many columns here that are not in tagdat, but only "OrderID" has any information
+ # merge OrderID in to tagdat and use tagdat for analysis
+
+fishdat = read.csv("/Volumes/GoogleDrive/My Drive/2022 Delta Smelt Tagging/DataCollection/DStagging_Expt2_DStemp2023/Expt2_DStemp_TagDataEntry.csv")
+ # everything here in metadata except for:
+ ## "CF","DrugTime","SurgTime"
+ ## all of these are calculated from other data, and are done in realtime in the database during tagging to inform tagging efforts
+ # add leading 0 back into TagID_Hex
+ fishdat$TagID_Hex = str_pad(fishdat$TagID_Hex,4, pad="0")
+ 
+fishdat2 = merge(fishdat, metadat[,c("TagID_Hex","OrderID")])
+
+morts = read.csv("/Volumes/GoogleDrive/My Drive/2022 Delta Smelt Tagging/DataCollection/DStagging_Expt2_DStemp2023/MortNecropsy_DSExpt2_Temp.csv")
+ # add leading 0 back into TagID_Hex
+ morts$TagID_Hex = str_pad(morts$TagID_Hex,4, pad="0")
+ 
+ # add mort date to tagdat NOT WORKING YET (8/3/2023)
+ fishdat3 = merge(fishdat2, morts[,c("TagID_Hex","ExptMort","MortDate",
+                                   "Mort_Mass_g","Mort_FL_mm","Sex","ReproIndex")], 
+                 all.x=T)
+ 
+# extract only those with which received tags to evalaute MS222 effects by individual covariates  
+tagdat = fishdat3[fishdat3$Rel_group %in% c("12T","16T"),]
+
+# add column for recovery time
+tagdat$RecovTime = as.numeric( difftime( as.POSIXct(paste(tagdat$DateTagged, tagdat$Time_recovered), format="%d-%b-%y %H:%M:%S", tz="America/Los_Angeles"), as.POSIXct(paste(tagdat$DateTagged, tagdat$Time_out_surgery), format="%d-%b-%y %H:%M:%S", tz="America/Los_Angeles") ) )
+```
+  
+## Quick look at correlations within the data
+```{r cors}
+summary(tagdat$DrugTime)
+summary(tagdat$SurgTime)
+summary(tagdat$RecovTime)
+
+ggplot(tagdat, aes(x=DrugTime, y=SurgTime)) + 
+  geom_point() + geom_smooth(method="lm")+
+  theme_bw()
+
+ggplot(tagdat, aes(x=DrugTime, y=RecovTime)) + 
+  geom_point() + geom_smooth(method="lm")+
+  theme_bw()
+
+ggplot(tagdat, aes(x=SurgTime, y=RecovTime)) + 
+  geom_point() + geom_smooth(method="lm")+
+  theme_bw()
+
+bleedtable= as.data.frame(table(tagdat$ExptMort, tagdat$Bleeding))
+ names(bleedtable) = c("ExptMort","BleedScore","Freq")
+ggplot(bleedtable, aes(x=factor(ExptMort), y=Freq, fill=factor(BleedScore))) + 
+  geom_col() + xlab("Experimental Mortality")+
+  scale_fill_viridis_d("Bleeding Score", direction=1, option="D") + 
+  theme_bw()
+
+
+```
+
+## Effect on mortality  
+### by size
+```{r mort size effect, fig.height=3}
+
+# by mass, seperated by sex
+  # Mass.mort.sex = ggplot(tagdat, aes(x=Weight y=ExptMort, group=Sex)) + 
+  #   geom_point(pch=21, size=3, fill="steelblue3") + 
+  #   facet_wrap(~Sex) + 
+  #   theme_bw()
+
+mort.Mass.sex = ggplot(tagdat, aes(y=Weight, x=factor(ExptMort), group=factor(ExptMort)) ) + 
+  geom_boxplot(fill="steelblue3") + 
+  facet_wrap(~Sex) + 
+  theme_bw() +
+  scale_x_discrete(name="", breaks=c(0,1), labels=c("survival","mortality"))
+
+# by mass, seperated by sex
+  # FL.mort.sex = ggplot(tagdat, aes(x=Length, y=ExptMort, group=Sex)) + 
+  #   geom_point(pch=21, size=3, fill="steelblue3") + 
+  #   facet_wrap(~Sex) + 
+  #   theme_bw()
+
+mort.FL.sex = ggplot(tagdat, aes(y=Length, x=factor(ExptMort), group=factor(ExptMort)) ) + 
+  geom_boxplot(fill="steelblue3") + 
+  facet_wrap(~Sex) + 
+  theme_bw() +
+  scale_x_discrete(name="", breaks=c(0,1), labels=c("survival","mortality"))
+
+mort.Mass.sex + mort.FL.sex + plot_layout(ncol=1)
+```
+  
+## stats on size and mort
+```{r size mort stats}
+mw = glm(ExptMort ~ Sex*Weight, family=binomial, data=tagdat)
+ plot(mw)
+ summary(mw)
+ summary(aov(mw))
+  newdat = expand.grid(Sex=c("male","female"), Weight = seq(2,6.75, 0.25))
+  predvals = predict(mw, newdata = newdat, type="response", se.fit=T)
+  plotpreddat = data.frame(newdat, predvals)
+  ggplot(plotpreddat, aes(x=Weight, y=fit, group=Sex, color=Sex)) + 
+    geom_line(size=2) + 
+    geom_ribbon(aes(ymin=fit-se.fit, ymax=fit+se.fit), alpha=0.1) + 
+    geom_point(data=tagdat, aes(x=Weight, y=ExptMort, group=Sex, color=Sex)) +
+    theme_bw()
+  
+lw = glm(ExptMort ~ Sex*Length, family=binomial, data=tagdat)
+ plot(lw)
+ summary(lw)
+ summary(aov(lw))
+  newdat = expand.grid(Sex=c("male","female"), Length = seq(65,95, 5))
+  predvals = predict(lw, newdata = newdat, type="response", se.fit=T)
+  plotpreddat = data.frame(newdat, predvals)
+  ggplot(plotpreddat, aes(x=Length, y=fit, group=Sex, color=Sex)) + 
+    geom_line(size=2) + 
+    geom_ribbon(aes(ymin=fit-se.fit, ymax=fit+se.fit), alpha=0.1) + 
+    geom_point(data=tagdat, aes(x=Length, y=ExptMort, group=Sex, color=Sex)) +
+    theme_bw()
+
+```
+ 
+### by tagger
+```{r mort tagger effect, fig.height=3}
+
+taggermort = as.data.frame(table(tagdat$ExptMort, tagdat$Surgeon))
+ names(taggermort)= c("ExptMort","Surgeon","Freq")
+
+ #[taggermort$ExptMort==1,]
+mort.tagger = ggplot(taggermort, 
+                     aes(y=Freq, x=factor(Surgeon), fill=factor(ExptMort)) ) + 
+  geom_col(color="black") + 
+  ylab("Number of Tagged Fish") + xlab("Surgeon") +
+  scale_fill_viridis_d("", labels= c("Survival", "Mortality"), 
+                       option="A", begin=.25, direction=-1) + 
+  theme_bw() 
+
+mort.tagger
+  
+```
+  
+
+### by temperature
+```{r mort tagger effect, fig.height=3}
+
+tempmort = as.data.frame(table(tagdat$ExptMort, tagdat$Rel_group))
+ names(tempmort)= c("ExptMort","Temp","Freq")
+
+ #[taggermort$ExptMort==1,]
+mort.temp = ggplot(tempmort, 
+                     aes(y=Freq, x=Temp, fill=factor(ExptMort)) ) + 
+  geom_col(color="black") + 
+  ylab("Number of Tagged Fish") + xlab("Temperature Treatment") +
+  scale_fill_viridis_d("", labels= c("Survival", "Mortality"), 
+                       option="A", begin=.25, direction=-1) + 
+  theme_bw() 
+
+mort.temp
+  
+```
+    
+  
+### by time in anaesthetic
+```{r mort dope time effect, fig.height=4}
+
+dopetime.size.sex1 = ggplot(tagdat, aes(x=Length, y=DrugTime, group=factor(ExptMort), 
+                                       color=factor(ExptMort), fill=factor(ExptMort)) ) + 
+  geom_point(pch=21, size=3) + 
+      scale_fill_viridis_d("", labels= c("Survival", "Mortality"), direction=-1) + 
+  geom_smooth(method="lm", se=F) + 
+      scale_color_viridis_d("", labels= c("Survival", "Mortality"), direction=-1) + 
+  facet_wrap(~Sex) + 
+  theme_bw() + xlab("Fork Length") + ylab("Time in Anaesthetic (s)")
+
+dopetime.size.sex2 = ggplot(tagdat, aes(x=Length, y=DrugTime, group=factor(Sex), color=factor(Sex), fill=factor(Sex)) ) + 
+  geom_point(size=3) + 
+  scale_fill_viridis_d("Sex", labels= c("Female", "Male"), direction=-1) + 
+  geom_smooth(method="lm", se=F) + 
+  scale_color_viridis_d("Sex", labels= c("Female", "Male"), direction=-1) + 
+  facet_wrap(~ExptMort, labeller = labeller(ExptMort = c("0"="Survival", "1"="Mortality")) ) + 
+  theme_bw() + xlab("Fork Length") + ylab("Time in Anaesthetic (s)")
+
+dopetime.size.sex3 = ggplot(tagdat, aes(x=Length, y=DrugTime) ) + 
+  geom_point(size=3, color="steelblue3", pch=16) + 
+  geom_smooth(method="lm", se=F, color="grey40") + 
+  facet_wrap(~ExptMort, labeller = labeller(ExptMort = c("0"="Survival", "1"="Mortality")) ) + 
+  theme_bw() + xlab("Fork Length") + ylab("Time in Anaesthetic (s)")
+
+mort.dopetime.dot = ggplot(tagdat, aes(y=DrugTime, x=ExptMort, group=ExptMort )) +
+  geom_boxplot(fill="steelblue3", alpha=0.6, width=.3, outlier.shape = NA) +
+  geom_point(pch=21, fill="steelblue3", position = position_dodge2(width=0.2, preserve = "total")) +
+ theme_bw() + ylab("Time in Anaesthetic (s)")+
+  scale_x_continuous(name="Mortality", limits=c(-0.5, 1.5),
+                     breaks=c(0,1), labels=c("survival","mortality"))
+
+
+mort.dopetime.dot + dopetime.size.sex3 + dopetime.size.sex1 + dopetime.size.sex2 + plot_layout(ncol=2)
+
+```
+
+### by time in surgery
+```{r mort surgery time effect, fig.height=4}
+
+
+surgtime.dopetime = ggplot(tagdat, aes(x=DrugTime, y=SurgTime) ) + 
+  geom_point(size=3, color="steelblue3", pch=16) + 
+  geom_smooth(method="lm", se=F, color="grey40") + 
+  facet_wrap(~ExptMort, labeller = labeller(ExptMort = c("0"="Survival", "1"="Mortality")) ) + 
+  theme_bw() + xlab("Time in Anaesthetic (s)") + ylab("Time in Surgery (s)")
+
+surgtime.size.sex2 = ggplot(tagdat, aes(x=Length, y=SurgTime, group=factor(Sex), color=factor(Sex), fill=factor(Sex)) ) + 
+  geom_point(size=3) + 
+  scale_fill_viridis_d("Sex", labels= c("Female", "Male"), direction=-1) + 
+  geom_smooth(method="lm", se=F) + 
+  scale_color_viridis_d("Sex", labels= c("Female", "Male"), direction=-1) + 
+  facet_wrap(~ExptMort, labeller = labeller(ExptMort = c("0"="Survival", "1"="Mortality")) ) + 
+  theme_bw() + xlab("Fork Length") + ylab("Time in Surgery (s)")
+
+surgtime.size.sex3 = ggplot(tagdat, aes(x=Length, y=SurgTime) ) + 
+  geom_point(size=3, color="steelblue3", pch=16) + 
+  geom_smooth(method="lm", se=F, color="grey40") + 
+  facet_wrap(~ExptMort, labeller = labeller(ExptMort = c("0"="Survival", "1"="Mortality")) ) + 
+  theme_bw() + xlab("Fork Length") + ylab("Time in Surgery (s)")
+
+surgtime.mort.dot = ggplot(tagdat, aes(y=SurgTime, x=ExptMort, group=ExptMort )) +
+  geom_boxplot(fill="steelblue3", alpha=0.6, width=.3, outlier.shape = NA) +
+  geom_point(pch=21, fill="steelblue3", position = position_dodge2(width=0.2, preserve = "total")) +
+ theme_bw() + ylab("Time in Surgery (s)")+
+  scale_x_continuous(name="Mortality", limits=c(-0.5, 1.5),
+                     breaks=c(0,1), labels=c("survival","mortality"))
+
+
+surgtime.mort.dot + surgtime.size.sex3 + surgtime.dopetime + surgtime.size.sex2 + plot_layout(ncol=2)
+
+```
+
+### by order tagged
+```{r mort size effect, fig.height=3}
+
+mort.order = ggplot(tagdat, 
+                     aes(y=(ExptMort), x=OrderID, color=Sex) ) + 
+  geom_point(size=3) + 
+  geom_smooth(method="lm", color="steelblue3") +
+  scale_y_continuous(name="Mortality", breaks=c(0,1)) +
+  coord_cartesian(ylim = c(0,1))+
+  xlab("Surgery Order") +
+  scale_color_viridis_d()+ #"", labels= c("Survival", "Mortality"), 
+                        #option="A", begin=.25, direction=-1) + 
+  facet_wrap(~Surgeon, scales="free")+
+  theme_bw() 
+
+mort.order
+  
+```
+  

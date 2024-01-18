@@ -1,5 +1,5 @@
 ---
-title: "Delta Smelt Tagging - Burst analysis Expt 1"
+title: "Delta Smelt Tagging - Burst analysis Expt 3 "
 author: "Anna Steel"
 date: "11/02/2023"
 output: html_document
@@ -28,33 +28,43 @@ tunnel_specs23 <- read_csv("../rawData/DS_Burst_Tunnel_Specs_08_2023_SG.csv")
 tunnel_specs = tunnel_specs23[,c("GATE_ID_L", "INTERGATE_DISTANCES_CM","GATE_DISTANCES_CM_L")]
 names(tunnel_specs) = c("GATE_ID","INTERGATE_DISTANCES","GATE_DISTANCES")
 
-# We have code that will let us use each intergate distance, including overlapping gates, not just the sequential gates. For the sturgeon, The resulting numbers wern't that different, and I'm uncomfortable with the pseudoreplication of averaging across segments that overlap, So I've deleted it for now, and we will use only the sequential gates to keep the code more concise. 
+# We have code that will let us use each intergate distance, including overlapping gates, not just the sequential gates. For the sturgeon, The resulting numbers weren't that different, and I'm uncomfortable with the pseudoreplication of averaging across segments that overlap, So I've deleted it for now, and we will use only the sequential gates to keep the code more concise. 
 
 ```      
     
 ```{r read trial metadata}
 
 # pull metadata for index to all trials and metadata
-trial_specs <- read.csv("../rawData/Burst_Expt1_DS2023_MetaTrialdata.csv")
+trial_specs <- read.csv("../rawData/Expt3_7day_DS2023_Burst_MetaTrialdat.csv")
+
 
  # tidy up data types within the df
- trial_specs$treatment = factor(trial_specs$treatment, 
-                                levels=c("FC","HC","LS","VS","LT","VT"))
- trial_specs[trial_specs=="N/A"] <- NA
+ trial_specs$trialdate = readr::parse_date(trial_specs$trialdate)
+ trial_specs$tagdate =  readr::parse_date(trial_specs$tagdate)
+ 
+ trial_specs$accstart = readr::parse_time(trial_specs$accstart, "%I:%M:%S %p")
+ trial_specs$trialstart = readr::parse_time(trial_specs$trialstart, "%I:%M:%S %p")
+ trial_specs$trialend = readr::parse_time(trial_specs$trialend, "%I:%M:%S %p")
+  
+ trial_specs$treatment = as.factor(trial_specs$treatment) 
+ trial_specs$holdingtank = as.factor(trial_specs$holdingtank) 
+ trial_specs$sex = as.factor(trial_specs$sex) 
+ trial_specs$startside = as.factor(trial_specs$startside) 
+ trial_specs$burstQual = as.factor(trial_specs$burstQual)
+ trial_specs$stimQual = as.factor(trial_specs$stimQual) 
+ 
+ trial_specs$nFalseStart[is.na(trial_specs$nFalseStart)] <- 0
+ 
+ # add padding zeros to the tag Hexcodes
+ trial_specs$tagID = str_pad(trial_specs$tagID,4, pad="0")
+ 
+ # Calculate trial length
+ trial_specs$triallength = as.numeric(difftime(trial_specs$trialend, trial_specs$trialstart))
+ 
  
 # vector of all the file names to be considered in the analysis
 filestart <- unique(trial_specs$raspPI_filestart)
 
- # remove trials without proper data file or terrible results that break the code
-    #filestart = filestart[!(filestart %in% c("WSContam2022_Whit_R02_07_26_2022"))]
-
-# read in necropsy data
-necro_dat <- read.csv("../rawData/Burst_Expt1_DS2023_NecropsyData.csv")
- necro_dat$trialID = paste0("T",sprintf("%02.0f",necro_dat$trialID))
- 
- # add to trial_specs
- trial_specs = merge(trial_specs, necro_dat[,c("trialID","sex","eggStage","tagID")], 
-                                               all.x=T, by="trialID")
 
 ```
 
@@ -82,6 +92,7 @@ fastPos.comp = data.frame(treatmentrep = "EMPTY", burstID = as.factor(NA),
 # create empty data frame to collect the burst events that were recorded but not used in analysis (usually false-triggers); need to check and confirm the filtering critera are working well
 check_events = data.frame(burstQual = "EMTPY", stalledAt = "EMPTY", BURST_NUMBER=NA, ORIENTATION=NA, START_TIME=NA,  
 Gate00 = NA, Gate01=NA, Gate02=NA, Gate03=NA, Gate04=NA, Gate05=NA, Gate06=NA, Gate07=NA, Gate08=NA, Gate09 = NA, Gate10=NA, Gate11=NA, Gate12=NA, Gate13=NA, Gate14=NA, n.missed=NA)
+
 ```
   
     
@@ -94,9 +105,9 @@ max_distance = 15        # only consider inter-gate distances less than 15cm
 write.file = "Yes"       # write out a file; don't use while troubleshooting
 
 # set up folders for writing out data as you go
-spp.yr.rawfilepath = "BurstExpt1_2023" # where the raw data files from raspPi are stored
-spp.yr.figfolder = "Bursts_Outputfigures_Expt1_DS2023" # this folder should be created within the 'DS_Tagging/figures' folder before running this code
-spp.yr.dataoutputfolder = "Bursts_Outputdata_Expt1_DS2023" # this folder should be created within the 'DS_Tagging/outputData' folder before running this code
+spp.yr.rawfilepath = "BurstExpt3_2023" # where the raw data files from raspPi are stored
+spp.yr.figfolder = "Bursts_Outputfigures_Expt3_DS2023" # this folder should be created within the 'DS_Tagging/figures' folder before running this code
+spp.yr.dataoutputfolder = "Bursts_Outputdata_Expt3_DS2023" # this folder should be created within the 'DS_Tagging/outputData' folder before running this code
 
 
 
@@ -104,7 +115,7 @@ spp.yr.dataoutputfolder = "Bursts_Outputdata_Expt1_DS2023" # this folder should 
 #### Here is the EPIC LOOP ####
 # for learning or troubleshooting, assign f to 1 (or 2 or 3 etc) then run each line within the loop directly and see what it does/where it's broken
 
-for(f in 1:length(filestart)) {
+for(f in 33:length(filestart)) {
   print(f) # useful for troubleshooting later, when things break
      filename = as.character(dir(paste0("../rawData/",spp.yr.rawfilepath), 
                                  pattern=filestart[f]))
@@ -143,29 +154,34 @@ for(f in 1:length(filestart)) {
       
      
        
-  #### filter out gate trips not made by fish, using metadata ('stalledAt')
+  #### filter out gate trips not made by fish, using metadata ('burstTo'); used to use stalledAt but I think the data was collected a little differently this time. 
      # df with blank columns to be filled in with the following loop    
-     dat2 = data.frame(burstQual=as.character(NA), stalledAt= as.character(NA), dat) 
+     dat2 = data.frame(burstQual=as.character(NA), burstTo= as.character(NA), dat, Notes = as.character(NA))
     
      for(b in 1:nrow(dat2)) {    #  for each row in dat2 do the following:
-       #  Use this line to troubleshoot if the loop is breaking;
+       #  Use this 'print' line to troubleshoot if the loop is breaking;
        #   can see where in the loop something happens, and review that specific iteration
-         #print(b) 
+        # print(b) 
        #   pull metadat for corresponding burst 
-       dat2$burstQual[b] <- metadat[b,"burstQual"]  
-       #   translate 'stalledAt' number to Gate number
-      finalgate = as.numeric(metadat[b,"stalledAt"])
-       #   add 'stalledAt' gate number to dat2
-      dat2$stalledAt[b] <- as.numeric(metadat[b,"stalledAt"])
-      #   if fish never stalled, move to next burst
-      if(is.na(finalgate)) next                    
+      dat2$burstQual[b] <- as.character(metadat[b,"burstQual"])
+       #   add 'burstTo' gate number to dat2
+      dat2$burstTo[b] <- as.numeric(metadat[b,"burstTo"])
+       finalgate = as.numeric(dat2$burstTo[b])
+      #   if there isn't burst data, move to next burst for now; maybe delete later
+       
+      # add notes so later we can remove data for rows with notes for 'fail'
+       dat2$Notes[b] = metadat$Notes[b]
+      if(is.na(finalgate)) next            #print("finaldate=NA")#
       #   if fish stalled at final gate (14 in 2023), next 
-      if(finalgate==14) next                       
+      if(finalgate==14) next               #print("finaldate=14")#        
       #  save column number where 'bad data' start so we can replace data from columns GateXX and after to remove from analysis
-      badcol_index = finalgate+6               
-      #  replace all timestamps from stall to end of tunnel with -99
-      dat2[b,badcol_index:ncol(dat2)] <- -99  
+      badcol_index = finalgate+7 # six columns gate columns, then add one more to jump to the first 'bad column'    ; CHECK THIS - may be that the numbers used in the notes do not correspond with the numbers used in the RaspPI code          
+      #  replace all timestamps from end of burst to end of tunnel with -99
+      dat2[b,badcol_index:(ncol(dat2)-1)] <- -99  # -1 to save the notes
      }
+     
+     # remove rows with 'fail' 
+     dat2 = dat2[!(str_detect(dat2$Notes,"FAIL")),]
      
      # quantify how many gates were missed 
      for(m in 1:nrow(dat2)) {
@@ -178,12 +194,16 @@ for(f in 1:length(filestart)) {
      
      # remove burst events that didn't collect quality data (eg: gates triggered incorrectly, fish skipped at surface, etc), but first pull data from the gates that meet my tentative criteria for removal create a dataframe to check before moving on
      # currently criteria are those burst events where missed more than 6 gates (ie>=50%) 
-     check_events_i = dat2[dat2$n.missed>6 | dat2$burstQual==-99,]
+
+     
+## add back in later ###########    
+#     check_events_i = dat2[dat2$n.missed>6 | dat2$burstQual==-99,]
     
-    
-    check_events <<- rbind(check_events, check_events_i) 
-       # double arrow saves object from loop into the global environment; else erased at end of loop
-    
+#    check_events <<- rbind(check_events, check_events_i) 
+   # double arrow saves object from loop into the global environment; else erased at end of loop
+#####################
+     
+     
     # apply filter and remove poor burst events
      dat3 = dat2[dat2$burstQual != -99 & dat2$n.missed<7,]
       
@@ -315,6 +335,7 @@ for(f in 1:length(filestart)) {
                   row.names=F)
        
        pdf(paste0(figureoutputfolder,"/velTrends_within_trial_",filestart[f],".pdf"))
+       
           print ( ggplot(data = burst.mntopvels, aes(x=burstID, y=mn.topburstvels)) +
               geom_errorbar(aes(ymax = mn.topburstvels+sd.topburstvels, 
                                  ymin = mn.topburstvels-sd.topburstvels), width=0.25)+
@@ -323,6 +344,7 @@ for(f in 1:length(filestart)) {
               ylab("Est. Max Velocity (cm/s)")+
               xlab("Burst Event")+
               theme_bw() )
+          
         dev.off()
       
       }
@@ -358,6 +380,7 @@ for(f in 1:length(filestart)) {
           subjective_rank_spds + subjective_rank_varspds + plot_layout(ncol=1)
           
         dev.off()
+        
         }
       
        
@@ -452,7 +475,7 @@ fastPos.comp2$fastGate = factor(fastPos.comp2$fastGate,
 
 
 # add metadata and fix formatting
-trial_specs_unique = unique(trial_specs[,c("raspPI_filestart","trialID","treatment", "spp","acclimstart","triallength","holdingtank","tunneltemp","sex","eggStage","fl_mm","mass_g")])
+trial_specs_unique = unique(trial_specs[,c("raspPI_filestart","trialID","treatment", "spp","accstart","triallength","holdingtank","tunneltemp","sex","fl_mm","mass_g")])
 
 mean.topvels2 = merge(mean.topvels, trial_specs_unique, all.x=T, by.x="treatmentrep", by.y="raspPI_filestart") 
 
@@ -462,8 +485,9 @@ mean.topvels2 = mean.topvels2[!is.na(mean.topvels2$sdburstGoodFair),]
 # add BL/s column
 mean.topvels2$mnburstGoodFair_bls = mean.topvels2$mnburstGoodFair/(mean.topvels2$fl_mm/10) 
 
-# adjust 'eggStage' for males; NA will break model code later
-mean.topvels2$eggStage[mean.topvels2$sex=="m"] <- 99
+# remove cold temp
+
+mean.topvels2 = mean.topvels2[mean.topvels2$tunneltemp >12,]
 
 ```
 
@@ -493,80 +517,68 @@ mean.topvels2$eggStage[mean.topvels2$sex=="m"] <- 99
     xlab("TrialID") + ylab("Est Burst Velocity (cm/s)")+
     theme_bw()   
   
-  # look at speed and sex and egg stage
-  ggplot(mean.topvels2, aes(x=factor(eggStage), y=nburstGoodFair)) + 
+  # look at speed and sex 
+  ggplot(mean.topvels2, aes(x=factor(sex), y=nburstGoodFair)) + 
     geom_boxplot() + 
     geom_jitter(width=.15) +
-    xlab("Egg Stage") + ylab("N 'Good' bursts")+
-    facet_wrap(~sex, scales="free") + 
+    xlab("Sex") + ylab("N 'Good' bursts")+
     theme_bw()   
   
-  ggplot(mean.topvels2, aes(x=factor(eggStage), y=mnburstGoodFair_bls)) + 
+  ggplot(mean.topvels2, aes(x=factor(sex), y=mnburstGoodFair_bls)) + 
     geom_boxplot()+
     geom_jitter(width=.15) +
-    xlab("Egg Stage") + ylab("Est Burst Velocity (bl/s)")+
-    facet_wrap(~sex, scales="free") + 
+    xlab("Sex") + ylab("Est Burst Velocity (bl/s)")+
     theme_bw()   
   
+  # look at speed and temp
+  ggplot(mean.topvels2, aes(x=tunneltemp, y=mnburstGoodFair_bls)) + 
+    geom_point(aes(color=sex))+
+    geom_smooth(method="lm")+
+    xlab("Water Temperature") + ylab("Est Burst Velocity (bl/s)")+
+    theme_bw()  
+    
   # look at trial length within a treatment, and look at participation and burst speed
   ggplot(mean.topvels2, aes(y=triallength, x=treatment, fill=treatment)) + 
       geom_boxplot() + 
-      scale_fill_manual(values=c("grey90","grey70",
-                                 "darkslategray2","sandybrown",
-                                 "cyan3","darkorange2"), 
-                        labels=c("Full Control","Handling Control",
-                                 "Lateral Surgery","Ventral Surgery",
-                                 "Lateral Tagging","Ventral Tagging"),
+      scale_fill_manual(values=c("grey90","cyan3","darkorange2"), 
+                        labels=c("Full Control","Lateral Tagging","Ventral Tagging"),
                         name="Treatment Group") + 
       ylab("Trial Length (min)") + xlab("Surgical Treatment") + theme_bw()
   
         ggplot(mean.topvels2, aes(x=triallength, y=nburstGood, fill=treatment)) + 
             geom_point(pch=21, size=4) + geom_smooth(aes(color=treatment), n=4) + 
-           scale_color_manual(values=c("grey90","grey70",
-                                     "darkslategray2","sandybrown",
-                                     "cyan3","darkorange2"), 
-                            labels=c("Full Control","Handling Control",
-                                     "Lateral Surgery","Ventral Surgery",
-                                     "Lateral Tagging","Ventral Tagging"),
+           scale_color_manual(values=c("grey90","cyan3","darkorange2"), 
+                            labels=c("Full Control","Lateral Tagging","Ventral Tagging"),
                             name="Treatment Group", 
                             guide=F) + 
-            scale_fill_manual(values=c("grey90","grey70",
-                                     "darkslategray2","sandybrown",
-                                     "cyan3","darkorange2"), 
-                            labels=c("Full Control","Handling Control",
-                                     "Lateral Surgery","Ventral Surgery",
-                                     "Lateral Tagging","Ventral Tagging"),
+            scale_fill_manual(values=c("grey90","cyan3","darkorange2"), 
+                            labels=c("Full Control","Lateral Tagging","Ventral Tagging"),
                             name="Treatment Group") + 
             facet_wrap(~treatment) + theme_bw()
         
         ggplot(mean.topvels2, aes(x=triallength, y=mnburstGoodFair_bls, fill=treatment)) + 
             geom_point(pch=21, size=4) + geom_smooth(aes(color=treatment), n=4) + 
-            scale_color_manual(values=c("grey90","grey70",
-                                     "darkslategray2","sandybrown",
-                                     "cyan3","darkorange2"), 
-                            labels=c("Full Control","Handling Control",
-                                     "Lateral Surgery","Ventral Surgery",
-                                     "Lateral Tagging","Ventral Tagging"),
+            scale_color_manual(values=c("grey90","cyan3","darkorange2"), 
+                            labels=c("Full Control","Lateral Tagging","Ventral Tagging"),
                             name="Treatment Group", 
                             guide=F) + 
-            scale_fill_manual(values=c("grey90","grey70",
-                                     "darkslategray2","sandybrown",
-                                     "cyan3","darkorange2"), 
-                            labels=c("Full Control","Handling Control",
-                                     "Lateral Surgery","Ventral Surgery",
-                                     "Lateral Tagging","Ventral Tagging"),
+            scale_fill_manual(values=c("grey90", "cyan3","darkorange2"), 
+                            labels=c("Full Control","Lateral Tagging","Ventral Tagging"),
                             name="Treatment Group") + 
             facet_wrap(~treatment) + theme_bw()
 
   # look at tank effects on growth, then on participation and burst speeds
   ggplot(mean.topvels2, aes(x=factor(holdingtank), y=fl_mm, fill=treatment)) + 
       geom_boxplot() + 
-      scale_fill_manual(values=c("grey90","grey70",
-                                     "darkslategray2","sandybrown",
-                                     "cyan3","darkorange2"), 
-                            labels=c("Full Control","Handling Control",
-                                     "Lateral Surgery","Ventral Surgery",
-                                     "Lateral Tagging","Ventral Tagging"),
+      scale_fill_manual(values=c("grey90", "cyan3","darkorange2"), 
+                            labels=c("Full Control","Lateral Tagging","Ventral Tagging"),
+                            name="Treatment Group") + 
+      theme_bw()
+
+  ggplot(mean.topvels2, aes(x=treatment, y=fl_mm, fill=treatment)) + 
+      geom_boxplot() + 
+      scale_fill_manual(values=c("grey90", "cyan3","darkorange2"), 
+                            labels=c("Full Control","Lateral Tagging","Ventral Tagging"),
                             name="Treatment Group") + 
       theme_bw()
   
@@ -575,10 +587,11 @@ mean.topvels2$eggStage[mean.topvels2$sex=="m"] <- 99
   summary(aov(lm(fl_mm ~ treatment + holdingtank, data= mean.topvels2)))  
   summary(aov(lm(nburstGoodFair ~ treatment + holdingtank, data= mean.topvels2)))  
   summary(aov(lm(mnburstGoodFair_bls ~ treatment + holdingtank, data= mean.topvels2)))  
-  # Tank effects doesn't seem to be causing difference in growth or nburstGood 
+  summary(aov(lm(mnburstGoodFair_bls ~ treatment + holdingtank + mass_g, data= mean.topvels2)))  
+  # Tank effects are present, and are non-significant but close to sig (p=0.08) when predicting burst speed. Not burst number or size of fish though. 
+  
 ```
-  
-  
+ 
 ```{r plot effects on Good burst number}
  
   # look at relationship between number of bursts and sd in bursts within a fish
@@ -588,10 +601,7 @@ mean.topvels2$eggStage[mean.topvels2$sex=="m"] <- 99
   ggplot(mean.topvels2, aes(x=nburstGoodFair, y=sdburstGoodFair)) + 
     geom_point(aes(color=nburstGoodFair), size=3) + geom_smooth()
   
-  ggplot(filter(mean.topvels2, nburstGoodFair>3), aes(x=nburstGoodFair, y=mnburstGoodFair)) + 
-    geom_point(aes(color=nburstGoodFair), size=3) + geom_smooth()
-  
-     table(mean.topvels2[mean.topvels2$nburstGoodFair>3,]$treatment)
+      table(mean.topvels2$treatment)
  
 ```
 
@@ -600,11 +610,8 @@ mean.topvels2$eggStage[mean.topvels2$sex=="m"] <- 99
      ggplot(filter(mean.topvels2, nburstGoodFair>3),
            aes(x=nburstGoodFair, y=mnburstGoodFair, color=treatment, group=treatment)) + 
       geom_point(size=4) + geom_smooth(n=4) + 
-      scale_color_manual(values=c("grey90","grey70", "darkslategray2","sandybrown",
-                                     "cyan3","darkorange2"), 
-                            labels=c("Full Control","Handling Control",
-                                     "Lateral Surgery","Ventral Surgery",
-                                     "Lateral Tagging","Ventral Tagging"),
+      scale_color_manual(values=c("grey90","cyan3","darkorange2"), 
+                            labels=c("Full Control","Lateral Tagging","Ventral Tagging"),
                             name="Treatment Group") + 
       facet_wrap(~treatment) + theme_bw()
   
@@ -612,13 +619,10 @@ mean.topvels2$eggStage[mean.topvels2$sex=="m"] <- 99
     # look at relationship between burst participation and treatment
   ggplot(filter(mean.topvels2, nburstGoodFair>3), 
          aes(x=treatment, y=nburstGoodFair, fill=treatment)) + 
-     geom_boxplot() +
-     #geom_violin() +
-     scale_fill_manual(values=c("grey90","grey70", "darkslategray2","sandybrown",
-                                     "cyan3","darkorange2"), 
-                            labels=c("Full Control","Handling Control",
-                                     "Lateral Surgery","Ventral Surgery",
-                                     "Lateral Tagging","Ventral Tagging"),
+     #geom_boxplot() +
+     geom_violin() +
+     scale_fill_manual(values=c("grey90","cyan3","darkorange2"), 
+                            labels=c("Full Control","Lateral Tagging","Ventral Tagging"),
                             name="Treatment Group") + 
      ylab("n 'Good' bursts") + xlab("Experimental Treatment") +
     theme_bw()
@@ -641,61 +645,57 @@ mean.topvels2$eggStage[mean.topvels2$sex=="m"] <- 99
     
 ```
 
-```{r lm relating burst participation with speed}
-
-  # test this statistically
-  participant.model.all = lm(nburstGood~log(CalcConc+1), data = mean.topvels2)
-    plot(participant.model.all) # meets assumptions okay, normal plot ends are skewed
-    summary((participant.model.all)) # no effect of treatment; effect size shows linear increase in number of good bursts with increasing conc. 
-  participant.model.5 = lm(nburstGood~log(CalcConc+1), 
-                           data = filter(mean.topvels2, nburstGood>5))
-    plot(participant.model.5) # meets assumptions okay, better ends for normal plot
-    summary((participant.model.5)) # sig effect of conc now, p=0.036; slightly stronger effect size and lower se; still linear increase in number of good bursts with increasing conc. 
-    
-    
-      # test this statistically
-      participant.model.allfair = lm(nburstGoodFair~log(CalcConc+1), data = mean.topvels2)
-        plot(participant.model.allfair) # meets assumptions okay, normal plot ends skew down
-        summary((participant.model.allfair)) # no effect of treatment; effect size shows linear increase in number of good bursts with increasing conc. 
-      participant.model.5fair = lm(nburstGoodFair~log(CalcConc+1), 
-                               data = filter(mean.topvels2, nburstGood>5))
-        plot(participant.model.5fair) # meets assumptions okay, better ends for normal plot
-        summary((participant.model.5fair)) # sig effect of conc now, p=0.038 slightly stronger effect size and lower se; still linear increase in number of good bursts with increasing conc. 
-
-```
 
 ```{r plots of effects on burst speed} 
 
   # look at effect of fish size or mass on burst speeds
-  ggplot(filter(mean.topvels2, nburstGoodFair>3), aes(x=fl_mm, y=mass_g)) + 
+  ggplot(mean.topvels2, #filter(mean.topvels2, nburstGoodFair>3), 
+         aes(x=fl_mm, y=mass_g)) + 
     geom_point() + geom_smooth() + theme_bw()
 
      # look at length-adjusted burst speeds (ie: bl/s)
        library(ggpubr)
-       gghistogram(filter(mean.topvels2, nburstGoodFair>3), 
+       gghistogram(mean.topvels2, #filter(mean.topvels2, nburstGoodFair>3), 
                    x="mnburstGoodFair_bls", y="..density..",
-                   add="mean", add_density=TRUE, fill="grey50")
+                   add="mean", add_density=TRUE, bins=12, fill="grey50")
        
-       ggplot(filter(mean.topvels2, nburstGoodFair>3), 
+       ggplot(mean.topvels2, #filter(mean.topvels2, nburstGoodFair>3), 
               aes(x=mnburstGoodFair_bls, color=factor(treatment), fill=factor(treatment))) + 
-         geom_density(alpha=0.2, bw=2) + 
-            scale_color_manual(values=c("grey90","grey70",
-                                     "darkslategray2","sandybrown",
-                                     "cyan3","darkorange2"), 
-                            labels=c("Full Control","Handling Control",
-                                     "Lateral Surgery","Ventral Surgery",
-                                     "Lateral Tagging","Ventral Tagging"),
+         geom_density(alpha=0.2, bw=3) + 
+            scale_color_manual(values=c("grey70","cyan3","darkorange2"), 
+                            labels=c("Full Control","Lateral Tagging","Ventral Tagging"),
                             name="Treatment Group", 
                             guide=F) + 
-            scale_fill_manual(values=c("grey90","grey70",
-                                     "darkslategray2","sandybrown",
-                                     "cyan3","darkorange2"), 
-                            labels=c("Full Control","Handling Control",
-                                     "Lateral Surgery","Ventral Surgery",
-                                     "Lateral Tagging","Ventral Tagging"),
+            scale_fill_manual(values=c("grey70", "cyan3","darkorange2"), 
+                            labels=c("Full Control", "Lateral Tagging","Ventral Tagging"),
                             name="Treatment Group") + 
          theme_bw()
+       
+       
+    # filter dataset so treatment groups are simliar in fl and number
+     filt.mean.topvels2 = filter(mean.topvels2, fl_mm>65 & fl_mm<81)
+        table(filt.mean.topvels2$treatment)
+            # FC LT VT 
+            # 18 16 17
+        summarize(group_by(filt.mean.topvels2, treatment), 
+                  minFL = min(fl_mm), maxFL = max(fl_mm), medianFL = median(fl_mm))
+             # treatment minFL maxFL medianFL
+             #        FC    66    80       76.5
+             #        LT    68    80       76
+             #        VT    69    77       72
 
+        ggplot(filt.mean.topvels2,
+              aes(x=mnburstGoodFair_bls, color=factor(treatment), fill=factor(treatment))) + 
+         geom_density(alpha=0.2, bw=4) + 
+            scale_color_manual(values=c("grey70","cyan3","darkorange2"), 
+                            labels=c("Full Control","Lateral Tagging","Ventral Tagging"),
+                            name="Treatment Group", 
+                            guide=F) + 
+            scale_fill_manual(values=c("grey70", "cyan3","darkorange2"), 
+                            labels=c("Full Control", "Lateral Tagging","Ventral Tagging"),
+                            name="Treatment Group") + 
+         theme_bw()
+        
 ```
    
    
@@ -703,186 +703,146 @@ mean.topvels2$eggStage[mean.topvels2$sex=="m"] <- 99
 # plot points for each fish, jittered around the log of the treatments; presents same dataset but with more information
 # this is the plot used for Ken's bay delta poster
 set.seed(38)
-mean.topvels2$random.offset = runif(n=nrow(mean.topvels2), min = -0.25, max=0.25)
-mainplot = ggplot(filter(mean.topvels2, nburstGoodFair>3), 
-                  aes(y=mnburstGoodFair, x=as.numeric(treatment)+random.offset)) + 
-         geom_errorbar(aes(ymin=mnburstGoodFair-sdburstGoodFair,
-                           ymax=mnburstGoodFair+sdburstGoodFair), width=0) + 
+filt.mean.topvels2$random.offset = runif(n=nrow(filt.mean.topvels2), min = -0.25, max=0.25)
+
+filt.mean.topvels2 = filt.mean.topvels2 %>%
+  mutate(sdburstGoodFair_bls = (sdburstGoodFair/mnburstGoodFair)*mnburstGoodFair_bls )
+  # use Coef Var to translate mn & sd in absolute to bls
+
+mainplot.filt = ggplot(filt.mean.topvels2, #filter(mean.topvels2, nburstGoodFair>3), 
+                  aes(y=mnburstGoodFair_bls, x=as.numeric(treatment)+random.offset)) + 
+         geom_errorbar(aes(ymin=mnburstGoodFair_bls-sdburstGoodFair_bls,
+                           ymax=mnburstGoodFair_bls+sdburstGoodFair_bls), width=0) + 
          geom_point(aes(size=nburstGoodFair, fill=treatment), pch=21, alpha=0.8) + 
          theme_bw() + 
-         ylab("Est. Burst Swim Speed (cm/s)") +
-         scale_x_continuous(breaks=1:6, 
+         ylab("Est. Burst Swim Speed (bl/s)") +
+         scale_x_continuous(breaks=1:3, 
                             labels=levels(mean.topvels2$treatment), 
                             name="Surgical Treatment Group")  +
-         scale_size_continuous(breaks=c(4,6,8), name = "Number of\n'Good' Bursts") + 
-           scale_fill_manual(values=c("grey90","grey70",
-                                     "darkslategray2","sandybrown",
-                                     "cyan3","darkorange2"), 
-                            labels=c("Full Control","Handling Control",
-                                     "Lateral Surgery","Ventral Surgery",
-                                     "Lateral Tagging","Ventral Tagging"),
+         scale_size_continuous(breaks=c(2,4,6), name = "Number of\n'Good' Bursts") + 
+           scale_fill_manual(values=c("grey90","cyan3","darkorange2"), 
+                            labels=c("Full Control","Lateral Tagging","Ventral Tagging"),
                             name="Treatment Group") + 
          theme_bw()
 
-mainplot
+mainplot.filt
 
   
   if(write.file=="Yes") {
-    tiff("figures/Bursts_Outputfigures_2022WS/WS2022_Bif_BurstEstimates.tiff", 
+    tiff("figures/Bursts_Outputfigures_Expt3_DS2023/Expt3_7day_DS2023_BurstEstimates_sizeFilt.tiff", 
          width=165, height=100, units="mm", res=300) 
-    mainplot
+    mainplot.filt
     dev.off() }
 ```
 
 
 ```{r simple stats models}
-filtered.moddat = filter(mean.topvels2, nburstGoodFair>3)
 
 # experimental design checks
-summary(aov(fl_mm ~treatment, data = filtered.moddat)) # no effect
+summary(aov(fl_mm ~ treatment, data = filtered.moddat)) # near effect
 summary(aov(mass_g ~ treatment, data = filtered.moddat)) # no effect
-summary(aov(tunneltemp ~ treatment, data = filtered.moddat)) # effect!!!
- summarize(group_by(filtered.moddat, treatment), 
+summary(aov(tunneltemp ~ treatment, data = filtered.moddat)) # no effect
+ summarize(group_by(filt.mean.topvels2, treatment), 
               meanTemp = mean(tunneltemp, na.rm=T), 
               sdTemp = sd(tunneltemp, na.rm=T))
         #  treatment     meanTemp sdTemp
-        #  FC            12.8     0.300  
-        #  HC            12.8     0.195
-        #  LS            12.6     0.392
-        #  VS *          12.6     0.332 
-        #  LT            12.8     0.161
-        #  VT            12.8     0.186
- TukeyHSD(aov(tunneltemp ~ treatment, data = filtered.moddat)) # no sig pair-wise difs, and effect size is small enough it doesn't seem relevant to the fish performance. 
- 
+        #  FC            12.7     0.244  
+        #  LT            12.8     0.294
+        #  VT            12.7     0.306
+ TukeyHSD(aov(fl_mm ~ treatment, data = filt.mean.topvels2)) # no sig pair-wise difs 
 
 
 # basic hypothesis test (effect of treatment on vel)
-simplemod = lm(mnburstGoodFair_bls~treatment, data = filtered.moddat)
+simplemod = lm(mnburstGoodFair_bls~treatment, data = filt.mean.topvels2)
   plot(simplemod) # fits assumptions great
   summary(aov(simplemod)) # not significant p=0.181
-  summarize(group_by(filtered.moddat, treatment), 
+  summarize(group_by(filt.mean.topvels2, treatment), 
               estVel = mean(mnburstGoodFair, na.rm=T), 
               sdVel = sd(mnburstGoodFair, na.rm=T),
               estVelbls = mean(mnburstGoodFair_bls, na.rm=T), 
-              sdVelbls = sd(mnburstGoodFair_bls, na.rm=T))
-       # treatment estVel sdVel estVelbls sdVelbls
-       # FC         118.   36.1      14.9     4.86
-       # HC          87.   29.3      11.0     3.80
-       # LS         112.   35.0      14.1     4.16
-       # VS         113.   45.7      13.8     5.45
-       # LT         100.   30.6      12.4     3.68
-       # VT         110.   32.0      13.9     3.72
+              sdVelbls = sd(mnburstGoodFair_bls, na.rm=T),
+              meanFL = mean(fl_mm, na.rm=T) )
+       # treatment   estVel  sdVel estVelbls sdVelbls   meanFL
+       #        FC   129.3    47.6     17.4      6.6     74.4
+       #        LT   121.4    42.0     16.3      5.7     74.9
+       #        VT   113.1    31.5     15.6.     4.5     72.6
 
+  
   # set custom contrasts to compare controls vs treatments   
   #    https://rcompanion.org/rcompanion/h_01.html
   library(car)
   library(emmeans)
   library(multcomp)
-  # levels of treatment  are  "FC" "HC" "LS" "VS" "LT" "VT"
-  Contrasts.all = list(FCvLS      =  c(1,   0,  -1,   0,   0,   0),
-                   FCvVS      =  c(1,   0,   0,  -1,   0,   0), 
-                   FCvLT      =  c(1,   0,   0,   0,  -1,   0),
-                   FCvVT      =  c(1,   0,   0,   0,   0,  -1),
-                   HCvLS      =  c(0,   1,  -1,   0,   0,   0),
-                   HCvVS      =  c(0,   1,   0,  -1,   0,   0), 
-                   HCvLT      =  c(0,   1,   0,   0,  -1,   0),
-                   HCvVT      =  c(0,   1,   0,   0,   0,  -1))
+  # levels of treatment  are  "FC" "LT" "VT"
+  Contrasts.all = list(FCvLT  =  c(1,  -1,   0),
+                   FCvVT      =  c(1,   0,  -1), 
+                   LTvVT      =  c(0,   1,  -1))
   marginal = emmeans(simplemod, ~treatment)
   contrast(marginal, method = Contrasts.all, adjust="sidak")
          # contrast estimate   SE df t.ratio p.value
-         # FCvLS       0.892 1.56 86  0.571  0.9988 
-         # FCvVS       1.149 1.54 86  0.747  0.9924 
-         # FCvLT       2.497 1.56 86  1.597  0.6197 
-         # FCvVT       1.090 1.54 86  0.709  0.9947 
-         # HCvLS      -3.092 1.62 86 -1.913  0.3856 
-         # HCvVS      -2.835 1.59 86 -1.781  0.4800 
-         # HCvLT      -1.487 1.62 86 -0.920  0.9719 
-         # HCvVT      -2.894 1.59 86 -1.818  0.4525 
+         # FCvLT       1.144 1.95 48   0.586  0.9153
+         # FCvVT       1.841 1.91 48   0.958  0.7164
+         # LTvVT       0.697 1.98 48   0.352  0.9795
   
-  # set custom contrasts to lump sham vs tag and L vs V locations   
-  # levels of treatment  are  "FC" "HC" "LS" "VS" "LT" "VT"
-  Contrasts = list(LvV      =  c(0,   0,   1,  -1,   1,  -1),
-                   SvT      =  c(0,   0,   1,   1,  -1,  -1), 
-                   CvL      =  c(1,   1,  -1,   0,  -1,   0),
-                   CvV      =  c(1,   1,   0,  -1,   0,  -1),
-                   CvS      =  c(1,   1,  -1,  -1,   0,   0),
-                   CvT      =  c(1,   1,   0,   0,  -1,  -1))
-
-  marginal = emmeans(simplemod, ~treatment)
-  contrast(marginal, method = Contrasts, adjust="sidak")
-      #  contrast estimate   SE df t.ratio p.value
-      #  LvV        -1.150 2.21 86 -0.520  0.9962 
-      #  SvT         1.546 2.21 86  0.699  0.9816 
-      #  CvL        -0.595 2.25 86 -0.265  0.9999 
-      #  CvV        -1.745 2.21 86 -0.788  0.9667 
-      #  CvS        -1.943 2.23 86 -0.871  0.9466 
-      #  CvT        -0.397 2.23 86 -0.178  1.0000 
-      
-  
-  # still no sig differences when lump groups together; we do see that the largest est vel differences occur between the control vs ventral group (control slower), and the control vs sham group (control slower). When we compare the lateral vs ventral the model estimates that the lateral tagged group is slower. But because the handing control is the slowest, and there is no statistical significance, I don't think there is any evidence that the tagging process is altering the burst capabilities after 7 days of recovery. 
-  
-  # exclude handling control, just to see
-  Contrasts2 = list(CvL      =  c(2,   0,  -1,   0,  -1,   0),
-                   CvV       =  c(2,   0,   0,  -1,   0,  -1),
-                   CvS       =  c(2,   0,  -1,  -1,   0,   0),
-                   CvT       =  c(2,   0,   0,   0,  -1,  -1))
-
-  marginal = emmeans(simplemod, ~treatment)
-  contrast(marginal, method = Contrasts2, adjust="sidak")
-       # contrast estimate   SE df t.ratio p.value
-       # CvL          3.39 2.69 86  1.258  0.3167 
-       # CvV          2.24 2.66 86  0.841  0.8728 
-       # CvS          2.04 2.68 86  0.762  0.9072 
-       # CvT          3.59 2.68 86  1.339  0.5566   
-  # without the slow HC group, the full control is faster than all treatment group combinations. The biggest differences are between the FC and lateral groups and the tagged groups, and the smallest difference from FC is the sham groups; this amtches our expectations more so than the prior contrasts. However, there is still no statistical support for differences that are unlikely to be due to chance. 
 ```  
   
+  
+  
 ```{r full stats model for comparison}  
-filtered.moddat = filter(mean.topvels2, nburstGoodFair>3)
+
+     filt.mean.topvels2 = filter(mean.topvels2, fl_mm>65 & fl_mm<81)
 
 # kitchen sink model for dredging (explore effects of study design/constraints)
 
-fullmod = lm(mnburstGoodFair_bls ~ treatment + nburstGoodFair + tunneltemp + fl_mm + triallength + sex*eggStage, data = filtered.moddat, na.action="na.fail" ) # could (should?) make this a lmer with holding tank as the random effect, but makes inference harder later
+fullmod = lm(mnburstGoodFair_bls ~ treatment + nburstGoodFair + tunneltemp + fl_mm + sex, data = filt.mean.topvels2, na.action="na.fail" ) # could (should?) make this a lmer with holding tank as the random effect, but makes inference harder later
 
  plot(fullmod) # looks good!
  
- summary(aov(fullmod)) # tunneltemp significant, nburst close
+ summary(aov(fullmod)) # tunneltemp is significant (after removed cold outlier with leverage), 
+                       # treatment and sex least significant
  
  dredge(fullmod)
-   # best model with only treatment and tunnel temp (but none really good; weight here only 6.6%)
-   # 2nd best (dAIC = 0.70) adds nburst
-   # 3rd best (dAIC = 1.1) drops treatment *most parsimonious within dAIC<2
+   # best model with only tunnel temp (but none really good; weight here only 20%)
+   # 2nd best (dAIC = 0.50) adds fl
+   # 3rd best (dAIC = 1.38) adds fl and #good burst
  
-summarize(group_by(filter(mean.topvels2, nburstGoodFair>3), treatment), 
-           n.reps = n(),
-           mean.vel = mean(mnburstGoodFair_bls, na.rm=T), 
-           sd.vel = sd(mnburstGoodFair_bls, na.rm=T),
-           mean.nburstGood = mean(nburstGoodFair, na.rm=T),
-           mean.triallength = mean(triallength, na.rm=T),
-           mean.temp = mean(tunneltemp, na.rm=T),
-           mean.fl_mm = mean(fl_mm, na.rm=T))
-#  treatment n.reps mean.vel   sd.vel mean.nburstGood mean.triallength mean.temp mean.fl_mm
-#         FC     16 14.94438 4.860154        6.062500          9.18750  12.77500   79.75000
-#         HC     14 10.95997 3.803696        6.428571         10.35714  12.83571   79.64286
-#         LS     15 14.05243 4.161743        6.133333         10.73333  12.60667   79.80000
-#         VS     16 13.79489 5.451122        6.000000          9.37500  12.56875   82.00000
-#         LT     15 12.44692 3.681385        6.066667         10.46667  12.82000   80.46667
-#         VT     16 13.85421 3.715551        5.812500          9.12500  12.75000   79.00000
-
+ Contrasts.all = list(FCvLT  =  c(1,  -1,   0),
+                   FCvVT      =  c(1,   0,  -1), 
+                   LTvVT      =  c(0,   1,  -1))
+  marginal = emmeans(fullmod, ~treatment)
+  contrast(marginal, method = Contrasts.all, adjust="sidak")
  
- 
-fullmod.participant= lm(nburstGoodFair ~ treatment + triallength + tunneltemp + fl_mm + sex + eggStage, data = filtered.moddat, na.action="na.fail")
+  
+  
+fullmod.participant= lm(nburstGoodFair ~ treatment + triallength + tunneltemp + fl_mm + sex, data = filt.mean.topvels2, na.action="na.fail")
  plot(fullmod.participant) # not super clean, but probably okay
- summary(aov(fullmod.participant)) # no effects are significant
+ summary(aov(fullmod.participant)) # sex is significant here; temp nearly is
  
 dredge(fullmod.participant)  
- # best model only tunnel temp (and intercept) - weight = 15%
- # second best with only intercept (dAIC=0.72, weight = 10%) *most parsimonious within dAIC<2
+ # best model sex, tunnel temp, and treatment group (p=0.2); weight = 15%
+ # second best drops treatment (dAIC=0.44, weight = 12%) *most parsimonious within dAIC<2
  
+  # levels of treatment  are  "FC" "LT" "VT"
+  Contrasts.all = list(FCvLT  =  c(1,  -1,   0),
+                   FCvVT      =  c(1,   0,  -1), 
+                   LTvVT      =  c(0,   1,  -1))
+  marginal = emmeans(fullmod.participant, ~treatment)
+  contrast(marginal, method = Contrasts.all, adjust="sidak")
+     #   contrast estimate    SE df t.ratio p.value
+     #   FCvLT    -0.00862 0.449 43  -0.019  1.0000
+     #   FCvVT     0.90425 0.457 43   1.980  0.1537
+     #   LTvVT     0.91286 0.476 43   1.920  0.1736
+   # greatest participation from LT, then FC, then VT; no significance
+  
+  
 ```
  
-## From this data I conclude that there is not a clear nor strong effect of the tagging procedure on burst capacity after 7 days of recovery. There may be a small signal indicating that the lateral location reduces burst speeds more than the ventral location, and that tag burden reduces the burst speed more than simply the surgical procedure. But again, no statistical significance. 
+## From this data I conclude that there is not a clear nor strong effect of the tagging procedure on burst capacity after 7 days of recovery. There may be a small signal indicating that the lateral location reduces burst speeds more than the ventral location, but it is very small if it is present at all, and no statistical significance. 
 
-## We did these tests with 14-16 replicates. With the high variance among individuals (CV = ~30%) we will need to use more replicates to detect a significant effect. 
+## We did these tests with 16-18 replicates, and still didn't see any significant differences. There was smaller CV in burst speeds this time (16-24%, vs 30% from Expt 1). 
 
-## We saw average estimates of 11-15 (sd ~4) bl/s and differences of 2-3 bl/s. If we put these values into a power analysis (mean = 13.5, sd = 4, minimum difference to detect = 3) it suggests we use a sample size of 23 per group (with 3 groups). If we want to detect significance with a difference of 2 bl/s, we should use 50 per group. 
+## We saw slightly faster average estimates with an IQR from 12-20 bl/s and differences of 1.3 bl/s between the means for FC and VT. There were effects of size and water temp before data filtering, so I removed one cold outlier that had highleverage (11.6C; resulted in increased effect of temp), and I subset the data to equalize the length and sample size between groups. After that (removed larger fish from FC and VT) there was nearly no effect of treatment on burst speed. 
+
+## I have not done an exhautive cleaning of the dataset to idenfity outliers based on speeds or notes; only removed those burst that were noted with "fail" in the comments. This *may* change results a little but I doubt it would alter things very much. 
+
+

@@ -1,0 +1,162 @@
+---
+title: "Extp3_Ucrit"
+author: "Anna Steel"
+date: "2024-01-11"
+output: html_document
+---
+
+# This is an R Markdown Document, which I think is easier to code within vs using a basic r script file. 
+  
+A document like this will make it easier to identify and run 'chunks' of code,
+and it also is capable of creating either html or pdf or .docx outputs if you script nicely, so you can write your code then knit it and have a pretty output document for sending or sharing with collaborators. I find I don't have the patience to make the code 'pretty' but I suspect you would find that capability very useful. For instance, you could read in a necropsy .csv, and create plots etc with it, then whenever you wanted to update the .csv you would simply re-run the code and produce a new document to send around. 
+  
+For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+  
+I'll also leave helpful annotations around and within chunks to give you a little push up the steep R learning curve. =) 
+  
+  
+  
+The first Chuck is usually where all the required packages and settings are put. 'include=FALSE' means the chunk won't be output in the html/pdf knitted document but will be run. 'echo=FALSE' means that the default for future chunks is for only the output (ie: graphs or tables) to be printed and the code itself to be excluded in the output document. If you say 'echo=TRUE' then the code and outputs will show.
+  
+It's useful to include a unique and descriptive name after the 'r' in the chunk title for the outline to the right and for watching what is running when you knit the output document
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message=FALSE, warning=FALSE)
+
+library(tidyverse)
+library(lme4)
+library(circular)
+library(patchwork)
+library(MuMIn)
+library(chron)
+library(emmeans)
+
+```
+
+
+## Read in Data 
+```{r read in data, include=FALSE}
+
+# you can change the pathway for each computer, or set it up to have a base folder wherever you save an R project. For not I've just included the entire filepath; we can learn file and project management strategies later.
+
+# I manually adjusted the column names to remove the # symbol and make the ID columns consistent (eg: trialID, tagID, etc)
+# I also manually adjusted any lowercase na missing data holders to uppercase NA since this is what R recognizes. 
+# and I manually corrected the tag dates that were entered as 12/13/0203
+dat = read.csv("/Users/Anna/Documents/ResearchGit/DStagging/rawData/Expt3_DSsublethal_7day_Ucrit_MetaTrialdata_RawData.csv")
+
+head(dat) # look at first 6 rows
+str(dat) # look at column names and data types
+
+```
+
+## Mutate Data for Analysis
+```{r clean data, include=FALSE}
+
+# put date and time into a recognizable format for R 
+# type in '?strptime' to console then scroll down in the help window that pops up to see different abbreviations for 'format'
+
+dat$hatch_date = as.Date(dat$hatch_date, format="%m/%d/%Y")
+
+dat$trial_date = as.Date(dat$trial_date, format="%m/%d/%Y")
+
+dat$tag_date = as.Date(dat$tag_date, format="%m/%d/%Y")
+
+dat$time_fish_in = as.POSIXct(paste(dat$trial_date, dat$time_fish_in), 
+                              format="%Y-%m-%d %I:%M:%S %p")
+
+dat$time_trial_end = as.POSIXct(paste(dat$trial_date, dat$time_trial_end), 
+                              format="%Y-%m-%d %I:%M:%S %p")
+
+dat$time_fail = times(dat$time_fail)
+ dat$time_fail_s = hours(dat$time_fail)*60*60 + minutes(dat$time_fail)*60 + seconds(dat$time_fail)
+ 
+## add leading zeros to HEX code that excel wipes out when it saves. Argh
+dat$tagID = str_pad(dat$tagID,4, pad="0")
+ # check remaining ID to make sure they look correct; will deal with 'shed' and 'unk' later
+ unique(dat$tagID)
+
+ 
+# check other data columns to ensure no irregularities (ie: extra spaces, etc)
+ table(dat$sex)
+ table(dat$treat_group)
+ table(dat$fail_y_n)
+```
+
+## Add tagging metadata
+```{r tagging metadata, include=FALSE}
+# I haven't cleaned the data from Eric yet, so will do this later
+```
+
+
+
+## Explore Relationships in Data
+
+```{r explore data}
+# here is an example of a ggplot with facets so you can seperate the data by a grouping variable.
+ggplot(data=filter(dat, treat_group!="vt-shed", sex!="unk"), 
+       aes(x=treat_group, y=time_fail_s, fill=treat_group)) + 
+  geom_boxplot() + 
+  facet_wrap(~sex) + 
+  theme_bw()
+
+dat.filt = filter(dat, treat_group!="vt-shed", sex!="unk", time_fail_s>600) # only fish that swam longer than 10 minutes; removes 3 fish
+ggplot(data= dat.filt,
+       aes(x=mass_g, y=time_fail_s, fill=sex)) + 
+  geom_point(size=2, pch=21) + 
+  geom_smooth(method="lm", aes(color=sex))+
+  facet_wrap(~treat_group) + 
+  theme_bw()
+
+### continue playing with this and looking at other aspects of the dataset! There may be interesting correlations within it that we didn't intend to create, or relationships between tagger and swim time, gravid state and swim time, etc. etc. etc.  
+
+```
+
+
+
+## Build Statistical Models
+
+```{r stats}
+
+
+# set up dataset for model (simplify)
+dat.brief = filter(dat, treat_group!="vt-shed", sex!="unk", time_fail_s>600) 
+ dat.brief[,c("fishID","treat_group","time_fail_s","mass_g","fl_mm","sex","tankID","start_temp","fail_y_n")]
+ dat.brief$tag_group[dat.brief$tag_date=="2023-12-11"] <- 1
+ dat.brief$tag_group[dat.brief$tag_date=="2023-12-13"] <- 2
+
+ 
+m.full = lmer(time_fail_s ~ factor(treat_group) + mass_g + sex + start_temp + (1|tag_group), data = dat.brief, na.action="na.fail")  
+  plot(m.full); qqnorm(resid(m.full)); qqline(resid(m.full)) #okay; slight residual curve in qqnorm plot
+  summary(m.full)
+    # random effect explain s6% of residual deviance; useful
+    # treatment group is most important variable (phew)
+  dredge(m.full)
+    # but all vars are included in model using AIC comparisons
+    # haven't centered or scaled vars, so harder to say which one is most influetial in terms of effect size
+    # warmer temps resulted in shorter swims, but not significant
+   ## when evaluated with interaction between sex*treat there was not an effect
+
+  
+# contrasts to compare treatment groups at average levels of the other variables
+fm.emm <- emmeans(m.full, "treat_group")
+     fm.emm 
+     # treat_group emmean  SE   df lower.CL upper.CL
+     # fc            7495 551 2.49     5520     9470
+     # lt            6786 550 2.49     4815     8757
+     # vt            5759 581 3.10     3943     7574
+         
+     contrast(fm.emm, 'tukey')   
+     # contrast estimate  SE   df t.ratio p.value
+     # fc - lt       709 597 64.0   1.187  0.4651
+     # fc - vt      1736 625 64.2   2.779  0.0193 ***
+     # lt - vt      1027 605 64.1   1.697  0.2143  
+     
+    
+```
+
+
+```{r size}
+
+ggplot(dat, aes(y=fl_mm)) + geom_boxplot()
+
+
+```

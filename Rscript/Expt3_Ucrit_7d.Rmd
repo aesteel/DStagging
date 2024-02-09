@@ -79,6 +79,10 @@ dat$tagID = str_pad(dat$tagID,4, pad="0")
  table(dat$sex)
  table(dat$treat_group)
  table(dat$fail_y_n)
+ 
+ # look at sample sizes
+ table(dat$treat_group)
+ 
 ```
 
 ## Add tagging metadata
@@ -93,14 +97,30 @@ dat$tagID = str_pad(dat$tagID,4, pad="0")
 ```{r explore data}
 # here is an example of a ggplot with facets so you can seperate the data by a grouping variable.
 ggplot(data=filter(dat, treat_group!="vt-shed", sex!="unk"), 
-       aes(x=treat_group, y=time_fail_s, fill=treat_group)) + 
-  geom_boxplot() + 
-  facet_wrap(~sex) + 
+       aes(y=time_fail_s, x=sex))+
+  geom_jitter(width=.2) + 
+  #facet_wrap(~sex) + 
   theme_bw()
 
 dat.filt = filter(dat, treat_group!="vt-shed", sex!="unk", time_fail_s>600) # only fish that swam longer than 10 minutes; removes 3 fish
+set.seed(1983)
+plot_failtime_all = ggplot(data=dat.filt,#filter(dat, treat_group!="vt-shed", sex!="unk"), 
+       aes(x=treat_group, y=time_fail_s, fill=treat_group)) + 
+  geom_boxplot(show.legend=F) + 
+  geom_jitter(data=filter(dat.filt, time_fail_s<=9000), width=.1, show.legend=F) + 
+  geom_jitter(data=filter(dat.filt, time_fail_s>9000), color="red",width=.1, show.legend=FALSE)+
+ # facet_wrap(~sex) + 
+  geom_hline(yintercept=9140, linetype="dashed", color="grey40") + 
+  ylab("Time to Fail") + xlab("Treatment Group") + 
+  scale_x_discrete(labels=c("Full\nControl","Lateral\nTag","Ventral\nTag"))+
+  theme_bw()
+plot_failtime_all
+
+plot_failtime_all + facet_wrap(~sex)
+
+dat.filt = filter(dat, treat_group!="vt-shed", sex!="unk", time_fail_s>600) # only fish that swam longer than 10 minutes; removes 3 fish
 ggplot(data= dat.filt,
-       aes(x=mass_g, y=time_fail_s, fill=sex)) + 
+       aes(x=fl_mm, y=time_fail_s, fill=sex)) + 
   geom_point(size=2, pch=21) + 
   geom_smooth(method="lm", aes(color=sex))+
   facet_wrap(~treat_group) + 
@@ -109,7 +129,28 @@ ggplot(data= dat.filt,
 ### continue playing with this and looking at other aspects of the dataset! There may be interesting correlations within it that we didn't intend to create, or relationships between tagger and swim time, gravid state and swim time, etc. etc. etc.  
 
 ```
+## write out graphs
+```{r final plots}
+   if(write.file=="Yes") {
+        tiff("../figures/Ucrit_Expt3_7d_TimeboxplotAll.tiff", 
+         width=115, height=100, units="mm", res=300) 
+        
+   plot_failtime_all
+          
+        dev.off()
+        
+   }
 
+   if(write.file=="Yes") {
+        tiff("../figures/Ucrit_Expt3_7d_TimeboxplotSex.tiff",
+         width=220, height=100, units="mm", res=300) 
+        
+   plot_failtime_all + facet_wrap(~sex)
+          
+        dev.off()
+        
+        }
+```
 
 
 ## Build Statistical Models
@@ -153,10 +194,3 @@ fm.emm <- emmeans(m.full, "treat_group")
     
 ```
 
-
-```{r size}
-
-ggplot(dat, aes(y=fl_mm)) + geom_boxplot()
-
-
-```

@@ -35,19 +35,16 @@ names(tunnel_specs) = c("GATE_ID","INTERGATE_DISTANCES","GATE_DISTANCES")
 ```{r read trial metadata}
 
 # pull metadata for index to all trials and metadata
-trial_specs.7  <- read.csv("../rawData/Expt3_7day_DS2023_Burst_MetaTrialdat.csv")
-trial_specs.30 <- read.csv("../rawData/Expt3_30day_DS2023_Burst_MetaTrialdat.csv")
-
-trial_specs = rbind(trial_specs.7, trial_specs.30)
+trial_specs <- read.csv("../rawData/Expt3_30day_DS2023_Burst_MetaTrialdat.csv")
 
 
  # tidy up data types within the df
- trial_specs$trialdate = as.Date(trial_specs$trialdate, format="%m/%d/%y")#readr::parse_date(trial_specs$trialdate)
- trial_specs$tagdate =  as.Date(trial_specs$tagdate, format="%m/%d/%y")#readr::parse_date(trial_specs$tagdate)
+ trial_specs$trialdate = readr::parse_date(trial_specs$trialdate)
+ trial_specs$tagdate =  readr::parse_date(trial_specs$tagdate)
  
- trial_specs$accstart = readr::parse_time(trial_specs$accstart, "%H:%M:%S")# %p")
- trial_specs$trialstart = readr::parse_time(trial_specs$trialstart, "%H:%M:%S")# %p")
- trial_specs$trialend = readr::parse_time(trial_specs$trialend, "%H:%M:%S")# %p")
+ trial_specs$accstart = readr::parse_time(trial_specs$accstart, "%I:%M:%S %p")
+ trial_specs$trialstart = readr::parse_time(trial_specs$trialstart, "%I:%M:%S %p")
+ trial_specs$trialend = readr::parse_time(trial_specs$trialend, "%I:%M:%S %p")
   
  trial_specs$treatment = as.factor(trial_specs$treatment) 
  trial_specs$holdingtank = as.factor(trial_specs$holdingtank) 
@@ -68,7 +65,6 @@ trial_specs = rbind(trial_specs.7, trial_specs.30)
 # vector of all the file names to be considered in the analysis
 filestart <- unique(trial_specs$raspPI_filestart)
 
-# 115 trials, but removed trial T79 from dataset since fish LOE before bursts began
 
 ```
 
@@ -109,9 +105,9 @@ max_distance = 15        # only consider inter-gate distances less than 15cm
 write.file = "Yes"       # write out a file; don't use while troubleshooting
 
 # set up folders for writing out data as you go
-spp.yr.rawfilepath = "BurstExpt3_2023" # where the raw data files from raspPi are stored
-spp.yr.figfolder = "Bursts_Outputfigures_Expt3_DS2023" # this folder should be created within the 'DS_Tagging/figures' folder before running this code
-spp.yr.dataoutputfolder = "Bursts_Outputdata_Expt3_DS2023" # this folder should be created within the 'DS_Tagging/outputData' folder before running this code
+spp.yr.rawfilepath = "BurstExpt3_30d_2023" # where the raw data files from raspPi are stored
+spp.yr.figfolder = "Bursts_Outputfigures_Expt3_30d_DS2023" # this folder should be created within the 'DS_Tagging/figures' folder before running this code
+spp.yr.dataoutputfolder = "Bursts_Outputdata_Expt3_30d_DS2023" # this folder should be created within the 'DS_Tagging/outputData' folder before running this code
 
 
 
@@ -469,25 +465,19 @@ PHEW! That was an epic loop.
 burst.topvels2 = burst.topvels[burst.topvels$treatmentrep!="EMPTY",]
 fastPos.comp2 = fastPos.comp[fastPos.comp$treatmentrep!="EMPTY",] 
 
-# # set fastPos gate order for factor
-# fastPos.comp2$fastGate = factor(fastPos.comp2$fastGate, 
-#                                 levels=c("Gate00","Gate01","Gate02","Gate03",
-#                                          "Gate04","Gate05","Gate06","Gate07",
-#                                          "Gate08","Gate09","Gate10","Gate11",
-#                                          "Gate12","Gate13","Gate14"))
+# set fastPos gate order for factor
+fastPos.comp2$fastGate = factor(fastPos.comp2$fastGate, 
+                                levels=c("Gate00","Gate01","Gate02","Gate03",
+                                         "Gate04","Gate05","Gate06","Gate07",
+                                         "Gate08","Gate09","Gate10","Gate11",
+                                         "Gate12","Gate13","Gate14"))
+
 
 
 # add metadata and fix formatting
 trial_specs_unique = unique(trial_specs[,c("raspPI_filestart","trialID","treatment", "spp","accstart","triallength","holdingtank","tunneltemp","sex","fl_mm","mass_g")])
 
 mean.topvels2 = merge(mean.topvels, trial_specs_unique, all.x=T, by.x="treatmentrep", by.y="raspPI_filestart") 
-
-
-#### need to do something here to correct for the fish burst after the middle laser was removed
-## for now, subset to remove all trials run on 1/24/2024 so we can get a quick look at the first 3/4 of the data
-## Note made Jan 30, 2024
-mean.topvels2 = mean.topvels2[!(mean.topvels2$trialID %in% paste0("T",88:115)),] # 28 burst trials
-
 
 # remove NA burst estimates (or estimated with only one good or fair bursts)
 mean.topvels2 = mean.topvels2[!is.na(mean.topvels2$sdburstGoodFair),]
@@ -496,16 +486,8 @@ mean.topvels2 = mean.topvels2[!is.na(mean.topvels2$sdburstGoodFair),]
 mean.topvels2$mnburstGoodFair_bls = mean.topvels2$mnburstGoodFair/(mean.topvels2$fl_mm/10) 
 
 # remove cold temp
-mean.topvels2 = mean.topvels2[mean.topvels2$tunneltemp >12,] # 2 trials
 
-# add column for 7d or 30d
-mean.topvels2$testgroup[mean.topvels2$trialID %in% paste0("T",61:115)] <- "30d"
-mean.topvels2$testgroup[!(mean.topvels2$trialID %in% paste0("T",61:115))] <- "7d"
-
-# adjust data entry where spaces were added to excel file
-
-mean.topvels2$treatment <- str_replace_all(mean.topvels2$treatment, " ", "")
-mean.topvels2$sex <- str_replace_all(mean.topvels2$sex, " ", "")
+mean.topvels2 = mean.topvels2[mean.topvels2$tunneltemp >12,]
 
 ```
 
@@ -530,7 +512,7 @@ mean.topvels2$sex <- str_replace_all(mean.topvels2$sex, " ", "")
 
   # look at speed and trial order
   ggplot(mean.topvels2, aes(x=as.numeric(str_sub(trialID,2,3)), y=mnburstGoodFair)) + 
-    geom_point(aes(color=testgroup)) + 
+    geom_point() + 
     geom_smooth(method="lm") +
     xlab("TrialID") + ylab("Est Burst Velocity (cm/s)")+
     theme_bw()   
@@ -598,15 +580,14 @@ mean.topvels2$sex <- str_replace_all(mean.topvels2$sex, " ", "")
       scale_fill_manual(values=c("grey90", "cyan3","darkorange2"), 
                             labels=c("Full Control","Lateral Tagging","Ventral Tagging"),
                             name="Treatment Group") + 
-      facet_wrap(~testgroup) +
       theme_bw()
   
     
-  summary(aov(lm(mass_g ~ treatment + holdingtank + testgroup, data= mean.topvels2)))     
-  summary(aov(lm(fl_mm ~ treatment + holdingtank + testgroup, data= mean.topvels2)))  
-  summary(aov(lm(nburstGoodFair ~ treatment + holdingtank + testgroup, data= mean.topvels2)))  
-  summary(aov(lm(mnburstGoodFair_bls ~ treatment + holdingtank + testgroup, data= mean.topvels2)))  
-  summary(aov(lm(mnburstGoodFair_bls ~ treatment + holdingtank + mass_g + testgroup, data= mean.topvels2)))  
+  summary(aov(lm(mass_g ~ treatment + holdingtank, data= mean.topvels2)))     
+  summary(aov(lm(fl_mm ~ treatment + holdingtank, data= mean.topvels2)))  
+  summary(aov(lm(nburstGoodFair ~ treatment + holdingtank, data= mean.topvels2)))  
+  summary(aov(lm(mnburstGoodFair_bls ~ treatment + holdingtank, data= mean.topvels2)))  
+  summary(aov(lm(mnburstGoodFair_bls ~ treatment + holdingtank + mass_g, data= mean.topvels2)))  
   # Tank effects are present, and are non-significant but close to sig (p=0.08) when predicting burst speed. Not burst number or size of fish though. 
   
 ```
@@ -615,12 +596,12 @@ mean.topvels2$sex <- str_replace_all(mean.topvels2$sex, " ", "")
  
   # look at relationship between number of bursts and sd in bursts within a fish
   ggplot(mean.topvels2, aes(x=nburstGoodFair, y=mnburstGoodFair)) + 
-    geom_point(aes(color=nburstGoodFair), size=3) + geom_smooth() + facet_wrap(~testgroup)
+    geom_point(aes(color=nburstGoodFair), size=3) + geom_smooth()
 
   ggplot(mean.topvels2, aes(x=nburstGoodFair, y=sdburstGoodFair)) + 
-    geom_point(aes(color=nburstGoodFair), size=3) + geom_smooth() + facet_wrap(~testgroup)
+    geom_point(aes(color=nburstGoodFair), size=3) + geom_smooth()
   
-      table(mean.topvels2$treatment, mean.topvels2$testgroup)
+      table(mean.topvels2$treatment)
  
 ```
 
@@ -632,7 +613,7 @@ mean.topvels2$sex <- str_replace_all(mean.topvels2$sex, " ", "")
       scale_color_manual(values=c("grey90","cyan3","darkorange2"), 
                             labels=c("Full Control","Lateral Tagging","Ventral Tagging"),
                             name="Treatment Group") + 
-      facet_grid(testgroup~treatment) + theme_bw()
+      facet_wrap(~treatment) + theme_bw()
   
     
     # look at relationship between burst participation and treatment
@@ -644,7 +625,6 @@ mean.topvels2$sex <- str_replace_all(mean.topvels2$sex, " ", "")
                             labels=c("Full Control","Lateral Tagging","Ventral Tagging"),
                             name="Treatment Group") + 
      ylab("n 'Good' bursts") + xlab("Experimental Treatment") +
-    facet_wrap(~testgroup) + 
     theme_bw()
 
   # test this statistically
@@ -661,7 +641,6 @@ mean.topvels2$sex <- str_replace_all(mean.topvels2$sex, " ", "")
     ggplot(filter(mean.topvels2, nburstGoodFair>3), aes(x=fl_mm, y=nburstGoodFair)) + 
       geom_point() + geom_smooth(method="lm")+
       ylab("n 'Good' bursts") + xlab("fish length cm") + 
-      facet_wrap(~testgroup)+
     theme_bw()
     
 ```
@@ -672,9 +651,7 @@ mean.topvels2$sex <- str_replace_all(mean.topvels2$sex, " ", "")
   # look at effect of fish size or mass on burst speeds
   ggplot(mean.topvels2, #filter(mean.topvels2, nburstGoodFair>3), 
          aes(x=fl_mm, y=mass_g)) + 
-    geom_point() + geom_smooth() + 
-   facet_wrap(~testgroup)+
-  theme_bw()
+    geom_point() + geom_smooth() + theme_bw()
 
      # look at length-adjusted burst speeds (ie: bl/s)
        library(ggpubr)
@@ -692,29 +669,20 @@ mean.topvels2$sex <- str_replace_all(mean.topvels2$sex, " ", "")
             scale_fill_manual(values=c("grey70", "cyan3","darkorange2"), 
                             labels=c("Full Control", "Lateral Tagging","Ventral Tagging"),
                             name="Treatment Group") + 
-         facet_wrap(~testgroup)+
          theme_bw()
        
        
     # filter dataset so treatment groups are simliar in fl and number
      filt.mean.topvels2 = filter(mean.topvels2, fl_mm>65 & fl_mm<81)
-        table(filt.mean.topvels2$treatment, filt.mean.topvels2$testgroup)
-            #.      FC LT VT 
-            #.  7d  19 16 17
-            #. 30d   6  6  7 # without 24th data
-        
-        summarize(group_by(filt.mean.topvels2, treatment, testgroup), 
+        table(filt.mean.topvels2$treatment)
+            # FC LT VT 
+            # 18 16 17
+        summarize(group_by(filt.mean.topvels2, treatment), 
                   minFL = min(fl_mm), maxFL = max(fl_mm), medianFL = median(fl_mm))
-             # 7d
              # treatment minFL maxFL medianFL
              #        FC    66    80       76.5
              #        LT    68    80       76
              #        VT    69    77       72
-             # 30d
-             # treatment minFL maxFL medianFL
-             #        FC    66    76       71.5
-             #        LT    70    78       71
-             #        VT    68    76       71
 
         ggplot(filt.mean.topvels2,
               aes(x=mnburstGoodFair_bls, color=factor(treatment), fill=factor(treatment))) + 
@@ -726,7 +694,6 @@ mean.topvels2$sex <- str_replace_all(mean.topvels2$sex, " ", "")
             scale_fill_manual(values=c("grey70", "cyan3","darkorange2"), 
                             labels=c("Full Control", "Lateral Tagging","Ventral Tagging"),
                             name="Treatment Group") + 
-          facet_wrap(~testgroup) + 
          theme_bw()
         
 ```
@@ -743,10 +710,11 @@ filt.mean.topvels2 = filt.mean.topvels2 %>%
   # use Coef Var to translate mn & sd in absolute to bls
 
 mainplot.filt = ggplot(filt.mean.topvels2, #filter(mean.topvels2, nburstGoodFair>3), 
-                  aes(y=mnburstGoodFair_bls, x=as.numeric(as.factor(treatment))+random.offset)) + 
+                  aes(y=mnburstGoodFair_bls, x=as.numeric(treatment)+random.offset)) + 
          geom_errorbar(aes(ymin=mnburstGoodFair_bls-sdburstGoodFair_bls,
                            ymax=mnburstGoodFair_bls+sdburstGoodFair_bls), width=0) + 
          geom_point(aes(size=nburstGoodFair, fill=treatment), pch=21, alpha=0.8) + 
+         theme_bw() + 
          ylab("Est. Burst Swim Speed (bl/s)") +
          scale_x_continuous(breaks=1:3, 
                             labels=levels(mean.topvels2$treatment), 
@@ -755,7 +723,6 @@ mainplot.filt = ggplot(filt.mean.topvels2, #filter(mean.topvels2, nburstGoodFair
            scale_fill_manual(values=c("grey90","cyan3","darkorange2"), 
                             labels=c("Full Control","Lateral Tagging","Ventral Tagging"),
                             name="Treatment Group") + 
-         facet_wrap(~testgroup)+
          theme_bw()
 
 mainplot.filt

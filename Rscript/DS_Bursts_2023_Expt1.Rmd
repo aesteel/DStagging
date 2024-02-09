@@ -91,7 +91,7 @@ Loop through all burst trials and fill in above dfs, and write out a pdf of burs
 # first define segment lengths to use in summarizing data
 min_distance = 1.5       # only consider inter-gate distances greater than 1.5cm 
 max_distance = 15        # only consider inter-gate distances less than 15cm 
-write.file = "Yes"       # write out a file; don't use while troubleshooting
+write.file = "No"       # write out a file; don't use while troubleshooting
 
 # set up folders for writing out data as you go
 spp.yr.rawfilepath = "BurstExpt1_2023" # where the raw data files from raspPi are stored
@@ -575,7 +575,12 @@ mean.topvels2$eggStage[mean.topvels2$sex=="m"] <- 99
   summary(aov(lm(fl_mm ~ treatment + holdingtank, data= mean.topvels2)))  
   summary(aov(lm(nburstGoodFair ~ treatment + holdingtank, data= mean.topvels2)))  
   summary(aov(lm(mnburstGoodFair_bls ~ treatment + holdingtank, data= mean.topvels2)))  
-  # Tank effects doesn't seem to be causing difference in growth or nburstGood 
+  # Tank effects doesn't seem to be causing difference in growth or nburstGood, but are close to important for spd
+  
+  mean.topvels2$tagday[mean.topvels2$holdingtank %in% paste0("AES-",1:6)] <- 1   
+  mean.topvels2$tagday[mean.topvels2$holdingtank %in% paste0("AES-",7:12)] <- 2
+  summary(aov(lm(mnburstGoodFair_bls ~ tagday, data= mean.topvels2)))  
+  
 ```
   
   
@@ -728,7 +733,7 @@ mainplot
 
   
   if(write.file=="Yes") {
-    tiff("figures/Bursts_Outputfigures_2022WS/WS2022_Bif_BurstEstimates.tiff", 
+    tiff("../figures/Bursts_Outputfigures_Expt1_DS2023/Burst_Expt1_DS2023.tiff", 
          width=165, height=100, units="mm", res=300) 
     mainplot
     dev.off() }

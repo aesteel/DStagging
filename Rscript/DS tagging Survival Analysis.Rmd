@@ -1,0 +1,643 @@
+---
+title: "Survival Analysis All DS 2023-24 Expts"
+author: "Anna Steel"
+date: "2024-09-20"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(patchwork)
+library(lme4)
+library(MuMIn)
+
+library(survival)
+library(coxme)
+```
+
+
+## Read in data
+```{r read in tagging dat}
+# 
+# e1tagdat = read.csv("/Users/Anna/Documents/ResearchGit/DStagging/rawData/Tags_Morts/Expt1_DStagloc_TaggedFishMetadata.csv")
+# 
+#    # add leading 0 back into TagID_Hex
+#    e1tagdat$TagID_Hex = str_pad(e1tagdat$TagID_Hex,4, pad="0")
+# 
+#    # check release group names and numbers
+#     table(e1tagdat$Rel_group) # 30 per group (eg: FC and FC2) -> 60 per treatment
+# 
+#    # change Rel_group to tagging treatment and round
+#     e1tagdat$Treatment = substr(e1tagdat$Rel_group, 1,2)
+#     e1tagdat$TagRound = substr(str_pad(e1tagdat$Rel_group, 3,
+#                                       pad="1", side="right"), 3,3)
+#     e1tagdat$Rel_group <- NULL
+#     e1tagdat$Notes <- NULL
+#     e1tagdat$DrugTime <- NULL
+#     e1tagdat$CF <- NULL
+#     e1tagdat$SurgTime <- NULL
+#     e1tagdat$RecordOfMortality <- NULL
+# 
+#     e1tagdat$Expt = 1
+#   ### only used for checking mort sheet. Not for analysis of survival.
+
+
+e2tagdat = read.csv("/Users/Anna/Documents/ResearchGit/DStagging/rawData/Tags_Morts/Expt2_DStemp_TaggedFishMetadata.csv")
+
+   # add leading 0 back into TagID_Hex
+   e2tagdat$TagID_Hex = str_pad(e2tagdat$TagID_Hex,4, pad="0")
+
+   # check release group names and numbers
+    table(e2tagdat$Rel_group) # 24 per group
+
+   # change Rel_group to temperature treatment and round
+    e2tagdat$Treatment = e2tagdat$Rel_group
+
+    e2tagdat$TagRound = 1
+
+    e2tagdat$Rel_group <- NULL
+    e2tagdat$Notes <- NULL
+    e2tagdat$OrderID <- NULL
+
+    e2tagdat$Expt = 2
+
+
+# e3tagdat7 = read.csv("/Users/Anna/Documents/ResearchGit/DStagging/rawData/Tags_Morts/Expt3_DSsublethal_7d_TaggedFishMetadata.csv")
+# 
+#    # add leading 0 back into TagID_Hex
+#    e3tagdat7$TagID_Hex = str_pad(e3tagdat7$TagID_Hex,4, pad="0")
+#   
+#    # check release group names and numbers
+#     table(e3tagdat7$Rel_group, e3tagdat7$DateTagged) # 64 and 70 per group per day -> 134 per treatment
+#     
+#    # change Rel_group to tagging treatment and round
+#     e3tagdat7$Treatment = substr(e3tagdat7$Rel_group, 1,2)
+#      
+#     e3tagdat7$TagRound = NA
+#      for(i in 1:nrow(e3tagdat7)) {
+#        ifelse(e3tagdat7[i,"DateTagged"] == "12/11/23", e3tagdat7[i,"TagRound"] <- 1, e3tagdat7[i,"TagRound"] <-2)
+#        }
+#     e3tagdat7$Rel_group <- NULL
+#     e3tagdat7$Notes <- NULL
+#     e3tagdat7$Tag_placement <- NULL
+#    # e3tagdat7$Tank.Number <- NULL
+#     e3tagdat7$OrderID <- NULL
+#     
+#     e3tagdat7$Expt = 3.1
+# 
+#     
+# e3tagdat30 = read.csv("/Users/Anna/Documents/ResearchGit/DStagging/rawData/Tags_Morts/Expt3_DSsublethal_30d_TaggedFishMetadata.csv")
+# 
+#    # add leading 0 back into TagID_Hex
+#    e3tagdat30$TagID_Hex = str_pad(e3tagdat30$TagID_Hex,4, pad="0")
+#   
+#    # check release group names and numbers
+#     table(e3tagdat30$Rel_group, e3tagdat30$DateTagged) # 64 and 70 per group per day -> 134 per treatment
+#     
+#    # change Rel_group to tagging treatment and round
+#     e3tagdat30$Treatment = substr(e3tagdat30$Rel_group, 1,2)
+#      
+#     e3tagdat30$TagRound = NA
+#      for(i in 1:nrow(e3tagdat30)) {
+#        ifelse(e3tagdat30[i,"DateTagged"] == "12/21/23", e3tagdat30[i,"TagRound"] <- 1, e3tagdat30[i,"TagRound"] <-2)
+#        }
+#     e3tagdat30$Rel_group <- NULL
+#     e3tagdat30$Notes <- NULL
+#     e3tagdat30$Tag_placement <- NULL
+#    # e3tagdat30$Tank.Number <- NULL
+#     e3tagdat30$OrderID <- NULL
+#     
+#     e3tagdat30$Expt = 3.2
+#     
+#
+# # combine the three tagging sessions
+#     dl = list(e1tagdat, e2tagdat, e3tagdat7)#, e3tagdat30)
+#     tagdat = do.call(rbind, dl)
+#     
+#     # tags were reused across experiments, to add an ExptID to the Hex-code to make it unique
+#     tagdat$TagID = paste0(tagdat$TagID_Hex, "-",tagdat$Expt)
+
+e4tagdat = read.csv("/Users/Anna/Documents/ResearchGit/DStagging/rawData/Tags_Morts/Expt4_DStransport_TaggedFishMetadata.csv")
+
+   # add leading 0 back into TagID_Hex
+   e4tagdat$TagID_Hex = str_pad(e4tagdat$TagID_Hex,4, pad="0")
+  
+   # check release group names and numbers
+    table(e4tagdat$Rel_group) # 40-50 per group, with all tagged gtoups including 50 but control groups including fewer; this tracks with the 'tank totals' tallied in another datasheet so perhaps this is good!
+    
+   # change Rel_group to tagging treatment and round
+    e4tagdat$Treatment = e4tagdat$Rel_group
+    e4tagdat$TagRound = 1
+    
+    e4tagdat$Rel_group <- NULL
+    e4tagdat$Notes <- NULL
+    e4tagdat$DrugTime <- NULL
+    e4tagdat$CF <- NULL
+    e4tagdat$SurgTime <- NULL
+    e4tagdat$RecordOfMortality <- NULL
+   
+    e4tagdat$Expt = 4
+  ### only used for checking mort sheet. Not for analysis of survival.   
+```        
+    
+```{r read dat for morts}
+e1morts = read.csv("/Users/Anna/Documents/ResearchGit/DStagging/rawData/Tags_Morts/Expt1_DStagloc_MortRecord.csv")
+ # add leading 0 back into TagID_Hex
+  e1morts$Treatment = e1morts$Rel_group
+  e1morts$TagID_Hex = str_pad(e1morts$TagID_Hex,4, pad="0")
+  e1morts$ReproIndex <- NULL
+  e1morts$ReproNotes <- NULL 
+  e1morts$Rel_group <- NULL 
+  
+  e1morts$TagDate <- as.Date(e1morts$TagDate, format="%m/%d/%y")
+  e1morts$MortDate <- as.Date(e1morts$MortDate, format="%m/%d/%y")
+  e1morts$TankID <- factor(e1morts$TankID, levels=c("AES-1","AES-2","AES-3","AES-4","AES-5","AES-6",
+                                                     "AES-7","AES-8","AES-9","AES-10","AES-11","AES-12"))
+  
+  # remove lines for fish that died after they had shed their tag
+  e1morts = e1morts[!(e1morts$TagID_Hex == "Shed" & e1morts$Treatment=="VT"),]
+  
+  # remove lines for burst fish
+  #e1morts = e1morts[e1morts$ExptMort != "Burst",]
+  
+  # add FC fishID to the mort sheet
+  doub.digs = str_pad(1:99,2, pad="0")
+   e1morts.NT = e1morts %>%
+     filter(Treatment %in% c("FC","HC","LS","VS")) %>%
+     group_by(Treatment) %>%
+     mutate(TagID_Hex = paste0(Treatment, doub.digs[1:n()])) %>%
+     ungroup() %>% data.frame()
+   
+  e1morts.T = filter(e1morts, Treatment %in% c("LT","VT"))
+
+  e1morts = rbind(e1morts.T, e1morts.NT) 
+   e1morts = e1morts[order(e1morts$Number),]
+   
+  e1morts$EventTime = as.numeric(difftime(e1morts$MortDate, e1morts$TagDate, units="days")) 
+   
+e1morts.ns = filter(e1morts, !(Number=="shed" | Number=="shed/burst"))    
+   
+## manually added burst fish into the mortality datasheet; pulled tagIDs from the scanned datasheets. There were two burst fish (VT) that had shed their tags so I assigned them the tagIDs that were missing (ie: in the tagging dataframe but not in the mort dataframe)
+   
+### e1morts is complete - all fish tagged and used for survival analysis are present!!!!!
+   
+   # Tagging data indicated 60 tagged for each group (44 for survival, 16 for burst) but the tank counts indicate only 59 went into FC tanks and 58 into HC tanks. This is what is in the e1morts sheet that we will analyze. 
+   
+   
+
+
+
+e2morts = read.csv("/Users/Anna/Documents/ResearchGit/DStagging/rawData/Tags_Morts/Expt2_DStemp_MortRecord.csv")
+ # add leading 0 back into TagID_Hex
+  e2morts$Treatment = e2morts$Rel_group
+  e2morts$TagID_Hex = str_pad(e2morts$TagID_Hex,4, pad="0")
+  e2morts$ReproIndex <- NULL
+  e2morts$ReproNotes <- NULL
+  e2morts$Rel_group <- NULL 
+  
+  e2morts$TagDate <- as.Date(e2morts$TagDate, format="%m/%d/%y")
+  e2morts$MortDate <- as.Date(e2morts$MortDate, format="%m/%d/%y")
+  e2morts$TankID <- factor(e2morts$TankID, levels=c("AES-3","AES-4","AES-9","AES-10"))
+  
+  e2morts$EventTime = as.numeric(difftime(e2morts$MortDate, e2morts$TagDate, units="days")) 
+  
+ 
+ 
+# e3morts7 = read.csv("/Users/Anna/Documents/ResearchGit/DStagging/rawData/Tags_Morts/Expt3_DSsublethal_7d_MortRecord.csv")
+#  # add leading 0 back into TagID_Hex
+#  e3morts7$TagID_Hex = str_pad(e3morts7$TagID_Hex,4, pad="0")
+#  e3morts7$ReproNotes <- NULL 
+#  
+# e3morts30 = read.csv("/Users/Anna/Documents/ResearchGit/DStagging/rawData/Tags_Morts/Expt3_DSsublethal_30d_MortRecord.csv")
+#  # add leading 0 back into TagID_Hex
+#  e3morts30$TagID_Hex = str_pad(e3morts30$TagID_Hex,4, pad="0")
+#  e3morts30$ReproNotes <- NULL 
+ 
+
+e4morts = read.csv("/Users/Anna/Documents/ResearchGit/DStagging/rawData/Tags_Morts/Expt4_DStransport_MortRecord.csv")
+ # add leading 0 back into TagID_Hex
+  e4morts$Treatment = e4morts$Rel_group
+  e4morts$TagID_Hex = str_pad(e4morts$TagID_Hex,4, pad="0")
+  e4morts$ReproNotes <- NULL 
+  e4morts$Rel_group <- NULL 
+  
+  e4morts$TagDate <- as.Date(e4morts$TagDate, format="%m/%d/%y")
+  e4morts$MortDate <- as.Date(e4morts$MortDate, format="%m/%d/%y")
+  e4morts$TankID <- factor(e4morts$TankID, levels=c("DS 5-1","CAGE1","CAGE2"))
+   
+  e4morts$EventTime = as.numeric(difftime(e4morts$MortDate, e4morts$TagDate, units="days")) 
+   
+```
+
+### Take a quick look at the distribution of variables
+```{r quick visualization of survival}
+ggplot(e1morts, aes(x=ExptMort)) + geom_bar(fill="steelblue3", color="black") + theme_bw()
+ggplot(e1morts, aes(x=Treatment)) + geom_bar(fill="steelblue3", color="black") + theme_bw()
+ggplot(e1morts, aes(x=TagDate)) + geom_bar(fill="steelblue3", color="black") + theme_bw()
+ggplot(filter(e1morts, ExptMort=="Natural"), aes(x=MortDate) ) + 
+  geom_histogram(stat="count", fill="steelblue3", color="black") + theme_bw()
+ggplot(e1morts, aes(x=Mort_FL_mm, y=Mort_Mass_g)) + 
+  geom_point(pch=21, fill="steelblue3", color="black") + 
+  facet_wrap(~Sex) + theme_bw()
+ggplot(e1morts, aes(x=Mort_FL_mm, y=Mort_Mass_g)) + 
+  geom_point(pch=21, fill="steelblue3", color="black") + 
+  facet_wrap(~ExptMort) + theme_bw()
+
+
+ggplot(e2morts, aes(x=ExptMort)) + geom_bar(fill="steelblue3", color="black") + theme_bw()
+ggplot(e2morts, aes(x=Treatment)) + geom_bar(fill="steelblue3", color="black") + theme_bw()
+ggplot(e2morts, aes(x=TagDate)) + geom_bar(fill="steelblue3", color="black") + theme_bw()
+ggplot(filter(e2morts, ExptMort=="Natural"), aes(x=MortDate) ) + 
+  geom_histogram(stat="count", fill="steelblue3", color="black") + theme_bw()
+ggplot(e2morts, aes(x=Mort_FL_mm, y=Mort_Mass_g)) + 
+  geom_point(pch=21, fill="steelblue3", color="black") + 
+  facet_wrap(~Sex) + theme_bw()
+ggplot(e2morts, aes(x=Mort_FL_mm, y=Mort_Mass_g)) + 
+  geom_point(pch=21, fill="steelblue3", color="black") + 
+  facet_wrap(~ExptMort) + theme_bw()
+
+
+
+ggplot(e4morts, aes(x=ExptMort)) + geom_bar(fill="steelblue3", color="black") + theme_bw()
+ggplot(e4morts, aes(x=Treatment)) + geom_bar(fill="steelblue3", color="black") + theme_bw()
+ggplot(e4morts, aes(x=TagDate)) + geom_bar(fill="steelblue3", color="black") + theme_bw()
+ggplot(filter(e4morts, ExptMort=="Natural"), aes(x=MortDate) ) + 
+  geom_histogram(stat="count", fill="steelblue3", color="black") + theme_bw()
+ggplot(e4morts, aes(x=Mort_FL_mm, y=Mort_Mass_g)) + 
+  geom_point(pch=21, fill="steelblue3", color="black") + 
+  facet_wrap(~Sex) + theme_bw()
+ggplot(e4morts, aes(x=Mort_FL_mm, y=Mort_Mass_g)) + 
+  geom_point(pch=21, fill="steelblue3", color="black") + 
+  facet_wrap(~ExptMort) + theme_bw()
+
+```
+
+### Run survival models on the dataset  
+I want to fit a model that will describe the liklihood of mortality through time (hazard), and test whether the treatment group (one of 6) describes differences in the hazard rate. Because we had two tanks of fish per treatment, we should also consider the random effect of tank ID, and perhaps a random effect of tagging day - these two random effects are somehow related (crossed?) so I may need to think carefully about how to specify them. 
+  
+We will also have issues because we have a subset of fish that shed thier tags but we didn't find the shed tag, so we don't know when they 'died'. The Shad paper we are modeling this after didn't have that problem, so considered all shed tags as morts. We could exclude the shed tags from the survival analysis, and conduct a second analysis on shed tag rate if necessary? It's so clear I'm not sure that we need to do anything fancy there. But will it cause problems to remove all shed tags from the analysis all together? 
+```{r survival package expt1}
+
+e1moddat = e1morts.ns[,c("TagID_Hex","TankID","TagDate","Treatment","TankID","Sex","EventTime","ExptMort")]
+ e1moddat[e1moddat$ExptMort=="Burst","ExptMort"] <- "Euth"
+ e1moddat$Treatment = factor(e1moddat$Treatment, levels=c("FC","HC","VS","LS","VT","LT"))
+ 
+m1 = coxph(Surv(EventTime, ExptMort=="Natural") ~ Treatment, e1moddat)
+ summary(m1)
+ anova(m1) # no effect of treatment 
+
+ 
+ # we can add tagging day as a stratified variable ('Stratified Cox model'); this compares individuals tagge on the same day to one another to compute the partial likelihood, then sum across strata for the final results. The examples usually use this as differences in an enrolling institutaion, but here it can account for differences in surgeons etc between days as well as differences in tanks since all fish from one day for one treatment were put into the same tank. 
+m2 = coxph(Surv(EventTime, ExptMort=="Natural") ~ Treatment + strata(TagDate), e1moddat)
+ summary(m2)
+ anova(m2) # no effect of treatment 
+
+ 
+# use survfit() to plot predicted survival curves: 
+ preddat = expand.grid(Treatment = sort(unique(e1moddat$Treatment)), TagDate = unique(e1moddat$TagDate))
+ 
+ m1curve = survfit(m1, newdata = data.frame(Treatment = c("FC","HC","VS","LS","VT","LT")))
+  dim(m1curve)
+ m2curve = survfit(m2, newdata = preddat)
+  dim(m2curve)
+
+ plot(m1curve, xlab="Days Post Tagging", ylab="Survival",
+      col=c("black","grey50","seagreen","green3","steelblue2","royalblue"), lwd=2)  
+ #legend(2,.5, c(unique(e1moddat$Treatment)),
+ #        col=c("black","grey50","seagreen","green3","steelblue2","royalblue"), lwd=2)
+ #abline(a=.8, b=0, col="red", lty=2)
+ # 
+ # plot(m2curve, xlab="Days Post Tagging", ylab="Survival",
+ #      col=c("black","grey50","seagreen","green3","steelblue2","royalblue"), 
+ #      lty = c(rep(1:2, each=6)), lwd=2)  
+ # legend(2,.5, paste0(sort(unique(e1moddat$TankID)), "-", rep(c("FC","HC","LS","VS","LT","VT"),2)),
+ #        col=c("black","grey50","seagreen","green3","steelblue2","royalblue"), 
+ #      lty = c(rep(1:2, each=6)), lwd=2)
+ # abline(a=.54, b=0, col="red",lty=2)
+  
+predictedPlotDat.m1 = data.frame(DPT = rep(m1curve[1]$time,6), 
+                   #Treatment = rep(c("FC","HC","VS","LS","VT","LT"), each=19), 
+                   Treatment = rep(m1curve$newdata$Treatment, each=19), 
+                   PredSurv = c(m1curve$surv[1:19,1], m1curve$surv[1:19,2], m1curve$surv[1:19,3], 
+                                m1curve$surv[1:19,4], m1curve$surv[1:19,5], m1curve$surv[1:19,6]), 
+                   CumMort = c(m1curve$cumhaz[,1], m1curve$cumhaz[,2], m1curve$cumhaz[,3],
+                               m1curve$cumhaz[,4], m1curve$cumhaz[,5], m1curve$cumhaz[,6]))
+
+ggplot(predictedPlotDat.m1, aes(x=DPT, y=PredSurv, color=Treatment, group=Treatment)) + 
+  geom_line() + 
+  coord_cartesian(y=c(0.2,1.01)) + 
+  xlab("Days Post Tagging") + 
+  scale_y_continuous(name="Predicted Survival", 
+                     labels = paste0(seq(.2,1,.2)*100,"%"), breaks = seq(.2,1,.2)) + 
+  scale_color_discrete(labels=c("Full Control","Handling Control",
+                                "Lateral Sham","Lateral Tag",
+                                "Ventral Sham","Ventral Tag"))+ 
+  ggtitle("Cox Proportional Hazard Model - time-invariant survival") +
+  theme_bw()
+ 
+ 
+ 
+# "The simplifying aspects of the Cox model that make is so useful are exactly those that should be verified, namely proportional hazards [what is this? checked by the zp.m1 output], additivity [vs interactions? not relevant for single variable model], linearity [not relevant for factor-only models], and lack of any high leverage points. The first can be checked with the cox.zph function" from the vignette on survival curves (survival package)
+ zp.m1 = cox.zph(m1)
+ zp.m1 
+ plot(zp.m1, resid=TRUE)
+ abline(coef(m1)[2] ,0, lty=3) 
+ # If proporitional hazard holds we would expect the fitted line to be horizontal, i.e., β(t) is constant.
+ 
+ zp.m2 = cox.zph(m2)
+ zp.m2 # good I think? 
+ plot(zp.m2, resid=TRUE)
+ abline(coef(m2) ,0, lty=3) 
+ 
+```
+## these models don't quite capture the trends we see in the raw data; I think this is because they are assuming proportional hazards (ie: death rate is contant over time). But in tagging studies, this is not the case because of the stress-process and healing-process. So I think we need to create an additional variable that accounts for changing hazard with time-since-tagging. According to the vignette, it's not as simple as adding an interacting time variable on the right hand side of the equation. I've followed thier recommended approach in the following chunk: 
+
+```{r models with time-varying hazard expt 1}
+dtime <- unique(e1moddat$EventTime[e1moddat$ExptMort=="Natural"]) # unique times of mortality
+e1moddat3 <- survSplit(Surv(EventTime, ExptMort=="Natural") ~ Treatment + 
+                         TagDate + Sex + TankID + TagID_Hex, 
+                      data = e1moddat, cut=dtime)
+ # adds rows for all the observation points where the fish were Alive (only selects an observation point if there were mortalities; I don't think it matters but if I wanted I could likely change the code to add a point for every day). Also converts the ExptMort to 'event' where a value of 1 corresponds with a Natural Mort and 0 corresponds with alive.
+# Ah-ha. This function converts the dataframe to include a row for tstart=t to EventTime=t+1 for every fish that is still alive at time t. Then the EventTime column is representing a single day timestep, and whether or not the mortality happens during that time step. 
+
+m3 <- coxph(Surv(tstart, EventTime, event) ~ Treatment, e1moddat3) 
+ # The vignette has EventTime on the right side, but I dropped this and got slightly different results than in m1 
+m3curve = survfit(m3, newdata = preddat)
+  dim(m3curve)
+
+ plot(m3curve, col=1:6, xlab="Days Post Tagging", ylab="Survival", lwd=2)  # IDENTICAL to m1
+ 
+ 
+ m4 <- coxph(Surv(tstart, EventTime, event) ~ Treatment:EventTime, e1moddat3) 
+ # This follows the vignette with EventTime on the right side as an interaction (excluding lower order variables) which should let the daily mortality rate vary (ie: slower deaths after first 14 days, etc) and should let the change in the daily rate vary by treatment (ie: recovery takes longer after surgery than handling, so should see a longer tail of mortality)
+ m4
+
+# m4curve = survfit(m4, newdata = preddat) # throws error because no lower-order effects
+
+
+   
+ 
+
+
+m5 <- coxph(Surv(tstart, EventTime, event) ~ Treatment*EventTime, e1moddat3) 
+
+ preddat5 = expand.grid(Treatment=c("FC","HC","LS","VS","LT","VT"),
+                        EventTime = 1:30, event=0:1)
+ preddat5$tstart = preddat5$EventTime-1
+ 
+ m5curve = survfit(m5, newdata = preddat5) 
+ 
+# can't get this to work either  
+#preddat5$predict = predict(object = m4, type="expected") # this 'type' will give us the number of expected mortality events at each time point within each treatment
+
+predictedPlotDat.m5 = data.frame(DPT = rep(m5curve[1]$time,6), 
+                   #Treatment = rep(c("FC","HC","VS","LS","VT","LT"), each=19), 
+                   Treatment = rep(m5curve$newdata$Treatment, each=19), 
+                   PredSurv = c(m5curve$surv[1:19,1], m5curve$surv[1:19,2], m5curve$surv[1:19,3], 
+                                m5curve$surv[1:19,4], m5curve$surv[1:19,5], m5curve$surv[1:19,6]), 
+                   lower95Surv = c(m5curve$lower[,1], m5curve$lower[,2], m5curve$lower[,3],
+                               m5curve$lower[,4], m5curve$lower[,5], m5curve$lower[,6]),
+                   upper95Surv = c(m5curve$upper[,1], m5curve$upper[,2], m5curve$upper[,3],
+                               m5curve$upper[,4], m5curve$upper[,5], m5curve$upper[,6]) )
+
+ggplot(predictedPlotDat.m5, aes(x=DPT, y=PredSurv, color=Treatment, group=Treatment)) + 
+  #geom_ribbon(aes(ymin=lower95Surv, ymax=upper95Surv, fill=Treatment), alpha=.1, lwd=.1) + 
+  geom_line(lwd=1.5) + 
+  coord_cartesian(y=c(0.2,1.01)) + 
+  xlab("Days Post Tagging") + 
+  scale_y_continuous(name="Predicted Survival", 
+                     labels = paste0(seq(.2,1,.2)*100,"%"), breaks = seq(.2,1,.2)) + 
+  scale_color_discrete(labels=c("Full Control","Handling Control",
+                                "Lateral Sham","Ventral Sham","Lateral Tag",
+                                 "Ventral Tag"))+ 
+  ggtitle("Cox Proportional Hazard Model - time-variable survival by treatment - Expt1") +
+  theme_bw()
+ 
+summary(m5)
+
+```
+
+### Another issue discussed in the vignette is the issue of tied events (ie: two fish die on the same day). The library gives three ways to deal with ties: 1) breslow approximation - ignores ties...those who die count toward the 'available fish' when calculating the death probabilities of others; 2) efron approximation - coarsens the continuous time scale, assuming measurements are made at longer intervals (monthly, daily) and thus ties do not actually occur but are observed that way, so the method uses weighting to adjust for this; 3) 'exact partial likelihood due to Cox' which treats underlying time scale as discrete and can become comuptationally intensive if there are 2% or more ties at a given time point (we have 10% ties in our dataset), with the problem becoming worse on tstart-tstop data analyses. 
+### Efron is the default, and is the one I'd pick anyway. 
+
+
+```{r models with time-varying hazard expt 2}
+
+e2moddat = e2morts[,c("TagID_Hex","TagDate","Treatment","Sex","EventTime","ExptMort")]
+ e2moddat$Treatment = factor(e2moddat$Treatment, levels=c("12C","12T","16C","16T"))
+ 
+ dtime <- unique(e2moddat$EventTime[e2moddat$ExptMort=="Natural"]) # unique times of mortality
+ dtime.all = 1:14
+ e2moddatT <- survSplit(Surv(EventTime, ExptMort=="Natural") ~ Treatment + Sex + TagID_Hex, 
+                      data = e2moddat, cut=dtime.all)
+# This function converts the dataframe to include a row for tstart=t to EventTime=t+1 for every fish that is still alive at time t. Then the EventTime column is representing a single day timestep, and whether or not the mortality happens during that time step. Also converts the ExptMort to 'event' where a value of 1 corresponds with a Natural Mort and 0 corresponds with alive.
+ 
+ 
+ 
+#### models for all treatments in tank, compared to HC as baseline ####
+ 
+m1.e2 <- coxph(Surv(tstart, EventTime, event) ~ Treatment, e2moddatT) 
+ m1.e2
+ 
+ preddat.e2T = expand.grid(Treatment = sort(unique(e2moddatT$Treatment)))
+
+ m1.e2curveT= survfit(m1.e2, newdata = preddat.e2T)
+  dim(m1.e2curveT)
+
+ plot(m1.e2curveT, col=1:4, xlab="Days Post Tagging", ylab="Survival", lwd=2)  
+ 
+ 
+ 
+m5.e2 <- coxph(Surv(tstart, EventTime, event) ~ Treatment*EventTime, e2moddatT) 
+ m5.e2
+
+ preddat5.e2T = expand.grid(Treatment=sort(unique(e2moddatT$Treatment)),
+                        EventTime = 1:14)#, event=0:1)
+ preddat5.e2T$tstart = preddat5.e2T$EventTime-1
+ 
+ m5.e2curveT = survfit(m5.e2, newdata = preddat5.e2T) 
+  str(m5.e2curveT) # 1:14, 1:120
+  ndays = 14
+  
+ plot(m5.e2curveT, col=1:4, xlab="Days Post Tagging", ylab="Survival", lwd=2)  
+ 
+## can't get automated predictions to work here 
+ e2moddatT$expected.pred = predict(object = m5.e2, type="expected", se.fit=F) 
+  e2moddatT$survprob.pred = exp(-e2moddatT$expected.pred)
+ plotdat.m5.e2 = unique(e2moddatT[,c("Treatment","tstart","EventTime","survprob.pred")])
+  
+T12 = filter(e2moddatT, Treatment=="12T")
+C12 = filter(e2moddatT, Treatment=="12C")
+T16 = filter(e2moddatT, Treatment=="16T")
+C16 = filter(e2moddatT, Treatment=="16C")
+  
+T12$Nsurv50.pred[1] <- 24
+for(i in 2:nrow(T12)) { T12$Nsurv50.pred[i] <- T12$Nsurv50.pred[i-1] * T12$survprob.pred[i] } 
+ggplot(T12, aes(c=EventTime))
+  
+ ######### this may be the key???
+ 
+ 
+ 
+## brute force: 
+predictedPlotDat.m5.e2T = data.frame(DPT = rep(m5.e2curveT[1]$time,4), 
+                   Treatment = rep(m5.e2curveT$newdata$Treatment, each=10), 
+                   PredSurv = c(m5.e2curveT$surv[1:ndays,1], m5.e2curveT$surv[1:ndays,2],
+                                m5.e2curveT$surv[1:ndays,3], 
+m5.e2curveT$surv[1:ndays,4]), 
+                   lower95Surv = c(m5.e2curveT$lower[,1], m5.e2curveT$lower[,2], m5.e2curveT$lower[,3],
+                               m5.e2curveT$lower[,4]),
+                   upper95Surv = c(m5.e2curveT$upper[,1], m5.e2curveT$upper[,2], m5.e2curveT$upper[,3],
+                               m5.e2curveT$upper[,4]) )
+
+ggplot(predictedPlotDat.m5.e2T, aes(x=DPT, y=PredSurv, color=Treatment, group=Treatment)) + 
+  #geom_ribbon(aes(ymin=lower95Surv, ymax=upper95Surv, fill=Treatment), alpha=.1, lwd=.1) + 
+  geom_line(lwd=1.5) + 
+ # coord_cartesian(y=c(0.2,1.01)) + 
+  xlab("Days Post Tagging") + 
+  scale_y_continuous(name="Predicted Survival", 
+                     labels = paste0(seq(.2,1,.2)*100,"%"), breaks = seq(.2,1,.2)) + 
+ # scale_color_discrete(labels=c("Handling Control","Handling Tagged",
+ #                               "Transport Control","Transport Tagged"))+ 
+  ggtitle("Cox Proportional Hazard Model - time-variable survival by treatment - Expt2") +
+  theme_bw()
+ 
+###### DOESN'T WORK ########
+
+```
+
+
+```{r models with time-varying hazard expt 4}
+
+e4moddat = e4morts[,c("TagID_Hex","TagDate","Treatment","Sex","EventTime","ExptMort")]
+ e4moddat$Treatment = factor(e4moddat$Treatment, levels=c("HC","HT","TC","TT","CC","CT"))
+ 
+ e4moddat.tank = filter(e4moddat, Treatment %in% c("HC","HT","TC","TT"))
+  e4moddat.tank$Treatment = factor(e4moddat.tank$Treatment, levels=c("HC","HT","TC","TT"))
+ e4moddat.transport = filter(e4moddat, Treatment %in% c("TC","TT"))
+  e4moddat.transport$Treatment = factor(e4moddat.transport$Treatment, levels = c("TC","TT")) 
+ e4moddat.handling = filter(e4moddat, Treatment %in% c("HC","HT"))
+   e4moddat.handling$Treatment = factor(e4moddat.handling$Treatment, levels = c("HC","HT"))
+   
+ dtime <- unique(e4moddat.tank$EventTime[e4moddat$ExptMort=="Natural"]) # unique times of mortality
+ e4moddatT <- survSplit(Surv(EventTime, ExptMort=="Natural") ~ Treatment + Sex + TagID_Hex, 
+                      data = e4moddat.tank, cut=dtime)
+ e4moddatT.transp <- survSplit(Surv(EventTime, ExptMort=="Natural") ~ Treatment + Sex + TagID_Hex, 
+                      data = e4moddat.transport, cut=dtime)
+ e4moddatT.hand <- survSplit(Surv(EventTime, ExptMort=="Natural") ~ Treatment + Sex + TagID_Hex, 
+                      data = e4moddat.handling, cut=dtime)
+# This function converts the dataframe to include a row for tstart=t to EventTime=t+1 for every fish that is still alive at time t. Then the EventTime column is representing a single day timestep, and whether or not the mortality happens during that time step. Also converts the ExptMort to 'event' where a value of 1 corresponds with a Natural Mort and 0 corresponds with alive.
+
+ 
+#### models for all treatments in tank, compared to HC as baseline ####
+ 
+m1.e4 <- coxph(Surv(tstart, EventTime, event) ~ Treatment, e4moddatT) 
+ m1.e4
+ 
+ preddat.e4T = expand.grid(Treatment = sort(unique(e4moddatT$Treatment)))
+
+ m1.e4curveT= survfit(m1.e4, newdata = preddat.e4T)
+  dim(m1.e4curveT)
+
+ plot(m1.e4curveT, col=1:4, xlab="Days Post Tagging", ylab="Survival", lwd=2)  
+ 
+m5.e4 <- coxph(Surv(tstart, EventTime, event) ~ Treatment*EventTime, e4moddatT) 
+ m5.e4 # no significance, but close for HT
+
+ preddat5.e4T = expand.grid(Treatment=sort(unique(e4moddatT$Treatment)),
+                        EventTime = 1:30)#, event=0:1)
+ preddat5.e4T$tstart = preddat5.e4T$EventTime-1
+ 
+ m5.e4curveT = survfit(m5.e4, newdata = preddat5.e4T) 
+  str(m5.e4curveT) # 1:23, 1:120
+  
+ plot(m5.e4curveT, col=1:4, xlab="Days Post Tagging", ylab="Survival", lwd=2)  
+ 
+## can't get automated predictions to work here 
+ trash = predict(object = m5.e4, type="expected") # this 'type' will give us the number of expected mortality events at each time point within each treatment, However the predict results in 4609 numbers, and it's unclear how these relate to the treatment conditions. =/ 
+ 
+## brute force: 
+predictedPlotDat.m5.e4T = data.frame(DPT = rep(m5.e4curveT[1]$time,4), 
+                   Treatment = rep(m5.e4curveT$newdata$Treatment, each=23), 
+                   PredSurv = c(m5.e4curveT$surv[1:23,1], m5.e4curveT$surv[1:23,2], m5.e4curveT$surv[1:23,3], 
+                                m5.e4curveT$surv[1:23,4]), 
+                   lower95Surv = c(m5.e4curveT$lower[,1], m5.e4curveT$lower[,2], m5.e4curveT$lower[,3],
+                               m5.e4curveT$lower[,4]),
+                   upper95Surv = c(m5.e4curveT$upper[,1], m5.e4curveT$upper[,2], m5.e4curveT$upper[,3],
+                               m5.e4curveT$upper[,4]) )
+
+ggplot(predictedPlotDat.m5.e4T, aes(x=DPT, y=PredSurv, color=Treatment, group=Treatment)) + 
+  #geom_ribbon(aes(ymin=lower95Surv, ymax=upper95Surv, fill=Treatment), alpha=.1, lwd=.1) + 
+  geom_line(lwd=1.5) + 
+ # coord_cartesian(y=c(0.2,1.01)) + 
+  xlab("Days Post Tagging") + 
+  scale_y_continuous(name="Predicted Survival", 
+                     labels = paste0(seq(.2,1,.2)*100,"%"), breaks = seq(.2,1,.2)) + 
+  scale_color_discrete(labels=c("Handling Control","Handling Tagged",
+                                "Transport Control","Transport Tagged"))+ 
+  ggtitle("Cox Proportional Hazard Model - time-variable survival by treatment - Expt4") +
+  theme_bw()
+ 
+###### DOESN'T WORK ########
+
+
+#### models for transport treatments only ####
+ 
+m1b.e4 <- coxph(Surv(tstart, EventTime, event) ~ Treatment, e4moddatT.transp) 
+ m1b.e4
+ 
+ preddat.m1b.e4T = expand.grid(Treatment = sort(unique(e4moddatT.transp$Treatment)))
+
+ m1b.e4curveT= survfit(m1b.e4, newdata = preddat.m1b.e4T)
+  dim(m1b.e4curveT)
+
+ plot(m1b.e4curveT, col=1:4, xlab="Days Post Tagging", ylab="Survival", lwd=2)  
+ 
+m5b.e4 <- coxph(Surv(tstart, EventTime, event) ~ Treatment*EventTime, e4moddatT.transp) 
+ m5b.e4 
+
+ preddat5b.e4T = expand.grid(Treatment=sort(unique(e4moddatT.transp$Treatment)),
+                        EventTime = 1:30)#, event=0:1)
+ preddat5b.e4T$tstart = preddat5b.e4T$EventTime-1
+ 
+ m5b.e4curveT = survfit(m5b.e4, newdata = preddat5b.e4T) 
+  str(m5b.e4curveT) # 1:20, 1:60
+  
+ plot(m5b.e4curveT, col=1:2, xlab="Days Post Tagging", ylab="Survival", lwd=2)  
+ 
+ 
+###### DOESN'T WORK ########
+ 
+ 
+#### models for transport treatments only ####
+ 
+m1c.e4 <- coxph(Surv(tstart, EventTime, event) ~ Treatment, e4moddatT.hand) 
+ m1c.e4
+ 
+ preddat.m1c.e4T = expand.grid(Treatment = sort(unique(e4moddatT.hand$Treatment)))
+
+ m1c.e4curveT= survfit(m1c.e4, newdata = preddat.m1c.e4T)
+  dim(m1c.e4curveT)
+
+ plot(m1c.e4curveT, col=1:2, xlab="Days Post Tagging", ylab="Survival", lwd=2)  
+ 
+ 
+m5c.e4 <- coxph(Surv(tstart, EventTime, event) ~ Treatment*EventTime, e4moddatT.hand) 
+ m5c.e4 
+ # warnings when fitting: agreg.fit(...) ran out of itereations and did not converge
+
+ preddat5c.e4T = expand.grid(Treatment=sort(unique(e4moddatT.hand$Treatment)),
+                        EventTime = 1:30)#, event=0:1)
+ preddat5c.e4T$tstart = preddat5c.e4T$EventTime-1
+ 
+ m5c.e4curveT = survfit(m5c.e4, newdata = preddat5c.e4T) 
+  str(m5c.e4curveT) # 1:22, 1:60
+  
+ plot(m5c.e4curveT, col=1:2, xlab="Days Post Tagging", ylab="Survival", lwd=2)  
+ 
+ 
+###### DOESN'T WORK ########
+```
+

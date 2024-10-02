@@ -1,0 +1,1027 @@
+---
+title: "Survival Analysis All DS 2023-24 Expts"
+author: "Anna Steel"
+date: "2024-09-20"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(patchwork)
+library(lme4)
+library(MuMIn)
+
+library(survival)
+library(coxme)
+library(rstatix)
+library(viridis)
+
+```
+
+
+## Read in data
+```{r read in tagging dat}
+# 
+# e1tagdat = read.csv("/Users/Anna/Documents/ResearchGit/DStagging/rawData/Tags_Morts/Expt1_DStagloc_TaggedFishMetadata.csv")
+# 
+#    # add leading 0 back into TagID_Hex
+#    e1tagdat$TagID_Hex = str_pad(e1tagdat$TagID_Hex,4, pad="0")
+# 
+#    # check release group names and numbers
+#     table(e1tagdat$Rel_group) # 30 per group (eg: FC and FC2) -> 60 per treatment
+# 
+#    # change Rel_group to tagging treatment and round
+#     e1tagdat$Treatment = substr(e1tagdat$Rel_group, 1,2)
+#     e1tagdat$TagRound = substr(str_pad(e1tagdat$Rel_group, 3,
+#                                       pad="1", side="right"), 3,3)
+#     e1tagdat$Rel_group <- NULL
+#     e1tagdat$Notes <- NULL
+#     e1tagdat$DrugTime <- NULL
+#     e1tagdat$CF <- NULL
+#     e1tagdat$SurgTime <- NULL
+#     e1tagdat$RecordOfMortality <- NULL
+# 
+#     e1tagdat$Expt = 1
+#   ### only used for checking mort sheet. Not for analysis of survival.
+
+
+e2tagdat = read.csv("/Users/Anna/Documents/ResearchGit/DStagging/rawData/Tags_Morts/Expt2_DStemp_TaggedFishMetadata.csv")
+
+   # add leading 0 back into TagID_Hex
+   e2tagdat$TagID_Hex = str_pad(e2tagdat$TagID_Hex,4, pad="0")
+
+   # check release group names and numbers
+    table(e2tagdat$Rel_group) # 24 per group
+
+   # change Rel_group to temperature treatment and round
+    e2tagdat$Treatment = e2tagdat$Rel_group
+
+    e2tagdat$TagRound = 1
+
+    e2tagdat$Rel_group <- NULL
+    e2tagdat$Notes <- NULL
+    e2tagdat$OrderID <- NULL
+
+    e2tagdat$Expt = 2
+
+
+# e3tagdat7 = read.csv("/Users/Anna/Documents/ResearchGit/DStagging/rawData/Tags_Morts/Expt3_DSsublethal_7d_TaggedFishMetadata.csv")
+# 
+#    # add leading 0 back into TagID_Hex
+#    e3tagdat7$TagID_Hex = str_pad(e3tagdat7$TagID_Hex,4, pad="0")
+#   
+#    # check release group names and numbers
+#     table(e3tagdat7$Rel_group, e3tagdat7$DateTagged) # 64 and 70 per group per day -> 134 per treatment
+#     
+#    # change Rel_group to tagging treatment and round
+#     e3tagdat7$Treatment = substr(e3tagdat7$Rel_group, 1,2)
+#      
+#     e3tagdat7$TagRound = NA
+#      for(i in 1:nrow(e3tagdat7)) {
+#        ifelse(e3tagdat7[i,"DateTagged"] == "12/11/23", e3tagdat7[i,"TagRound"] <- 1, e3tagdat7[i,"TagRound"] <-2)
+#        }
+#     e3tagdat7$Rel_group <- NULL
+#     e3tagdat7$Notes <- NULL
+#     e3tagdat7$Tag_placement <- NULL
+#    # e3tagdat7$Tank.Number <- NULL
+#     e3tagdat7$OrderID <- NULL
+#     
+#     e3tagdat7$Expt = 3.1
+# 
+#     
+# e3tagdat30 = read.csv("/Users/Anna/Documents/ResearchGit/DStagging/rawData/Tags_Morts/Expt3_DSsublethal_30d_TaggedFishMetadata.csv")
+# 
+#    # add leading 0 back into TagID_Hex
+#    e3tagdat30$TagID_Hex = str_pad(e3tagdat30$TagID_Hex,4, pad="0")
+#   
+#    # check release group names and numbers
+#     table(e3tagdat30$Rel_group, e3tagdat30$DateTagged) # 64 and 70 per group per day -> 134 per treatment
+#     
+#    # change Rel_group to tagging treatment and round
+#     e3tagdat30$Treatment = substr(e3tagdat30$Rel_group, 1,2)
+#      
+#     e3tagdat30$TagRound = NA
+#      for(i in 1:nrow(e3tagdat30)) {
+#        ifelse(e3tagdat30[i,"DateTagged"] == "12/21/23", e3tagdat30[i,"TagRound"] <- 1, e3tagdat30[i,"TagRound"] <-2)
+#        }
+#     e3tagdat30$Rel_group <- NULL
+#     e3tagdat30$Notes <- NULL
+#     e3tagdat30$Tag_placement <- NULL
+#    # e3tagdat30$Tank.Number <- NULL
+#     e3tagdat30$OrderID <- NULL
+#     
+#     e3tagdat30$Expt = 3.2
+#     
+#
+# # combine the three tagging sessions
+#     dl = list(e1tagdat, e2tagdat, e3tagdat7)#, e3tagdat30)
+#     tagdat = do.call(rbind, dl)
+#     
+#     # tags were reused across experiments, to add an ExptID to the Hex-code to make it unique
+#     tagdat$TagID = paste0(tagdat$TagID_Hex, "-",tagdat$Expt)
+
+e4tagdat = read.csv("/Users/Anna/Documents/ResearchGit/DStagging/rawData/Tags_Morts/Expt4_DStransport_TaggedFishMetadata.csv")
+
+   # add leading 0 back into TagID_Hex
+   e4tagdat$TagID_Hex = str_pad(e4tagdat$TagID_Hex,4, pad="0")
+  
+   # check release group names and numbers
+    table(e4tagdat$Rel_group) # 40-50 per group, with all tagged gtoups including 50 but control groups including fewer; this tracks with the 'tank totals' tallied in another datasheet so perhaps this is good!
+    
+   # change Rel_group to tagging treatment and round
+    e4tagdat$Treatment = e4tagdat$Rel_group
+    e4tagdat$TagRound = 1
+    
+    e4tagdat$Rel_group <- NULL
+    e4tagdat$Notes <- NULL
+    e4tagdat$DrugTime <- NULL
+    e4tagdat$CF <- NULL
+    e4tagdat$SurgTime <- NULL
+    e4tagdat$RecordOfMortality <- NULL
+   
+    e4tagdat$Expt = 4
+  ### only used for checking mort sheet. Not for analysis of survival.   
+```        
+    
+```{r read dat for morts}
+e1morts = read.csv("/Users/Anna/Documents/ResearchGit/DStagging/rawData/Tags_Morts/Expt1_DStagloc_MortRecord.csv")
+ # add leading 0 back into TagID_Hex
+  e1morts$Treatment = e1morts$Rel_group
+  e1morts$TagID_Hex = str_pad(e1morts$TagID_Hex,4, pad="0")
+  e1morts$ReproIndex <- NULL
+  e1morts$ReproNotes <- NULL 
+  e1morts$Rel_group <- NULL 
+  
+  e1morts$TagDate <- as.Date(e1morts$TagDate, format="%m/%d/%y")
+  e1morts$MortDate <- as.Date(e1morts$MortDate, format="%m/%d/%y")
+  e1morts$TankID <- factor(e1morts$TankID, levels=c("AES-1","AES-2","AES-3","AES-4","AES-5","AES-6",
+                                                     "AES-7","AES-8","AES-9","AES-10","AES-11","AES-12"))
+  
+  # remove lines for fish that died after they had shed their tag
+  e1morts = e1morts[!(e1morts$TagID_Hex == "Shed" & e1morts$Treatment=="VT"),]
+  
+  # remove lines for burst fish
+  #e1morts = e1morts[e1morts$ExptMort != "Burst",]
+  
+  # add FC fishID to the mort sheet
+  doub.digs = str_pad(1:99,2, pad="0")
+   e1morts.NT = e1morts %>%
+     filter(Treatment %in% c("FC","HC","LS","VS")) %>%
+     group_by(Treatment) %>%
+     mutate(TagID_Hex = paste0(Treatment, doub.digs[1:n()])) %>%
+     ungroup() %>% data.frame()
+   
+  e1morts.T = filter(e1morts, Treatment %in% c("LT","VT"))
+
+  e1morts = rbind(e1morts.T, e1morts.NT) 
+   e1morts = e1morts[order(e1morts$Number),]
+   
+  e1morts$EventTime = as.numeric(difftime(e1morts$MortDate, e1morts$TagDate, units="days")) 
+   
+#e1morts.ns = filter(e1morts, !(Number=="shed" | Number=="shed/burst"))    
+   
+## manually added burst fish into the mortality datasheet; pulled tagIDs from the scanned datasheets. There were two burst fish (VT) that had shed their tags so I assigned them the tagIDs that were missing (ie: in the tagging dataframe but not in the mort dataframe)
+   
+### e1morts is complete - all fish tagged and used for survival analysis are present!!!!!
+   
+   # Tagging data indicated 60 tagged for each group (44 for survival, 16 for burst) but the tank counts indicate only 59 went into FC tanks and 58 into HC tanks. This is what is in the e1morts sheet that we will analyze. 
+   
+   
+
+
+
+e2morts = read.csv("/Users/Anna/Documents/ResearchGit/DStagging/rawData/Tags_Morts/Expt2_DStemp_MortRecord.csv")
+ # add leading 0 back into TagID_Hex
+  e2morts$Treatment = e2morts$Rel_group
+  e2morts$TagID_Hex = str_pad(e2morts$TagID_Hex,4, pad="0")
+  e2morts$ReproIndex <- NULL
+  e2morts$ReproNotes <- NULL
+  e2morts$Rel_group <- NULL 
+  
+  e2morts$TagDate <- as.Date(e2morts$TagDate, format="%m/%d/%y")
+  e2morts$MortDate <- as.Date(e2morts$MortDate, format="%m/%d/%y")
+  e2morts$TankID <- factor(e2morts$TankID, levels=c("AES-3","AES-4","AES-9","AES-10"))
+  
+  e2morts$EventTime = as.numeric(difftime(e2morts$MortDate, e2morts$TagDate, units="days")) 
+  
+ 
+
+e3morts7 = read.csv("/Users/Anna/Documents/ResearchGit/DStagging/rawData/Tags_Morts/Expt3_DSsublethal_7d_MortRecord.csv")
+ # add leading 0 back into TagID_Hex
+ e3morts7$TagID_Hex = str_pad(e3morts7$TagID_Hex,4, pad="0")
+ e3morts7$ReproNotes <- NULL
+
+ 
+ 
+e3morts30 = read.csv("/Users/Anna/Documents/ResearchGit/DStagging/rawData/Tags_Morts/Expt3_DSsublethal_30d_MortRecord.csv")
+ # add leading 0 back into TagID_Hex
+ e3morts30$TagID_Hex = str_pad(e3morts30$TagID_Hex,4, pad="0")
+ e3morts30$ReproNotes <- NULL
+ e3morts30$Treatment = e3morts30$Rel_group
+ e3morts30$Rel_group <- NULL 
+  
+
+ 
+e4morts = read.csv("/Users/Anna/Documents/ResearchGit/DStagging/rawData/Tags_Morts/Expt4_DStransport_MortRecord.csv")
+ # add leading 0 back into TagID_Hex
+  e4morts$Treatment = e4morts$Rel_group
+  e4morts$TagID_Hex = str_pad(e4morts$TagID_Hex,4, pad="0")
+  e4morts$ReproNotes <- NULL 
+  e4morts$Rel_group <- NULL 
+  
+  e4morts$TagDate <- as.Date(e4morts$TagDate, format="%m/%d/%y")
+  e4morts$MortDate <- as.Date(e4morts$MortDate, format="%m/%d/%y")
+  e4morts$TankID <- factor(e4morts$TankID, levels=c("DS 5-1","CAGE1","CAGE2"))
+   
+  e4morts$EventTime = as.numeric(difftime(e4morts$MortDate, e4morts$TagDate, units="days")) 
+   
+```
+
+### Take a quick look at the distribution of variables
+```{r quick visualization of survival}
+ggplot(e1morts, aes(x=ExptMort)) + geom_bar(fill="steelblue3", color="black") + theme_bw()
+ggplot(e1morts, aes(x=Treatment)) + geom_bar(fill="steelblue3", color="black") + theme_bw()
+ggplot(e1morts, aes(x=TagDate)) + geom_bar(fill="steelblue3", color="black") + theme_bw()
+ggplot(filter(e1morts, ExptMort=="Natural"), aes(x=MortDate) ) + 
+  geom_histogram(stat="count", fill="steelblue3", color="black") + theme_bw()
+ggplot(e1morts, aes(x=Mort_FL_mm, y=Mort_Mass_g)) + 
+  geom_point(pch=21, fill="steelblue3", color="black") + 
+  facet_wrap(~Sex) + theme_bw()
+ggplot(e1morts, aes(x=Mort_FL_mm, y=Mort_Mass_g)) + 
+  geom_point(pch=21, fill="steelblue3", color="black") + 
+  facet_wrap(~ExptMort) + theme_bw()
+
+
+ggplot(e2morts, aes(x=ExptMort)) + geom_bar(fill="steelblue3", color="black") + theme_bw()
+ggplot(e2morts, aes(x=Treatment)) + geom_bar(fill="steelblue3", color="black") + theme_bw()
+ggplot(e2morts, aes(x=TagDate)) + geom_bar(fill="steelblue3", color="black") + theme_bw()
+ggplot(filter(e2morts, ExptMort=="Natural"), aes(x=MortDate) ) + 
+  geom_histogram(stat="count", fill="steelblue3", color="black") + theme_bw()
+ggplot(e2morts, aes(x=Mort_FL_mm, y=Mort_Mass_g)) + 
+  geom_point(pch=21, fill="steelblue3", color="black") + 
+  facet_wrap(~Sex) + theme_bw()
+ggplot(e2morts, aes(x=Mort_FL_mm, y=Mort_Mass_g)) + 
+  geom_point(pch=21, fill="steelblue3", color="black") + 
+  facet_wrap(~ExptMort) + theme_bw()
+
+
+
+ggplot(e4morts, aes(x=ExptMort)) + geom_bar(fill="steelblue3", color="black") + theme_bw()
+ggplot(e4morts, aes(x=Treatment)) + geom_bar(fill="steelblue3", color="black") + theme_bw()
+ggplot(e4morts, aes(x=TagDate)) + geom_bar(fill="steelblue3", color="black") + theme_bw()
+ggplot(filter(e4morts, ExptMort=="Natural"), aes(x=MortDate) ) + 
+  geom_histogram(stat="count", fill="steelblue3", color="black") + theme_bw()
+ggplot(e4morts, aes(x=Mort_FL_mm, y=Mort_Mass_g)) + 
+  geom_point(pch=21, fill="steelblue3", color="black") + 
+  facet_wrap(~Sex) + theme_bw()
+ggplot(e4morts, aes(x=Mort_FL_mm, y=Mort_Mass_g)) + 
+  geom_point(pch=21, fill="steelblue3", color="black") + 
+  facet_wrap(~ExptMort) + theme_bw()
+
+```
+
+
+### read in the proportions 
+```{r read in ending props}
+# survival
+td = read.csv("/Users/Anna/Documents/ResearchGit/DStagging/rawData/Tags_Morts/ExptAll_TankCounts.csv")
+ td = td %>%
+   group_by(Expt, Treatment, TankID) %>%
+   mutate(Nstart = max(NfishNoShed)) %>%
+   mutate(PropSurv = NfishNoShed/Nstart) %>%
+   ungroup() %>% data.frame() 
+ 
+
+```
+
+### Take a quick look at the distribution of variables
+```{r quick visualization of survival}
+
+colors.tagtreat = c("azure","azure4","coral1","coral4","darkseagreen1","darkseagreen4")
+colors.expt = c("#440154FF", "#31688EFF", "#35B779FF", "#FDE725FF")
+
+
+# location
+ggplot(e1morts, aes(x=ExptMort)) + geom_bar(fill=colors.expt[1], color="black") + theme_bw()
+ggplot(e1morts, aes(x=Treatment)) + geom_bar(fill=colors.expt[1], color="black") + theme_bw()
+ggplot(e1morts, aes(x=TagDate)) + geom_bar(fill=colors.expt[1], color="black") + theme_bw()
+ggplot(filter(e1morts, ExptMort=="Natural"), aes(x=MortDate) ) + 
+  geom_histogram(stat="count", fill=colors.expt[1], color="black") + theme_bw()
+ggplot(e1morts, aes(x=Mort_FL_mm, y=Mort_Mass_g)) + 
+  geom_point(pch=21, fill=colors.expt[1], color="black") + 
+  facet_wrap(~Sex) + theme_bw()
+
+expt1_sizeplot = ggplot(filter(e1morts, ExptMort %in% c("Euth","Natural") & Sex %in% c("M","F")), 
+       aes(x=Mort_FL_mm, y=Mort_Mass_g)) + 
+  geom_point(pch=21, fill=colors.expt[1], color="black") + 
+  facet_grid(Sex~ExptMort, 
+             labeller = labeller(Sex = c("M" = "Male","F" = "Female"),
+                                 ExptMort = c("Natural" = "Mortality","Euth" = "Survival"))) + 
+  coord_cartesian(xlim=c(60,100), ylim=c(1.25,8)) +
+  xlab("Fork Length (mm)") + ylab("Mass (g)") +  theme_bw()
+
+expt1_sizeplot 
+
+# temp
+ggplot(e2morts, aes(x=ExptMort)) + geom_bar(fill=colors.expt[2], color="black") + theme_bw()
+ggplot(e2morts, aes(x=Treatment)) + geom_bar(fill=colors.expt[2], color="black") + theme_bw()
+ggplot(e2morts, aes(x=TagDate)) + geom_bar(fill=colors.expt[2], color="black") + theme_bw()
+ggplot(filter(e2morts, ExptMort=="Natural"), aes(x=MortDate) ) + 
+  geom_histogram(stat="count", fill=colors.expt[2], color="black") + theme_bw()
+ggplot(e2morts, aes(x=Mort_FL_mm, y=Mort_Mass_g)) + 
+  geom_point(pch=21, fill=colors.expt[2], color="black") + 
+  facet_wrap(~Sex) + theme_bw()
+
+expt2_sizeplot = ggplot(filter(e2morts, ExptMort %in% c("Euth","Natural")& Sex %in% c("M","F")), 
+       aes(x=Mort_FL_mm, y=Mort_Mass_g)) + 
+  geom_point(pch=21, fill=colors.expt[2], color="black") + 
+  facet_grid(Sex~ExptMort, 
+             labeller = labeller(Sex = c("M" = "Male","F" = "Female"),
+                                 ExptMort = c("Natural" = "Mortality","Euth" = "Survival"))) + 
+  coord_cartesian(xlim=c(60,100), ylim=c(1.25,8)) +
+  xlab("Fork Length (mm)") + ylab("Mass (g)") +  theme_bw()
+
+expt2_sizeplot
+
+# sublethal
+ggplot(e3morts30, aes(x=ExptMort)) + geom_bar(fill=colors.expt[3], color="black") + theme_bw()
+ggplot(e3morts30, aes(x=Treatment)) + geom_bar(fill=colors.expt[3], color="black") + theme_bw()
+ggplot(e3morts30, aes(x=TagDate)) + geom_bar(fill=colors.expt[3], color="black") + theme_bw()
+ggplot(filter(e3morts30, ExptMort=="Natural"), aes(x=MortDate) ) + 
+  geom_histogram(stat="count", fill=colors.expt[3], color="black") + theme_bw()
+ggplot(e3morts30, aes(x=Mort_FL_mm, y=Mort_mass_g)) + 
+  geom_point(pch=21, fill=colors.expt[3], color="black") + 
+  facet_wrap(~Sex) + theme_bw()
+
+expt3_30_sizeplot = ggplot(filter(e3morts30, ExptMort %in% c("Euth","Natural") & Sex %in% c("M","F")), 
+       aes(x=Mort_FL_mm, y=Mort_mass_g)) + 
+  geom_point(pch=21, fill=colors.expt[3], color="black") + 
+  facet_grid(Sex~ExptMort, 
+             labeller = labeller(Sex = c("M" = "Male","F" = "Female"),
+                                 ExptMort = c("Natural" = "Mortality","Euth" = "Survival"))) + 
+  coord_cartesian(xlim=c(60,100), ylim=c(1.25,8)) +
+  xlab("Fork Length (mm)") + ylab("Mass (g)") +  theme_bw()
+
+expt3_30_sizeplot 
+
+# transport
+ggplot(e4morts, aes(x=ExptMort)) + geom_bar(fill=colors.expt[4], color="black") + theme_bw()
+ggplot(e4morts, aes(x=Treatment)) + geom_bar(fill=colors.expt[4], color="black") + theme_bw()
+ggplot(e4morts, aes(x=TagDate)) + geom_bar(fill=colors.expt[4], color="black") + theme_bw()
+ggplot(filter(e4morts, ExptMort=="Natural"), aes(x=MortDate) ) + 
+  geom_histogram(stat="count", fill=colors.expt[4], color="black") + theme_bw()
+ggplot(e4morts, aes(x=Mort_FL_mm, y=Mort_Mass_g)) + 
+  geom_point(pch=21, fill=colors.expt[4], color="black") + 
+  facet_wrap(~Sex) + theme_bw()
+
+expt4_sizeplot = ggplot(filter(e4morts, ExptMort %in% c("Euth","Natural") & Sex %in% c("M","F")), 
+       aes(x=Mort_FL_mm, y=Mort_Mass_g)) + 
+  geom_point(pch=21, fill=colors.expt[4], color="black") + 
+  facet_grid(Sex~ExptMort, 
+             labeller = labeller(Sex = c("M" = "Male","F" = "Female"),
+                                  ExptMort = c("Natural" = "Mortality","Euth" = "Survival"))) + 
+  coord_cartesian(xlim=c(60,100), ylim=c(1.25,8)) +
+  xlab("Fork Length (mm)") + ylab("Mass (g)") +  theme_bw()
+
+expt4_sizeplot 
+
+expt1_sizeplot + expt2_sizeplot + expt4_sizeplot
+```
+
+
+### chi sq tests
+```{r fisher test expt 1 - placement}
+# Expt 1
+td1 = filter(td, Expt==2)
+td1$Nfish = td1$NfishNoShed; td1$NfishNoShed<-NULL
+td1 = td1 %>%
+  group_by(Treatment, ExptDay)%>%
+  summarize(Nfish = sum(Nfish), Nstart = sum(Nstart)) %>%
+  mutate(PropSurv = Nfish/Nstart) %>%
+  ungroup() %>% data.frame()
+
+chi.td1 = td1 %>%
+  group_by(Treatment, Nstart) %>%
+  summarize(Nend = min(Nfish)) %>%
+  mutate(Nmort = Nstart - Nend) %>%
+  ungroup() %>% data.frame()
+
+ngroup = length(unique(td1$Treatment))
+
+chiplot.td1 = data.frame(Treatment=rep(chi.td1$Treatment, 2),
+                     StartEnd = rep(c("Surv","Mort"), each=ngroup),
+                     Value = c(chi.td1$Nend, chi.td1$Nmort))
+
+ggplot(chiplot.td1, aes(x=Treatment, y=Value, fill=StartEnd)) + 
+  geom_col(color="black") + 
+  scale_fill_manual(values=c("grey80","grey40"))+
+  theme_bw()
+
+
+ft.td1.all = chi.td1[,c("Nend","Nmort")]
+row.names(ft.td1.all) <-  chi.td1$Treatment
+fisher.test(ft.td1.all)
+  # 	Fisher's Exact Test for Count Data
+  # 
+  # data:  ft.td1.all
+  # p-value = 0.139 with shed tags removed
+  # alternative hypothesis: two.sided
+
+pairwise_fisher_test(ft.td1.all, p.adjust.method = "holm") # default correction 
+#   group1 group2     n      p p.adj p.adj.signif
+#  * <chr>  <chr>  <int>  <dbl> <dbl> <chr>       
+#  1 FC     HC        88 0.816  1       ns          
+#  2 FC     LS        88 0.618  1       ns          
+#  3 FC     LT        88 0.073  0.514   ns          
+#  4 FC     VS        88 0.637  1       ns          
+#  5 FC     VT        88 0.225  1.      ns       
+# 10 LS     LT        88 0.0225 0.18    ns           
+# 14 LT     VT        88 0.654  1       ns
+# 15 VS     VT        88 0.485  1.      ns
+
+# only compare FC to all, and LT to VT, and T to S
+p.adjust(p = c(0.8160, 0.6180, 0.0734, 0.637, 0.225, 
+               0.0225, .654, 0.485), method = "holm")
+
+```
+
+```{r fisher test expt 2 - temp}
+# Expt 2
+td2 = filter(td, Expt==1)  
+td2$Nfish = td2$NfishNoShed; td2$NfishNoShed<-NULL
+chi.td2 = td2 %>%
+  group_by(Treatment, Nstart) %>%
+  summarize(Nend = min(Nfish)) %>%
+  mutate(Nmort = Nstart - Nend) %>%
+  ungroup() %>% data.frame()
+
+chiplot.td2 = data.frame(Treatment=rep(chi.td2$Treatment, 2),
+                     StartEnd = rep(c("Surv","Mort"), each=4),
+                     Value = c(chi.td2$Nend, chi.td2$Nmort))
+
+ggplot(chiplot.td2, aes(x=Treatment, y=Value, fill=StartEnd)) + 
+  geom_col(color="black") + 
+  scale_fill_manual(values=c("grey80","grey40"))+
+  theme_bw()
+
+# 
+# chisq.test(chi.td2$Nmort, p = rep(.25,4))
+#     # 	Chi-squared test for given probabilities
+#     # 
+#     # data:  chi.td2$Nmort
+#     # X-squared = 6.75, df = 3, p-value = 0.08031
+
+
+ft.td2.12 = data.frame(Surv= c(21,3), Mort = c(13,11))
+row.names(ft.td2.12) <-  c("Control","Tagged")
+fisher.test(ft.td2.12)
+# Fisher's Exact Test for Count Data
+# 
+# data:  ft.td2.12
+# p-value = 0.0243
+# alternative hypothesis: true odds ratio is not equal to 1
+# 95 percent confidence interval:
+#   1.201458 37.826916
+# sample estimates:
+# odds ratio 
+#   5.698432 
+
+
+ft.td2.16 = data.frame(Surv= c(18,6), Mort = c(12,12))
+row.names(ft.td2.16) <-  c("Control","Tagged")
+fisher.test(ft.td2.16)
+# 	Fisher's Exact Test for Count Data
+# 
+# data:  ft.td2.16
+# p-value = 0.1351
+# alternative hypothesis: true odds ratio is not equal to 1
+# 95 percent confidence interval:
+#   0.7624413 12.4026408
+# sample estimates:
+# odds ratio 
+#     2.9292 
+
+
+ft.td2.temp = data.frame(Surv= c(21,3), Mort = c(18,6))
+row.names(ft.td2.temp) <-  c("T12","T16")
+fisher.test(ft.td2.temp)
+# 	Fisher's Exact Test for Count Data
+# 
+# data:  ft.td2.temp
+# p-value = 0.4614
+# alternative hypothesis: true odds ratio is not equal to 1
+# 95 percent confidence interval:
+#   0.4164258 16.2301674
+# sample estimates:
+# odds ratio 
+#   2.292831
+
+ft.td2.all = chi.td2[,c("Nend","Nmort")]
+row.names(ft.td2.all) <-  chi.td2$Treatment
+fisher.test(ft.td2.all)
+# 	Fisher's Exact Test for Count Data
+# 
+# data:  ft.td2.all
+# p-value = 0.01587
+# alternative hypothesis: two.sided
+
+pairwise_fisher_test(ft.td2.all, p.adjust.method = "holm") # default correction 
+# group1 group2     n      p  p.adj p.adj.signif
+#  12C    12T       48 0.0243 0.122  ns          
+#  12C    16C       48 0.461  0.922  ns         
+#  12T    16T       48 1      1      ns          
+#  16C    16T       48 0.135  0.54   ns 
+#  12T    16C       48 0.227  0.681  ns          
+#  12C    16T       48 0.0114 0.0684 ns   
+
+p.adjust(p = c(0.0243, 0.461, 1.0, 0.135), method = "holm")
+# 0.0972 0.9220 1.0000 0.4050
+
+
+```
+
+```{r fisher test expt 3 - sublethal}
+# Expt 3
+td3 = filter(td, Expt=="3_30")
+td3$Nfish = td3$NfishNoShed; td3$NfishNoShed<-NULL
+td3 = td3 %>%
+  group_by(Treatment, ExptDay)%>%
+  summarize(Nfish = sum(Nfish), Nstart = sum(Nstart)) %>%
+  mutate(PropSurv = Nfish/Nstart) %>%
+  ungroup() %>% data.frame()
+
+chi.td3 = td3 %>%
+  group_by(Treatment, Nstart) %>%
+  summarize(Nend = min(Nfish)) %>%
+  mutate(Nmort = Nstart - Nend) %>%
+  ungroup() %>% data.frame()
+
+ngroup = length(unique(td3$Treatment))
+
+chiplot.td3 = data.frame(Treatment=rep(unique(chi.td3$Treatment), 2),
+                     StartEnd = rep(c("Surv","Mort"), each=ngroup),
+                     N_Fish = c(chi.td3$Nend, chi.td3$Nmort))
+
+ggplot(chiplot.td3, aes(x=Treatment, y=N_Fish, fill=StartEnd)) + 
+  geom_col(color="black") + 
+  scale_fill_manual(values=c("grey80","grey40"))+
+  theme_bw()
+
+
+ft.td3.all = chi.td3[,c("Nend","Nmort")]
+row.names(ft.td3.all) <-  chi.td3$Treatment
+fisher.test(ft.td3.all)
+  # 	Fisher's Exact Test for Count Data
+  # 
+  # data:  ft.td3.all
+  # p-value = 0.01488
+  # alternative hypothesis: two.sided
+
+pairwise_fisher_test(ft.td3.all, p.adjust.method = "holm") # default correction 
+#   group1 group2     n      p  p.adj p.adj.signif
+# * <chr>  <chr>  <int>  <dbl>  <dbl> <chr>       
+# 1 FC     LT       256 0.0119  0.0357 *           
+# 2 FC     VT       256 1.      1.     ns          
+# 3 LT     VT       256 0.0192  0.0384  ns       
+
+
+```
+
+```{r fisher test expt 4 - transport}
+
+# Expt 4
+td4 = filter(td, Expt=="4")
+td4$Nfish = td4$NfishNoShed; td4$NfishNoShed<-NULL
+td4 = td4 %>%
+  group_by(Treatment, ExptDay)%>%
+  summarize(Nfish = sum(Nfish), Nstart = sum(Nstart)) %>%
+  mutate(PropSurv = Nfish/Nstart) %>%
+  ungroup() %>% data.frame()
+
+chi.td4 = td4 %>%
+  group_by(Treatment, Nstart) %>%
+  summarize(Nend = min(Nfish)) %>%
+  mutate(Nmort = Nstart - Nend) %>%
+  ungroup() %>% data.frame()
+
+ngroup = length(unique(td4$Treatment))
+
+chiplot.td4 = data.frame(Treatment=rep(chi.td4$Treatment, 2),
+                     StartEnd = rep(c("Surv","Mort"), each=ngroup),
+                     Value = c(chi.td4$Nend, chi.td4$Nmort))
+
+ggplot(chiplot.td4, aes(x=Treatment, y=Value, fill=StartEnd)) + 
+  geom_col(color="black") + 
+  scale_fill_manual(values=c("grey80","grey40"))+
+  theme_bw()
+
+
+ft.td4.all = chi.td4[,c("Nend","Nmort")]
+row.names(ft.td4.all) <-  chi.td4$Treatment
+fisher.test(ft.td4.all)
+  # 	Fisher's Exact Test for Count Data
+  # 
+  # data:  ft.td4.all
+  # p-value = 0.05517
+  # alternative hypothesis: two.sided
+
+pairwise_fisher_test(ft.td4.all, p.adjust.method = "holm") # default correction 
+ #  group1 group2     n      p  p.adj p.adj.signif
+ # HC     HT        92 0.392  0.784      ns          
+ # HC     TC        82 0.118  0.354      ns          
+ # HT     TT       100 0.837  0.837      ns          
+ # TC     TT        90 0.0316 0.126     ns
+
+p.adjust(p = c(0.3920, 0.1180, 0.8370, 0.0316), method = "holm")
+
+```
+
+```{r shed tags}
+# read in shed tag data
+shd = read.csv("/Users/anna/Documents/ResearchGit/DStagging/rawData/Tags_Morts/AllExpts_ShedCounts.csv")
+
+# convert to wide for those with shed tags
+chi.shd = shd %>%
+  select(c("Expt","Treatment","Fate","nfish")) %>%
+  pivot_wider(id_cols = c("Expt","Treatment"), names_from="Fate", values_from="nfish") %>%
+  data.frame()
+
+
+ft.shd2.all = filter(chi.shd, Expt=="2")[,c("Retained","Shed")]
+row.names(ft.shd2.all) <-  filter(chi.shd, Expt=="2")$Treatment
+fisher.test(ft.shd2.all)
+  # 	Fisher's Exact Test for Count Data
+  # 
+  # data:  ft.shd2.all
+  # p-value = 0.0000358
+  # alternative hypothesis: two.sided
+
+ft.shd37.all = filter(chi.shd, Expt=="3_7")[,c("Retained","Shed")]
+row.names(ft.shd37.all) <-  filter(chi.shd, Expt=="3_7")$Treatment
+fisher.test(ft.shd37.all)
+  # 	Fisher's Exact Test for Count Data
+  # 
+  # data:  ft.shd37.all
+  # p-value = 0.000789
+  # alternative hypothesis: two.sided
+
+ft.shd330.all = filter(chi.shd, Expt=="3_30")[,c("Retained","Shed")]
+row.names(ft.shd330.all) <-  filter(chi.shd, Expt=="3_30")$Treatment
+fisher.test(ft.shd330.all)
+  # 	Fisher's Exact Test for Count Data
+  # 
+  # data:  ft.shd330.all
+  # p-value = 0.00000228
+  # alternative hypothesis: two.sided
+
+
+```
+
+### plots with raw data
+```{r survival plots}
+
+colors.tagtreat = c("grey70","grey60",
+                    "lightsalmon","coral2",
+                    "darkseagreen2","darkseagreen3",
+                    "grey40","brown3")
+
+# Expt 1 temp
+surv.temp.plot = ggplot(td2, aes(x=ExptDay, y=PropSurv, color=Treatment)) + 
+  #geom_line(lwd=1.7) + 
+  geom_smooth(se=FALSE, n=100, lwd=1.5, span=.4) +
+  xlab("Days Post Tagging") + 
+  scale_y_continuous(name="Survival", limits=c(0,1.01)) + 
+  scale_color_manual(values = c("lightskyblue1","steelblue2","palevioletred1","violetred3"),
+                     labels=c("Control, 12C","Tagged, 12C","Control, 16C","Tagged, 16C")) + 
+  annotate(geom="text", x=10, y=.01, label="n=24 per treatment") + 
+  theme_bw()
+
+    # rel survival
+    td2.12cont = filter(td2, Treatment=="12C")
+     td2.12cont$PropSurv.Cont = td2.12cont$Nfish/td2.12cont$Nstart
+    td2.12tag = filter(td2, Treatment=="12T")
+     td2.12tag$PropSurv.Tag = td2.12tag$Nfish/td2.12tag$Nstart
+    td2.16cont = filter(td2, Treatment=="16C")
+     td2.16cont$PropSurv.Cont = td2.16cont$Nfish/td2.16cont$Nstart
+    td2.16tag = filter(td2, Treatment=="16T")
+     td2.16tag$PropSurv.Tag = td2.16tag$Nfish/td2.16tag$Nstart
+     
+    td2.12rel = merge(td2.12cont[,c("ExptDay","PropSurv.Cont")], 
+                    td2.12tag[,c("ExptDay","PropSurv.Tag")]) 
+      td2.12rel$RelSurv = td2.12rel$PropSurv.Tag / td2.12rel$PropSurv.Cont
+      td2.12rel$Temp = 12
+    td2.16rel = merge(td2.16cont[,c("ExptDay","PropSurv.Cont")], 
+                    td2.16tag[,c("ExptDay","PropSurv.Tag")]) 
+      td2.16rel$RelSurv = td2.16rel$PropSurv.Tag / td2.16rel$PropSurv.Cont
+      td2.16rel$Temp = 16
+    td2.rel = rbind(td2.12rel, td2.16rel)
+    
+    relsurv.temp.plot = ggplot(td2.rel, aes(x=ExptDay, y=RelSurv, color=factor(Temp))) + 
+      #geom_line(lwd=1.7) + 
+      geom_smooth(se=FALSE, n=100, lwd=1.5, span=.4) +
+      xlab("Days Post Tagging") + 
+      scale_y_continuous(name="Survival", limits=c(0,1.01)) + 
+      scale_color_manual(values = c("steelblue1","violetred3"),
+                         labels=c("12C","16C"),
+                         name="Water\nTemperature (C)") + 
+      annotate(geom="text", x=10, y=.01, label="n=24 per treatment") + 
+      theme_bw()
+
+# Expt 2 tag placement
+surv.loc.plot = ggplot(td1, aes(x=ExptDay, y=PropSurv, color=Treatment)) + 
+  #geom_line(lwd=1.7) + 
+  geom_smooth(se=FALSE, n=100, lwd=1.5, span=.4) +
+  xlab("Days Post Tagging") + 
+  scale_y_continuous(name="Survival", limits=c(0,1.01)) + 
+  scale_color_manual(values = colors.tagtreat[1:6],
+                     labels= c("Full Control","Handling Control",
+                            "Lateral, Sham", "Lateral, Tagged",
+                            "Ventral, Sham","Ventral, Tagged"))+
+  annotate(geom="text", x=23, y=.01, label="n=44 per treatment") + 
+  theme_bw() 
+
+    td1.cont = filter(td1, Treatment=="FC")
+     td1.cont$PropSurv.Cont = td1.cont$Nfish/td1.cont$Nstart
+     
+    td1.treat = filter(td1, Treatment!="FC")
+     td1.treat$PropSurv.Treat = td1.treat$Nfish/td1.treat$Nstart
+     
+    td1.rel = merge(td1.treat[,c("Treatment","ExptDay","PropSurv.Treat")],
+                    td1.cont[,c("ExptDay","PropSurv.Cont")]) 
+      td1.rel$RelSurv = td1.rel$PropSurv.Treat / td1.rel$PropSurv.Cont
+
+    
+    relsurv.loc.plot = ggplot(td1.rel, aes(x=ExptDay, y=RelSurv, color=Treatment)) + 
+      #geom_line(lwd=1.7) + 
+      geom_smooth(se=FALSE, n=100, lwd=1.5, span=.4) +
+      xlab("Days Post Tagging") + 
+      scale_y_continuous(name="Survival", limits=c(0,1.1),
+                         breaks=c(0, 0.25, 0.5, 0.75, 1)) +
+      scale_color_manual(values = colors.tagtreat[2:6],
+                     labels= c("Handling Control",
+                            "Lateral, Sham", "Lateral, Tagged",
+                            "Ventral, Sham","Ventral, Tagged"))+
+      annotate(geom="text", x=23, y=.01, label="n=44 per treatment") + 
+      theme_bw()
+
+    
+# Expt 3
+surv.sublethal.plot = ggplot(td3, aes(x=ExptDay, y=PropSurv, color=Treatment)) + 
+  #geom_line(lwd=1.7) + 
+  geom_smooth(se=FALSE, n=100, lwd=1.5, span=.4) +  
+  xlab("Days Post Tagging") + 
+  scale_y_continuous(name="Survival", limits=c(0,1.01)) + 
+  scale_color_manual(values = colors.tagtreat[c(2,4,6)],
+                     labels= c("Full Control", "Lateral, Tagged","Ventral, Tagged")) + 
+  annotate(geom="text", x=23, y=.01, label="n=126 per treatment") + 
+  theme_bw() 
+
+    td3.cont = filter(td3, Treatment=="FC")
+     td3.cont$PropSurv.Cont = td3.cont$Nfish/td3.cont$Nstart
+     
+    td3.treat = filter(td3, Treatment!="FC")
+     td3.treat$PropSurv.Treat = td3.treat$Nfish/td3.treat$Nstart
+     
+    td3.rel = merge(td3.treat[,c("Treatment","ExptDay","PropSurv.Treat")],
+                    td3.cont[,c("ExptDay","PropSurv.Cont")]) 
+      td3.rel$RelSurv = td3.rel$PropSurv.Treat / td3.rel$PropSurv.Cont
+
+    
+    relsurv.sublethal.plot = ggplot(td3.rel, aes(x=ExptDay, y=RelSurv, color=Treatment)) + 
+      #geom_line(lwd=1.7) + 
+      geom_smooth(se=FALSE, n=100, lwd=1.5, span=.4) +
+      xlab("Days Post Tagging") + 
+      scale_y_continuous(name="Survival", limits=c(0,1.1),
+                         breaks=c(0, 0.25, 0.5, 0.75, 1)) +
+      scale_color_manual(values = colors.tagtreat[c(4,6)],
+                     labels= c("Lateral, Tagged","Ventral, Tagged")) +
+      annotate(geom="text", x=23, y=.01, label="n=126 per treatment") + 
+      theme_bw()
+
+    
+# Expt 4
+surv.transport.plot = ggplot(td4, aes(x=ExptDay, y=PropSurv, color=Treatment)) + 
+  #geom_line(lwd=1.7) + 
+  geom_smooth(se=FALSE, n=100, lwd=1.5, span=.4) +
+  xlab("Days Post Tagging") + 
+  scale_y_continuous(name="Survival", limits=c(0,1.01)) + 
+  scale_color_manual(values = colors.tagtreat[c(2,4,7,8)],
+                     labels = c("Non-transport, Control","Non-transport, Tagged",
+                                "Transport, Control","Transport, Tagged") ) + 
+  annotate(geom="text", x=23, y=.01, label="n=40-50 per treatment") + 
+  theme_bw() 
+
+    # rel survival
+    td4.Hcont = filter(td4, Treatment=="HC")
+     td4.Hcont$PropSurv.Cont = td4.Hcont$Nfish/td4.Hcont$Nstart
+    td4.Htag = filter(td4, Treatment=="HT")
+     td4.Htag$PropSurv.Tag = td4.Htag$Nfish/td4.Htag$Nstart
+    td4.Tcont = filter(td4, Treatment=="TC")
+     td4.Tcont$PropSurv.Cont = td4.Tcont$Nfish/td4.Tcont$Nstart
+    td4.Ttag = filter(td4, Treatment=="TT")
+     td4.Ttag$PropSurv.Tag = td4.Ttag$Nfish/td4.Ttag$Nstart
+     
+    td4.Hrel = merge(td4.Hcont[,c("ExptDay","PropSurv.Cont")], 
+                    td4.Htag[,c("ExptDay","PropSurv.Tag")]) 
+      td4.Hrel$RelSurv = td4.Hrel$PropSurv.Tag / td4.Hrel$PropSurv.Cont
+      td4.Hrel$Treatment = "No Transport"
+    td4.Trel = merge(td4.Tcont[,c("ExptDay","PropSurv.Cont")], 
+                    td4.Ttag[,c("ExptDay","PropSurv.Tag")]) 
+      td4.Trel$RelSurv = td4.Trel$PropSurv.Tag / td4.Trel$PropSurv.Cont
+      td4.Trel$Treatment = "Transport"
+      
+    td4.rel = rbind(td4.Hrel, td4.Trel)
+    
+    relsurv.transport.plot = ggplot(td4.rel, aes(x=ExptDay, y=RelSurv, color=Treatment)) + 
+      #geom_line(lwd=1.7) + 
+      geom_smooth(se=FALSE, n=100, lwd=1.5, span=.4) +
+      xlab("Days Post Tagging") + 
+      scale_y_continuous(name="Survival", limits=c(0,1.1),
+                         breaks=c(0, 0.25, 0.5, 0.75, 1)) +
+      scale_color_manual(values = colors.tagtreat[c(3,8)],
+                     labels= c("Tagged, No Transport","Tagged, Transport")) +
+      annotate(geom="text", x=23, y=.01, label="n=40-50 per treatment") + 
+      theme_bw()
+
+
+tiff("figures/Expt1_Temp_SurvPlot.tiff",width=150, height=90, units="mm", res=300)
+surv.temp.plot 
+dev.off()
+  
+  tiff("figures/Expt1_Temp_RelSurvPlot.tiff",width=150, height=90, units="mm", res=300)
+  relsurv.temp.plot 
+  dev.off()
+
+  
+tiff("figures/Expt2_Loc_SurvPlot.tiff",width=150, height=90, units="mm", res=300)
+surv.loc.plot 
+dev.off()
+
+  tiff("figures/Expt2_Loc_RelSurvPlot.tiff",width=150, height=90, units="mm", res=300)
+  relsurv.loc.plot 
+  dev.off()
+
+
+tiff("figures/Expt3_Sublethal_SurvPlot.tiff",width=150, height=90, units="mm", res=300)
+surv.sublethal.plot 
+dev.off()
+
+  tiff("figures/Expt3_Sublethal_RelSurvPlot.tiff",width=150, height=90, units="mm", res=300)
+  relsurv.sublethal.plot 
+  dev.off()
+
+  
+tiff("figures/Expt4_Transport_SurvPlot.tiff",width=170, height=90, units="mm", res=300)
+surv.transport.plot 
+dev.off()
+
+  tiff("figures/Expt4_Transport_RelSurvPlot.tiff",width=150, height=90, units="mm", res=300)
+  relsurv.transport.plot 
+  dev.off()
+
+```
+```{r all expt plots}
+colors.expt = c("#440154FF", "#31688EFF", "#35B779FF", "#FDE725FF")
+
+td.all = filter(td, (Expt=="1" & Treatment %in% c("12T","12C")) | 
+                       (Expt=="2" & Treatment %in% c("FC","LT")) |
+                          (Expt=="3_30" & Treatment %in% c("FC", "LT")) |
+                             (Expt=="4" & Treatment %in% c("HC","HT")) )
+
+td.all$Treatment[td.all$Treatment %in% c("12C","FC","HC")] <- "Control"
+td.all$Treatment[td.all$Treatment %in% c("12T","LT","HT")] <- "LateralTag"
+
+td.all = td.all%>%
+  group_by(Expt, Treatment, ExptDay) %>%
+  summarize(Nfish = sum(NfishNoShed), Nstart = sum(Nstart)) %>%
+  ungroup() %>% data.frame()
+
+td.all.cont = filter(td.all, Treatment=="Control")
+ td.all.cont$PropSurv.Cont = td.all.cont$Nfish/td.all.cont$Nstart
+td.all.tag = filter(td.all, Treatment=="LateralTag")
+ td.all.tag$PropSurv.Tag = td.all.tag$Nfish/td.all.tag$Nstart
+ 
+td.all2 = merge(td.all.cont[,c("Expt","ExptDay","PropSurv.Cont")], 
+                td.all.tag[,c("Expt","ExptDay","PropSurv.Tag")]) 
+td.all2$RelSurv = td.all2$PropSurv.Tag / td.all2$PropSurv.Cont
+
+
+
+relsurv.plot = ggplot(td.all2, aes(x=ExptDay, y=RelSurv, color=Expt)) + 
+  #geom_line(lwd=1.7) + 
+  geom_smooth(se=FALSE, n=100, lwd=1.5, span=.4) +
+  xlab("Days Post Tagging") + 
+  scale_y_continuous(name="Relative Survival", limits=c(0,1.01)) + 
+  # scale_color_manual(values = colors.expt,
+  #                    labels = c("Expt 1 (temperature)","Expt 2 (tag placement)",
+  #                               "Expt 3 (sublethal effects)","Expt 4 (transport)") ) + 
+  scale_color_manual(values = colors.expt,
+                     labels = c("Expt 1","Expt 2",
+                                "Expt 3","Expt 4"),
+                     name = "Experiment") +   
+  theme_bw() 
+relsurv.plot
+
+tiff("figures/AllExpt_RelSurvPlot.tiff",width=150, height=90, units="mm", res=300)
+relsurv.plot 
+dev.off() 
+
+
+relsurv.plot_3 = ggplot(td.all2, aes(x=ExptDay, y=RelSurv, color=Expt)) + 
+  #geom_line(lwd=1.7) + 
+  geom_smooth(se=FALSE, n=100, lwd=1.5, span=.4) +
+  geom_smooth(data = filter(td.all2, Expt=="3_30"), se=FALSE, n=100, lwd=2.75, span=.4) +
+  xlab("Days Post Tagging") + 
+  scale_y_continuous(name="Relative Survival", limits=c(0,1.01)) + 
+  # scale_color_manual(values = colors.expt,
+  #                    labels = c("Expt 1 (temperature)","Expt 2 (tag placement)",
+  #                               "Expt 3 (sublethal effects)","Expt 4 (transport)") ) + 
+  scale_color_manual(values = colors.expt,
+                     labels = c("Expt 1","Expt 2",
+                                "Expt 3","Expt 4"),
+                     name = "Experiment") +   
+  theme_bw() 
+relsurv.plot_3
+
+tiff("figures/AllExpt_RelSurvPlot_3.tiff",width=150, height=90, units="mm", res=300)
+relsurv.plot_3 
+dev.off() 
+
+
+```
+
+```{r shed, fig.height=4, fig.width=10}
+shd = read.csv("/Users/anna/Documents/ResearchGit/DStagging/rawData/Tags_Morts/AllExpts_ShedCounts.csv")
+
+# calculate the proportion shed for each experiment with L and V tagging
+nfish = shd %>%
+  group_by(Expt, IncLoc) %>%
+  summarize(Nstart = sum(nfish))
+shdLV = merge(shd, nfish, all.x=T)
+shdLV$PropShed = shdLV$nfish/shdLV$Nstart
+
+shedcol = viridis(2)
+
+# stacked barplot
+Expt30day.shdplot =  ggplot(data = filter(shdLV, Expt%in% c("2","3_30") ), aes(x=IncLoc, y=PropShed, fill=Fate)) + 
+  geom_col(color="black") + 
+  scale_fill_manual(values=shedcol)+#c("grey80","grey40"))+
+  facet_wrap(~Expt, scales="free", 
+             labeller = labeller(Expt = c("2" = "Expt 2", "3_30" = "Expt 3 (30d)")) ) + 
+  xlab("Insertion Location") + ylab("Proportion of Tags") + 
+  theme_bw()
+
+
+Expt2.shdplot =  ggplot(data = filter(shdLV, Expt%in% c("2") ), 
+                        aes(x=IncLoc, y=PropShed, fill=Fate)) + 
+  geom_col(color="black") + 
+  scale_fill_manual(values=shedcol)+#c("grey80","grey40"))+
+  facet_wrap(~Expt, scales="free", 
+             labeller = labeller(Expt = c("2" = "Expt 2", "3_30" = "Expt 3 (30d)")) ) + 
+  xlab("Insertion Location") + ylab("Proportion of Tags") + 
+  theme_bw()
+
+Expt3_30.shdplot =  ggplot(data = filter(shdLV, Expt%in% c("3_30") ), 
+                           aes(x=IncLoc, y=PropShed, fill=Fate)) + 
+  geom_col(color="black") + 
+  scale_fill_manual(values=shedcol)+#c("grey80","grey40"))+
+  facet_wrap(~Expt, scales="free", 
+             labeller = labeller(Expt = c("2" = "Expt 2", "3_30" = "Expt 3 (30d)")) ) + 
+  xlab("Insertion Location") + ylab("Proportion of Tags") + 
+  theme_bw()
+
+Expt3_7.shdplot =  ggplot(data = filter(shdLV, Expt%in% c("3_7") ), 
+                            aes(x=IncLoc, y=PropShed, fill=Fate)) + 
+  geom_col(color="black") + 
+  scale_fill_manual(values=shedcol)+#c("grey80","grey40"))+
+  facet_wrap(~Expt, scales="free", 
+             labeller = labeller(Expt = c("2" = "Expt 2", "3_7" = "Expt 3 (7d)")) ) + 
+  xlab("Insertion Location") + ylab("Proportion of Tags") + 
+  theme_bw()
+
+
+
+tiff("figures/All30dExpt_ShedPlot.tiff",width=150, height=90, units="mm", res=300)
+Expt30day.shdplot 
+dev.off() 
+
+
+tiff("figures/Expt2_ShedPlot.tiff",width=80, height=60, units="mm", res=300)
+Expt2.shdplot 
+dev.off() 
+
+tiff("figures/Expt3_30_ShedPlot.tiff",width=80, height=60, units="mm", res=300)
+Expt3_30.shdplot 
+dev.off() 
+
+tiff("figures/Expt3_7_ShedPlot.tiff",width=80, height=60, units="mm", res=300)
+Expt3_7.shdplot 
+dev.off() 
+
+```
+
+
+
+

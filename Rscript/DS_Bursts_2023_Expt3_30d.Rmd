@@ -105,9 +105,9 @@ max_distance = 15        # only consider inter-gate distances less than 15cm
 write.file = "Yes"       # write out a file; don't use while troubleshooting
 
 # set up folders for writing out data as you go
-spp.yr.rawfilepath = "BurstExpt3_30d_2023" # where the raw data files from raspPi are stored
-spp.yr.figfolder = "Bursts_Outputfigures_Expt3_30d_DS2023" # this folder should be created within the 'DS_Tagging/figures' folder before running this code
-spp.yr.dataoutputfolder = "Bursts_Outputdata_Expt3_30d_DS2023" # this folder should be created within the 'DS_Tagging/outputData' folder before running this code
+spp.yr.rawfilepath = "BurstExpt3_2023" # where the raw data files from raspPi are stored
+spp.yr.figfolder = "Bursts_Outputfigures_Expt3_DS2023" # this folder should be created within the 'DS_Tagging/figures' folder before running this code
+spp.yr.dataoutputfolder = "Bursts_Outputdata_Expt3_DS2023" # this folder should be created within the 'DS_Tagging/outputData' folder before running this code
 
 
 
@@ -488,6 +488,8 @@ mean.topvels2$mnburstGoodFair_bls = mean.topvels2$mnburstGoodFair/(mean.topvels2
 # remove cold temp
 
 mean.topvels2 = mean.topvels2[mean.topvels2$tunneltemp >12,]
+
+write.csv(mean.topvels2, "../intermedData/Expt3_Burst_30d_2023_processedData.csv", row.names=F)
 
 ```
 

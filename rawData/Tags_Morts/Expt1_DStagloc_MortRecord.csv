@@ -1,0 +1,370 @@
+Number,TagID_Hex,spp,Rel_group,TankID,TagDate,MortDate,ExptMort,Mort_Mass_g,Mort_FL_mm,Sex,ReproIndex,ReproNotes
+1,612,DeltaSmelt,LT,AES-5,8/8/23,8/9/23,Natural,2.6,69,M,1,Normal testes
+2,001D,DeltaSmelt,LT,AES-5,8/8/23,8/9/23,Natural,3.9,84,F,1,premature eggs
+3,25,DeltaSmelt,LT,AES-5,8/8/23,8/9/23,Natural,3.2,78,M,4,"shrunken testes, post-spawn"
+4,285,DeltaSmelt,VT,AES-6,8/8/23,8/10/23,Natural,5.8,90,F,1,premature eggs
+5,368,DeltaSmelt,VT,AES-6,8/8/23,8/10/23,Natural,3,71,M,2,large testes
+6,533,DeltaSmelt,LT,AES-5,8/8/23,8/10/23,Natural,3.4,77,M,2,enlarged testes
+7,07A1,DeltaSmelt,LT,AES-5,8/8/23,8/10/23,Natural,3.5,84,F,1,premature eggs
+8,045F,DeltaSmelt,LT,AES-5,8/8/23,8/10/23,Natural,2.8,76,F,4,"small number of fully developed eggs, deflated stomach"
+9,006F,DeltaSmelt,LT,AES-5,8/8/23,8/10/23,Natural,2.9,70,M,1,normal testes
+10,FC01,DeltaSmelt,FC,AES-1,8/8/23,8/10/23,Natural,5.2,84,F,2,"mostly developed eggs, some fatty tissue/premature eggs still remain"
+11,FC02,DeltaSmelt,FC,AES-1,8/8/23,8/10/23,Natural,2.3,71,F,1,premature eggs
+12,HC01,DeltaSmelt,HC,AES-2,8/8/23,8/10/23,Natural,4.1,80,M,2,large testes
+13,HC02,DeltaSmelt,HC,AES-2,8/8/23,8/10/23,Natural,2.4,73,M,1,normal testes
+14,LS01,DeltaSmelt,LS,AES-3,8/8/23,8/10/23,Natural,3.3,78,M,2,enlarged testes
+15,LS02,DeltaSmelt,LS,AES-3,8/8/23,8/10/23,Natural,3.6,83,M,2,enlarged testes
+16,NA,DeltaSmelt,VS,AES-4,8/8/23,8/10/23,Natural,4.5,84,F,1,mostly immature eggs
+17,NA,DeltaSmelt,VS,AES-4,8/8/23,8/10/23,Natural,5.1,88,F,2,fully developed eggs
+18,NA,DeltaSmelt,VS,AES-4,8/8/23,8/10/23,Natural,3.9,79,F,1,premature eggs
+21,570,DeltaSmelt,LT,AES-5,8/8/23,8/11/23,Natural,3.6,76,M,2,enlarged testes
+22,Shed,DeltaSmelt,VT,AES-6,8/8/23,8/11/23,Natural,6.1,86,F,3,very mature eggs
+23,606,DeltaSmelt,VT,AES-6,8/8/23,8/11/23,Natural,3.1,74,M,4,shrunken stomach and very small testes
+24,FC03,DeltaSmelt,FC,AES-1,8/8/23,8/11/23,Natural,2.6,66,M,1,normal testes
+25,NA,DeltaSmelt,VS,AES-4,8/8/23,8/11/23,Natural,2.2,65,M,4,shrunken stomach and very small testes
+26,NA,DeltaSmelt,VS,AES-4,8/8/23,8/11/23,Natural,3,74,M,1,normal testes
+19,280,DeltaSmelt,VT,AES-6,8/8/23,8/12/23,Natural,3.1,75,M,1,normal testes
+20,Shed,DeltaSmelt,VT,AES-6,8/8/23,8/12/23,Natural,4.5,86,F,1,premature eggs
+27,NA,DeltaSmelt,VS,AES-10,8/11/23,8/12/23,Natural,6.1,90,F,2,mature eggs
+28,HC03,DeltaSmelt,HC,AES-2,8/8/23,8/12/23,Natural,5.7,89,F,4,appears to be a post-spawn female
+29,LS03,DeltaSmelt,LS,AES-3,8/8/23,8/12/23,Natural,2.4,66,M,2,enlarged testes
+30,1E04,DeltaSmelt,LT,AES-5,8/8/23,8/12/23,Natural,3.9,80,F,1,premature eggs
+31,03D4,DeltaSmelt,VT,AES-12,8/11/23,8/13/23,Natural,4.3,85,F,1,early stages egg development
+32,027A,DeltaSmelt,VT,AES-12,8/11/23,8/13/23,Natural,3.6,79,M,2,enlarged testes
+33,155,DeltaSmelt,VT,AES-12,8/11/23,8/13/23,Natural,4.8,85,F,1,undeveloped eggs
+34,069C,DeltaSmelt,VT,AES-12,8/11/23,8/13/23,Natural,4.4,80,F,1,"undeveloped eggs, very early in egg development"
+35,02AF,DeltaSmelt,LT,AES-11,8/11/23,8/13/23,Natural,5.4,89,M,2,enlarged testes
+36,526,DeltaSmelt,LT,AES-11,8/11/23,8/13/23,Natural,3.4,74,M,4,post spawn 
+37,LS23,DeltaSmelt,LS,AES-9,8/11/23,8/13/23,Natural,3.7,77,F,1,premature eggs 
+38,FC04,DeltaSmelt,FC,AES-1,8/8/23,8/13/23,Natural,2.7,72,M,2,enlarged testes
+39,FC23,DeltaSmelt,FC,AES-7,8/11/23,8/13/23,Natural,4.7,81,F,1,premature eggs
+40,LS04,DeltaSmelt,LS,AES-3,8/8/23,8/13/23,Natural,4.6,84,M,2,enlarged testes
+41,315,DeltaSmelt,LT,AES-5,8/8/23,8/13/23,Natural,4.4,79,M,1,normal testes
+42,01A6,DeltaSmelt,LT,AES-5,8/8/23,8/14/23,Natural,3.8,79,M,2,enlarged testes
+43,LS05,DeltaSmelt,LS,AES-3,8/8/23,8/14/23,Natural,3.4,75,F,3,
+44,HC23,DeltaSmelt,HC,AES-8,8/11/23,8/14/23,Natural,4.1,81,F,4,
+45,NA,DeltaSmelt,LS,AES-9,8/11/23,8/14/23,Natural,3.3,78,F,4,Post-spawn
+46,NA,DeltaSmelt,VS,AES-10,8/11/23,8/14/23,Natural,4,77,F,3,
+47,068D,DeltaSmelt,LT,AES-11,8/11/23,8/14/23,Natural,3.2,78,M,,unsure due to potential very small testes; either 1 or 4
+48,02D6,DeltaSmelt,LT,AES-11,8/11/23,8/14/23,Natural,3.9,83,F,4,
+49,002C,DeltaSmelt,VT,AES-12,8/11/23,8/14/23,Natural,2.8,74,M,2,enlarged testes
+50,HC24,DeltaSmelt,HC,AES-8,8/11/23,8/15/23,Natural,5.8,88,F,3,mature eggs
+51,HC25,DeltaSmelt,HC,AES-8,8/11/23,8/15/23,Natural,3.9,79,M,2,enlarged testes
+52,NA,DeltaSmelt,VS,AES-10,8/11/23,8/15/23,Natural,2.3,71,F,1,early stage egg development
+53,535,DeltaSmelt,VT,AES-12,8/11/23,8/15/23,Natural,3,73,M,2,enlarged testes
+54,Shed,DeltaSmelt,VT,AES-12,8/11/23,8/15/23,Natural,5.7,87,F,3,maybe partially 4
+55,018F,DeltaSmelt,VT,AES-12,8/11/23,8/16/23,Natural,3,72,M,1,
+56,NA,DeltaSmelt,VS,AES-10,8/11/23,8/16/23,Natural,2.1,72,M,,"very small testies, unsure if post spawn; either 1 or 4"
+57,FC24,DeltaSmelt,FC,AES-7,8/11/23,8/16/23,Natural,4,85,F,4,post-spawn 
+58,05C2,DeltaSmelt,LT,AES-5,8/8/23,8/16/23,Natural,6.1,89,F,1,
+59,NA,DeltaSmelt,VS,AES-4,8/8/23,8/16/23,Natural,4.3,80,F,4,post-spawn
+60,HC04,DeltaSmelt,HC,AES-2,8/8/23,8/16/23,Natural,4.7,85,F,4,post-spawn
+61,01AF,DeltaSmelt,LT,AES-11,8/11/23,8/17/23,Natural,4.6,81,M,2,enlarged testes
+62,HC26,DeltaSmelt,HC,AES-8,8/11/23,8/17/23,Natural,3.8,87,F,1,early stage egg development
+63,FC25,DeltaSmelt,FC,AES-7,8/11/23,8/19/23,Natural,3.5,77,F,4,seemed to be post-spawn
+64,HC05,DeltaSmelt,HC,AES-2,8/8/23,8/19/23,Natural,1.9,66,M,2,normal testes
+65,HC27,DeltaSmelt,HC,AES-8,8/11/23,8/19/23,Natural,5.1,81,F,3,lots of big eggs
+66,NA,DeltaSmelt,VS,AES-10,8/11/23,8/19/23,Natural,2.8,73,M,2,normal testes
+67,Shed,DeltaSmelt,VT,AES-6,8/8/23,8/20/23,Natural,3.2,75,M,2,
+68,HC28,DeltaSmelt,HC,AES-8,8/11/23,8/20/23,Natural,5.6,90,F,2,mostly fully developed eggs
+359,FC26,DeltaSmelt,FC,AES-7,8/11/23,8/22/23,Natural,,,U,,
+69,216,DeltaSmelt,VT,AES-12,8/11/23,8/23/23,Natural,2.7,73,M,2,
+70,02B9,DeltaSmelt,LT,AES-11,8/11/23,8/23/23,Natural,4.5,87,F,2,mostly developed eggs
+71,FC27,DeltaSmelt,FC,AES-7,8/11/23,8/23/23,Natural,2.2,83,M,2,
+72,NA,DeltaSmelt,LS,AES-9,8/11/23,8/23/23,Natural,3.5,74,F,3,"lots of fully developed eggs, spawn imminent "
+73,330,DeltaSmelt,VT,AES-12,8/11/23,8/24/23,Natural,3,78,M,2,
+74,010D,DeltaSmelt,LT,AES-11,8/11/23,8/24/23,Natural,4.4,88,F,2,"eggs, not all fully developed"
+360,FC05,DeltaSmelt,FC,AES-1,8/8/23,8/24/23,Natural,,,U,,
+75,FC28,DeltaSmelt,FC,AES-7,8/11/23,8/25/23,Natural,3.4,87,F,4,"seems post-spawn, sunken stomach"
+76,Shed,DeltaSmelt,VT,AES-6,8/8/23,8/26/23,Natural,2.4,74,M,2,
+77,NA,DeltaSmelt,VS,AES-10,8/11/23,8/27/23,Natural,4.7,86,F,2,not fully developed eggs
+78,NA,DeltaSmelt,VS,AES-4,8/8/23,8/28/23,Natural,3,75,M,2,
+79,NA,DeltaSmelt,LS,AES-9,8/11/23,8/29/23,Natural,2,65,M,2,
+80,034C,DeltaSmelt,LT,AES-11,8/11/23,9/5/23,Natural,3.4,76,M,2,normal testes
+81,NA,DeltaSmelt,VS,AES-4,8/8/23,9/6/23,Natural,4.4,87,F,1,early egg development
+82,FC06,DeltaSmelt,FC,AES-1,8/8/23,9/8/23,Euth,3.6,84,M,2,
+83,FC07,DeltaSmelt,FC,AES-1,8/8/23,9/8/23,Euth,3.1,73,M,2,
+84,FC08,DeltaSmelt,FC,AES-1,8/8/23,9/8/23,Euth,4.8,88,M,2,
+85,FC09,DeltaSmelt,FC,AES-1,8/8/23,9/8/23,Euth,3.9,83,M,2,
+86,FC10,DeltaSmelt,FC,AES-1,8/8/23,9/8/23,Euth,4.5,82,M,2,
+87,FC11,DeltaSmelt,FC,AES-1,8/8/23,9/8/23,Euth,3.6,79,M,2,
+88,FC12,DeltaSmelt,FC,AES-1,8/8/23,9/8/23,Euth,3.9,81,F,0,
+89,FC13,DeltaSmelt,FC,AES-1,8/8/23,9/8/23,Euth,3,77,M,2,
+90,FC14,DeltaSmelt,FC,AES-1,8/8/23,9/8/23,Euth,3.4,76,M,2,
+91,FC15,DeltaSmelt,FC,AES-1,8/8/23,9/8/23,Euth,6.3,94,F,1,
+92,FC16,DeltaSmelt,FC,AES-1,8/8/23,9/8/23,Euth,3.2,79,M,2,
+93,FC17,DeltaSmelt,FC,AES-1,8/8/23,9/8/23,Euth,6.4,95,F,1,
+94,FC18,DeltaSmelt,FC,AES-1,8/8/23,9/8/23,Euth,3.8,86,F,1,very very early stage of egg development
+95,FC19,DeltaSmelt,FC,AES-1,8/8/23,9/8/23,Euth,4.3,85,M,2,
+96,FC20,DeltaSmelt,FC,AES-1,8/8/23,9/8/23,Euth,2.4,71,M,2,
+97,FC21,DeltaSmelt,FC,AES-1,8/8/23,9/8/23,Euth,4.4,82,M,2,
+99,FC22,DeltaSmelt,FC,AES-1,8/8/23,9/8/23,Euth,4.4,89,F,1,
+100,HC06,DeltaSmelt,HC,AES-2,8/8/23,9/8/23,Euth,6.1,92,F,1,
+101,HC07,DeltaSmelt,HC,AES-2,8/8/23,9/8/23,Euth,3.7,88,M,2,
+102,HC08,DeltaSmelt,HC,AES-2,8/8/23,9/8/23,Euth,3,75,F,1,
+103,HC09,DeltaSmelt,HC,AES-2,8/8/23,9/8/23,Euth,3.1,80,F,0,
+104,HC10,DeltaSmelt,HC,AES-2,8/8/23,9/8/23,Euth,2.7,73,M,2,
+105,HC11,DeltaSmelt,HC,AES-2,8/8/23,9/8/23,Euth,2.7,71,M,2,
+106,HC12,DeltaSmelt,HC,AES-2,8/8/23,9/8/23,Euth,3.6,77,M,2,
+107,HC13,DeltaSmelt,HC,AES-2,8/8/23,9/8/23,Euth,2.6,73,M,2,
+108,HC14,DeltaSmelt,HC,AES-2,8/8/23,9/8/23,Euth,3.8,80,M,2,
+109,HC15,DeltaSmelt,HC,AES-2,8/8/23,9/8/23,Euth,3,74,M,2,
+110,HC16,DeltaSmelt,HC,AES-2,8/8/23,9/8/23,Euth,4.6,85,M,2,
+111,HC17,DeltaSmelt,HC,AES-2,8/8/23,9/8/23,Euth,4,84,M,2,
+112,HC18,DeltaSmelt,HC,AES-2,8/8/23,9/8/23,Euth,3.6,78,M,2,
+113,HC19,DeltaSmelt,HC,AES-2,8/8/23,9/8/23,Euth,3.8,81,M,2,
+114,HC20,DeltaSmelt,HC,AES-2,8/8/23,9/8/23,Euth,4.2,82,M,2,
+115,HC21,DeltaSmelt,HC,AES-2,8/8/23,9/8/23,Euth,2.3,70,M,2,
+116,HC22,DeltaSmelt,HC,AES-2,8/8/23,9/8/23,Euth,3.1,82,F,,"no fat, sunken stomach; either 0 or 4"
+117,LS06,DeltaSmelt,LS,AES-3,8/8/23,9/8/23,Euth,3.4,79,M,2,
+118,LS07,DeltaSmelt,LS,AES-3,8/8/23,9/8/23,Euth,3.4,82,M,2,potentially post spawn? very hard to tell
+119,LS08,DeltaSmelt,LS,AES-3,8/8/23,9/8/23,Euth,4.5,82,F,3,
+120,LS09,DeltaSmelt,LS,AES-3,8/8/23,9/8/23,Euth,3.2,76,M,2,
+121,LS10,DeltaSmelt,LS,AES-3,8/8/23,9/8/23,Euth,4.9,85,M,2,
+122,LS11,DeltaSmelt,LS,AES-3,8/8/23,9/8/23,Euth,3.6,80,M,2,
+123,LS12,DeltaSmelt,LS,AES-3,8/8/23,9/8/23,Euth,4.2,83,F,0,
+124,LS13,DeltaSmelt,LS,AES-3,8/8/23,9/8/23,Euth,3.2,76,M,2,
+125,LS14,DeltaSmelt,LS,AES-3,8/8/23,9/8/23,Euth,3.7,85,M,2,
+126,LS15,DeltaSmelt,LS,AES-3,8/8/23,9/8/23,Euth,2.8,76,M,2,
+127,LS16,DeltaSmelt,LS,AES-3,8/8/23,9/8/23,Euth,3.9,79,M,2,
+128,LS17,DeltaSmelt,LS,AES-3,8/8/23,9/8/23,Euth,4.1,85,F,1,
+129,LS18,DeltaSmelt,LS,AES-3,8/8/23,9/8/23,Euth,4,80,M,2,
+130,LS19,DeltaSmelt,LS,AES-3,8/8/23,9/8/23,Euth,3.5,75,M,2,
+131,LS20,DeltaSmelt,LS,AES-3,8/8/23,9/8/23,Euth,3.4,83,M,1,very small teste
+132,LS21,DeltaSmelt,LS,AES-3,8/8/23,9/8/23,Euth,4.6,84,M,2,
+133,LS22,DeltaSmelt,LS,AES-3,8/8/23,9/8/23,Euth,3,75,M,2,
+134,NA,DeltaSmelt,VS,AES-4,8/8/23,9/8/23,Euth,3.6,79,M,2,
+135,NA,DeltaSmelt,VS,AES-4,8/8/23,9/8/23,Euth,3.9,81,M,2,
+136,NA,DeltaSmelt,VS,AES-4,8/8/23,9/8/23,Euth,4.4,82,F,1,
+137,NA,DeltaSmelt,VS,AES-4,8/8/23,9/8/23,Euth,2.7,79,M,2,
+138,NA,DeltaSmelt,VS,AES-4,8/8/23,9/8/23,Euth,4.2,82,M,2,
+139,NA,DeltaSmelt,VS,AES-4,8/8/23,9/8/23,Euth,2.9,78,F,0,
+140,NA,DeltaSmelt,VS,AES-4,8/8/23,9/8/23,Euth,3,79,M,2,testes grafted to incision sight
+141,NA,DeltaSmelt,VS,AES-4,8/8/23,9/8/23,Euth,5.2,90,F,1,
+142,NA,DeltaSmelt,VS,AES-4,8/8/23,9/8/23,Euth,3.9,81,M,2,
+143,NA,DeltaSmelt,VS,AES-4,8/8/23,9/8/23,Euth,4.5,87,F,2,
+144,NA,DeltaSmelt,VS,AES-4,8/8/23,9/8/23,Euth,2.6,71,M,2,teste grafted to incision
+145,NA,DeltaSmelt,VS,AES-4,8/8/23,9/8/23,Euth,3.5,76,M,2,
+146,NA,DeltaSmelt,VS,AES-4,8/8/23,9/8/23,Euth,3.4,80,F,0,
+147,NA,DeltaSmelt,VS,AES-4,8/8/23,9/8/23,Euth,3.4,79,M,2,
+148,415,DeltaSmelt,LT,AES-5,8/8/23,9/8/23,Euth,4,76,M,2,big testes
+149,06F2,DeltaSmelt,LT,AES-5,8/8/23,9/8/23,Euth,2.4,71,M,2,
+150,04F4,DeltaSmelt,LT,AES-5,8/8/23,9/8/23,Euth,3,75,M,2,
+151,794,DeltaSmelt,LT,AES-5,8/8/23,9/8/23,Euth,4.9,82,M,2,
+152,02CA,DeltaSmelt,LT,AES-5,8/8/23,9/8/23,Euth,1.8,69,M,2,
+153,3E05,DeltaSmelt,LT,AES-5,8/8/23,9/8/23,Euth,4.2,84,M,2,
+154,88,DeltaSmelt,LT,AES-5,8/8/23,9/8/23,Euth,4,83,M,2,
+155,00A8,DeltaSmelt,LT,AES-5,8/8/23,9/8/23,Euth,3.5,78,M,2,
+156,213,DeltaSmelt,LT,AES-5,8/8/23,9/8/23,Euth,3.5,81,M,2,tag pierced through teste
+157,003A,DeltaSmelt,LT,AES-5,8/8/23,9/8/23,Euth,3.1,78,M,2,
+158,Shed,DeltaSmelt,VT,AES-6,8/8/23,9/8/23,Euth,7.7,96,F,0,
+159,02A2,DeltaSmelt,VT,AES-6,8/8/23,9/8/23,Euth,3.7,80,M,2,
+160,Shed,DeltaSmelt,VT,AES-6,8/8/23,9/8/23,Euth,2.1,65,M,2,
+161,033D,DeltaSmelt,VT,AES-6,8/8/23,9/8/23,Euth,3.3,75,M,2,
+162,752,DeltaSmelt,VT,AES-6,8/8/23,9/8/23,Euth,7.1,95,F,1,
+163,184,DeltaSmelt,VT,AES-6,8/8/23,9/8/23,Euth,3.5,76,M,2,
+164,02A3,DeltaSmelt,VT,AES-6,8/8/23,9/8/23,Euth,3.1,75,M,2,
+165,02B5,DeltaSmelt,VT,AES-6,8/8/23,9/8/23,Euth,4.9,85,F,1,
+166,Shed,DeltaSmelt,VT,AES-6,8/8/23,9/8/23,Euth,3.8,80,M,2,
+167,Shed,DeltaSmelt,VT,AES-6,8/8/23,9/8/23,Euth,1.9,67,M,2,
+168,18,DeltaSmelt,VT,AES-6,8/8/23,9/8/23,Euth,2.1,67,M,2,
+169,Shed,DeltaSmelt,VT,AES-6,8/8/23,9/8/23,Euth,3.5,76,M,2,
+170,85,DeltaSmelt,VT,AES-6,8/8/23,9/8/23,Euth,2.7,71,M,2,
+171,05BB,DeltaSmelt,VT,AES-6,8/8/23,9/8/23,Euth,3.9,81,M,1,very small teste
+260,HC29,DeltaSmelt,HC,AES-8,8/11/23,9/9/23,Natural,3.6,83,M,2,normal testes
+172,FC29,DeltaSmelt,FC,AES-7,8/11/23,9/11/23,Euth,3.3,76,M,2,
+173,FC30,DeltaSmelt,FC,AES-7,8/11/23,9/11/23,Euth,6.6,96,F,1,crusty eggs
+174,FC31,DeltaSmelt,FC,AES-7,8/11/23,9/11/23,Euth,3.4,76,F,0,
+175,FC32,DeltaSmelt,FC,AES-7,8/11/23,9/11/23,Euth,7.7,97,F,0,
+176,FC33,DeltaSmelt,FC,AES-7,8/11/23,9/11/23,Euth,3.4,81,M,2,
+177,FC34,DeltaSmelt,FC,AES-7,8/11/23,9/11/23,Euth,4.9,87,F,4,inflamed vent likely due to spawning
+178,FC35,DeltaSmelt,FC,AES-7,8/11/23,9/11/23,Euth,3.1,79,M,2,
+179,FC36,DeltaSmelt,FC,AES-7,8/11/23,9/11/23,Euth,4,82,F,1,
+180,FC37,DeltaSmelt,FC,AES-7,8/11/23,9/11/23,Euth,3.5,82,M,2,
+181,FC38,DeltaSmelt,FC,AES-7,8/11/23,9/11/23,Euth,1.9,70,F,0,
+182,FC39,DeltaSmelt,FC,AES-7,8/11/23,9/11/23,Euth,2.2,72,M,2,
+183,FC40,DeltaSmelt,FC,AES-7,8/11/23,9/11/23,Euth,2.4,70,M,2,
+184,FC41,DeltaSmelt,FC,AES-7,8/11/23,9/11/23,Euth,3.2,78,M,1,
+185,FC42,DeltaSmelt,FC,AES-7,8/11/23,9/11/23,Euth,2.2,75,M,1,
+186,FC43,DeltaSmelt,FC,AES-7,8/11/23,9/11/23,Euth,1.6,71,M,2,
+187,HC30,DeltaSmelt,HC,AES-8,8/11/23,9/11/23,Euth,3.2,75,M,2,
+188,HC31,DeltaSmelt,HC,AES-8,8/11/23,9/11/23,Euth,3.1,73,M,2,
+189,HC32,DeltaSmelt,HC,AES-8,8/11/23,9/11/23,Euth,5,88,F,1,
+190,HC33,DeltaSmelt,HC,AES-8,8/11/23,9/11/23,Euth,6.1,100,F,1,
+191,HC34,DeltaSmelt,HC,AES-8,8/11/23,9/11/23,Euth,3.4,77,M,2,
+192,HC35,DeltaSmelt,HC,AES-8,8/11/23,9/11/23,Euth,4.2,84,M,2,
+193,HC36,DeltaSmelt,HC,AES-8,8/11/23,9/11/23,Euth,2.9,80,M,,"very skinny, small teste, unsure if post spawn; either 1 or 4"
+194,HC37,DeltaSmelt,HC,AES-8,8/11/23,9/11/23,Euth,5,82,F,1,
+195,HC38,DeltaSmelt,HC,AES-8,8/11/23,9/11/23,Euth,3.4,76,M,2,
+196,HC39,DeltaSmelt,HC,AES-8,8/11/23,9/11/23,Euth,5.1,88,F,1,
+197,HC40,DeltaSmelt,HC,AES-8,8/11/23,9/11/23,Euth,2.5,73,M,2,
+198,HC41,DeltaSmelt,HC,AES-8,8/11/23,9/11/23,Euth,3.3,77,M,2,fat
+199,HC42,DeltaSmelt,HC,AES-8,8/11/23,9/11/23,Euth,2.4,73,F,0,
+200,NA,DeltaSmelt,LS,AES-9,8/11/23,9/11/23,Euth,3.7,79,M,2,
+201,NA,DeltaSmelt,LS,AES-9,8/11/23,9/11/23,Euth,5.3,88,F,1,
+202,NA,DeltaSmelt,LS,AES-9,8/11/23,9/11/23,Euth,5.3,90,F,0,
+203,NA,DeltaSmelt,LS,AES-9,8/11/23,9/11/23,Euth,4.8,85,M,2,
+204,NA,DeltaSmelt,LS,AES-9,8/11/23,9/11/23,Euth,5.9,93,F,0,
+205,NA,DeltaSmelt,LS,AES-9,8/11/23,9/11/23,Euth,4.5,80,F,0,
+206,NA,DeltaSmelt,LS,AES-9,8/11/23,9/11/23,Euth,3.7,77,M,2,
+207,NA,DeltaSmelt,LS,AES-9,8/11/23,9/11/23,Euth,3.2,77,M,2,
+208,NA,DeltaSmelt,LS,AES-9,8/11/23,9/11/23,Euth,3.3,80,M,2,
+209,NA,DeltaSmelt,LS,AES-9,8/11/23,9/11/23,Euth,5.4,92,F,2,
+210,NA,DeltaSmelt,LS,AES-9,8/11/23,9/11/23,Euth,2.9,82,M,2,
+211,NA,DeltaSmelt,LS,AES-9,8/11/23,9/11/23,Euth,3.3,83,M,1,
+212,NA,DeltaSmelt,LS,AES-9,8/11/23,9/11/23,Euth,4.5,86,F,2,
+213,NA,DeltaSmelt,LS,AES-9,8/11/23,9/11/23,Euth,3.4,79,M,2,
+214,NA,DeltaSmelt,LS,AES-9,8/11/23,9/11/23,Euth,2.8,79,M,2,
+215,NA,DeltaSmelt,LS,AES-9,8/11/23,9/11/23,Euth,3.3,80,M,2,
+216,NA,DeltaSmelt,LS,AES-9,8/11/23,9/11/23,Euth,1.9,67,M,2,
+217,NA,DeltaSmelt,LS,AES-9,8/11/23,9/11/23,Euth,3.8,83,F,0,
+218,NA,DeltaSmelt,VS,AES-10,8/11/23,9/11/23,Euth,6.3,93,F,1,
+219,NA,DeltaSmelt,VS,AES-10,8/11/23,9/11/23,Euth,7.2,96,F,2,
+220,NA,DeltaSmelt,VS,AES-10,8/11/23,9/11/23,Euth,3.6,77,M,2,
+221,NA,DeltaSmelt,VS,AES-10,8/11/23,9/11/23,Euth,5.2,90,F,4,"overripe eggs, eggs red and crispy; likely 4 but maybe no"
+222,NA,DeltaSmelt,VS,AES-10,8/11/23,9/11/23,Euth,3.2,76,M,2,
+223,NA,DeltaSmelt,VS,AES-10,8/11/23,9/11/23,Euth,2.7,70,M,2,
+224,NA,DeltaSmelt,VS,AES-10,8/11/23,9/11/23,Euth,3.5,75,M,2,
+225,NA,DeltaSmelt,VS,AES-10,8/11/23,9/11/23,Euth,4.4,84,F,0,no egg development
+226,NA,DeltaSmelt,VS,AES-10,8/11/23,9/11/23,Euth,2.5,72,M,2,
+227,NA,DeltaSmelt,VS,AES-10,8/11/23,9/11/23,Euth,7.5,98,F,2,
+228,NA,DeltaSmelt,VS,AES-10,8/11/23,9/11/23,Euth,4.8,87,M,2,
+229,NA,DeltaSmelt,VS,AES-10,8/11/23,9/11/23,Euth,3,75,M,2,
+230,NA,DeltaSmelt,VS,AES-10,8/11/23,9/11/23,Euth,4,85,F,1,few eggs
+231,NA,DeltaSmelt,VS,AES-10,8/11/23,9/11/23,Euth,3.5,75,M,2,
+232,NA,DeltaSmelt,VS,AES-10,8/11/23,9/11/23,Euth,3.1,77,M,2,
+233,NA,DeltaSmelt,VS,AES-10,8/11/23,9/11/23,Euth,3.1,81,F,1,few eggs
+234,34,DeltaSmelt,LT,AES-11,8/11/23,9/11/23,Euth,6.1,89,F,3,
+235,04EE,DeltaSmelt,LT,AES-11,8/11/23,9/11/23,Euth,2.6,72,M,2,
+236,560,DeltaSmelt,LT,AES-11,8/11/23,9/11/23,Euth,5.5,91,F,1,
+237,03D2,DeltaSmelt,LT,AES-11,8/11/23,9/11/23,Euth,3.2,77,M,2,
+238,02DE,DeltaSmelt,LT,AES-11,8/11/23,9/11/23,Euth,3.8,83,F,3,
+239,051E,DeltaSmelt,LT,AES-11,8/11/23,9/11/23,Euth,3.2,75,M,2,
+240,036C,DeltaSmelt,LT,AES-11,8/11/23,9/11/23,Euth,5.3,88,F,1,
+241,365,DeltaSmelt,LT,AES-11,8/11/23,9/11/23,Euth,3.4,79,M,2,
+242,321,DeltaSmelt,LT,AES-11,8/11/23,9/11/23,Euth,3.9,82,M,2,
+243,05D8,DeltaSmelt,LT,AES-11,8/11/23,9/11/23,Euth,5.3,82,M,2,
+244,00BC,DeltaSmelt,LT,AES-11,8/11/23,9/11/23,Euth,3.2,76,M,2,
+245,016F,DeltaSmelt,LT,AES-11,8/11/23,9/11/23,Euth,6.4,94,F,2,
+246,02C7,DeltaSmelt,LT,AES-11,8/11/23,9/11/23,Euth,3.8,75,M,2,
+247,00EE,DeltaSmelt,LT,AES-11,8/11/23,9/11/23,Euth,3.5,84,F,4,post spawn
+248,Shed,DeltaSmelt,VT,AES-12,8/11/23,9/11/23,Euth,3.4,77,M,2,
+249,183,DeltaSmelt,VT,AES-12,8/11/23,9/11/23,Euth,6.9,93,M,2,
+250,Shed,DeltaSmelt,VT,AES-12,8/11/23,9/11/23,Euth,4.1,84,M,2,
+251,403,DeltaSmelt,VT,AES-12,8/11/23,9/11/23,Euth,4.3,83,F,1,
+252,776,DeltaSmelt,VT,AES-12,8/11/23,9/11/23,Euth,7,96,F,3,
+253,019A,DeltaSmelt,VT,AES-12,8/11/23,9/11/23,Euth,3.2,79,F,3,
+254,01A0,DeltaSmelt,VT,AES-12,8/11/23,9/11/23,Euth,2.8,72,F,1,
+255,06CB,DeltaSmelt,VT,AES-12,8/11/23,9/11/23,Euth,4.3,81,F,1,
+256,061C,DeltaSmelt,VT,AES-12,8/11/23,9/11/23,Euth,3.8,80,F,0,
+257,06F5,DeltaSmelt,VT,AES-12,8/11/23,9/11/23,Euth,2.9,74,M,2,
+258,258,DeltaSmelt,VT,AES-12,8/11/23,9/11/23,Euth,4.2,86,F,1,
+259,03CA,DeltaSmelt,VT,AES-12,8/11/23,9/11/23,Euth,3.3,75,M,2,
+shed,51,DeltaSmelt,VT,AES-6,8/8/23,8/11/23,Shed,,,U,,
+shed,160,DeltaSmelt,VT,AES-6,8/8/23,8/11/23,Shed,,,U,,
+shed,01A1,DeltaSmelt,VT,AES-6,8/8/23,8/11/23,Shed,,,U,,
+shed,01A8,DeltaSmelt,VT,AES-6,8/8/23,8/11/23,Shed,,,U,,
+shed,035C,DeltaSmelt,VT,AES-6,8/8/23,8/11/23,Shed,,,U,,
+shed,036E,DeltaSmelt,VT,AES-6,8/8/23,8/11/23,Shed,,,U,,
+shed,551,DeltaSmelt,VT,AES-6,8/8/23,8/12/23,Shed,,,U,,
+shed,677,DeltaSmelt,VT,AES-6,8/8/23,8/12/23,Shed,,,U,,
+shed,1E09,DeltaSmelt,VT,AES-12,8/11/23,8/12/23,Shed,,,U,,
+shed,00C2,DeltaSmelt,VT,AES-6,8/8/23,8/21/23,Shed,,,U,,
+shed,01CB,DeltaSmelt,VT,AES-12,8/11/23,8/27/23,Shed,,,U,,
+shed,0E00,DeltaSmelt,VT,AES-12,8/11/23,8/31/23,Shed,,,U,,
+burst,046F,DeltaSmelt,VT,AES-6,8/8/23,8/14/23,Burst,4.3,86,U,,
+burst,07A9,DeltaSmelt,LT,AES-5,8/8/23,8/14/23,Burst,4.9,89,U,,
+burst,796,DeltaSmelt,VT,AES-6,8/8/23,8/14/23,Burst,3,80,U,,
+burst,02AB,DeltaSmelt,LT,AES-5,8/8/23,8/14/23,Burst,3,75,U,,
+shed/burst,02D0,DeltaSmelt,VT,AES-6,8/8/23,8/15/23,Burst,,,U,,
+shed/burst,049C,DeltaSmelt,VT,AES-6,8/8/23,8/15/23,Burst,,,U,,
+burst,295,DeltaSmelt,LT,AES-5,8/8/23,8/16/23,Burst,3.1,80,U,,
+burst,013D,DeltaSmelt,LT,AES-5,8/8/23,8/16/23,Burst,4,82,U,,
+burst,038C,DeltaSmelt,LT,AES-11,8/11/23,8/19/23,Burst,5.5,88,U,,
+burst,009A,DeltaSmelt,VT,AES-12,8/11/23,8/19/23,Burst,4.2,80,U,,
+burst,219,DeltaSmelt,VT,AES-12,8/11/23,8/17/23,Burst,2.5,71,U,,
+burst,392,DeltaSmelt,LT,AES-11,8/11/23,8/17/23,Burst,3.2,71,U,,
+burst,207,DeltaSmelt,VT,AES-12,8/11/23,8/17/23,Burst,5.7,90,U,,
+burst,06FB,DeltaSmelt,LT,AES-11,8/11/23,8/18/23,Burst,3.9,81,U,,
+burst,06D0,DeltaSmelt,VT,AES-12,8/11/23,8/19/23,Burst,3.9,80,U,,
+burst,110,DeltaSmelt,LT,AES-11,8/11/23,8/17/23,Burst,2.5,68,U,,
+burst,00F1,DeltaSmelt,VT,AES-12,8/11/23,8/18/23,Burst,2.6,73,U,,
+burst,011B,DeltaSmelt,LT,AES-11,8/11/23,8/19/23,Burst,4.1,85,U,,
+burst,03D3,DeltaSmelt,VT,AES-6,8/8/23,8/16/23,Burst,1.8,68,U,,
+burst,772,DeltaSmelt,LT,AES-5,8/8/23,8/14/23,Burst,4.2,82,U,,
+burst,249,DeltaSmelt,LT,AES-5,8/8/23,8/15/23,Burst,5,85,U,,
+burst,01FD,DeltaSmelt,VT,AES-6,8/8/23,8/15/23,Burst,2.8,71,U,,
+burst,01EA,DeltaSmelt,VT,AES-6,8/8/23,8/16/23,Burst,2.4,71,U,,
+burst,060E,DeltaSmelt,LT,AES-5,8/8/23,8/14/23,Burst,3.4,77,U,,
+burst,799,DeltaSmelt,LT,AES-5,8/8/23,8/15/23,Burst,3.6,80,U,,
+burst,247,DeltaSmelt,LT,AES-11,8/11/23,8/17/23,Burst,5.7,89,U,,
+burst,03C4,DeltaSmelt,VT,AES-12,8/11/23,8/18/23,Burst,3.1,80,U,,
+burst,304,DeltaSmelt,VT,AES-12,8/11/23,8/19/23,Burst,6,91,U,,
+burst,491,DeltaSmelt,LT,AES-11,8/11/23,8/18/23,Burst,4.1,81,U,,
+burst,07A0,DeltaSmelt,VT,AES-12,8/11/23,8/18/23,Burst,2.9,75,U,,
+burst,031D,DeltaSmelt,VT,AES-6,8/8/23,8/16/23,Burst,3.4,78,U,,
+burst,02BE,DeltaSmelt,LT,AES-11,8/11/23,8/19/23,Burst,3.2,74,U,,
+burst,,DeltaSmelt,VS,AES-4,8/8/23,8/14/23,Burst,7.5,92,U,,
+burst,,DeltaSmelt,VS,AES-4,8/8/23,8/14/23,Burst,3.6,87,U,,
+burst,,DeltaSmelt,VS,AES-4,8/8/23,8/15/23,Burst,4.6,85,U,,
+burst,,DeltaSmelt,VS,AES-4,8/8/23,8/15/23,Burst,3,78,U,,
+burst,,DeltaSmelt,VS,AES-4,8/8/23,8/15/23,Burst,2.7,79,U,,
+burst,,DeltaSmelt,VS,AES-4,8/8/23,8/16/23,Burst,2.9,79,U,,
+burst,,DeltaSmelt,VS,AES-4,8/8/23,8/16/23,Burst,2.4,79,U,,
+burst,,DeltaSmelt,VS,AES-4,8/8/23,8/16/23,Burst,2.5,75,U,,
+burst,,DeltaSmelt,VS,AES-10,8/11/23,8/17/23,Burst,6.3,93,U,,
+burst,,DeltaSmelt,VS,AES-10,8/11/23,8/17/23,Burst,3.4,71,U,,
+burst,,DeltaSmelt,VS,AES-10,8/11/23,8/18/23,Burst,4,84,U,,
+burst,,DeltaSmelt,VS,AES-10,8/11/23,8/18/23,Burst,3.7,83,U,,
+burst,,DeltaSmelt,VS,AES-10,8/11/23,8/18/23,Burst,4.4,85,U,,
+burst,,DeltaSmelt,VS,AES-10,8/11/23,8/19/23,Burst,3.7,77,U,,
+burst,,DeltaSmelt,VS,AES-10,8/11/23,8/19/23,Burst,4.3,82,U,,
+burst,,DeltaSmelt,VS,AES-10,8/11/23,8/19/23,Burst,4,83,U,,
+burst,,DeltaSmelt,LS,AES-3,8/8/23,8/14/23,Burst,4.5,86,U,,
+burst,,DeltaSmelt,LS,AES-3,8/8/23,8/14/23,Burst,3,75,U,,
+burst,,DeltaSmelt,LS,AES-3,8/8/23,8/14/23,Burst,2.4,77,U,,
+burst,,DeltaSmelt,LS,AES-3,8/8/23,8/15/23,Burst,2.9,70,U,,
+burst,,DeltaSmelt,LS,AES-3,8/8/23,8/15/23,Burst,2.6,70,U,,
+burst,,DeltaSmelt,LS,AES-3,8/8/23,8/16/23,Burst,3.3,75,U,,
+burst,,DeltaSmelt,LS,AES-3,8/8/23,8/16/23,Burst,4.2,80,U,,
+burst,,DeltaSmelt,LS,AES-3,8/8/23,8/16/23,Burst,4.3,84,U,,
+burst,,DeltaSmelt,LS,AES-9,8/11/23,8/17/23,Burst,3.6,80,U,,
+burst,,DeltaSmelt,LS,AES-9,8/11/23,8/17/23,Burst,5.4,81,U,,
+burst,,DeltaSmelt,LS,AES-9,8/11/23,8/17/23,Burst,4.6,81,U,,
+burst,,DeltaSmelt,LS,AES-9,8/11/23,8/18/23,Burst,4.4,87,U,,
+burst,,DeltaSmelt,LS,AES-9,8/11/23,8/18/23,Burst,7.4,94,U,,
+burst,,DeltaSmelt,LS,AES-9,8/11/23,8/19/23,Burst,2.7,74,U,,
+burst,,DeltaSmelt,LS,AES-9,8/11/23,8/19/23,Burst,3.5,74,U,,
+burst,,DeltaSmelt,LS,AES-9,8/11/23,8/19/23,Burst,3.8,83,U,,
+burst,,DeltaSmelt,HC,AES-2,8/8/23,8/14/23,Burst,5,85,U,,
+burst,,DeltaSmelt,HC,AES-2,8/8/23,8/14/23,Burst,3.4,81,U,,
+burst,,DeltaSmelt,HC,AES-2,8/8/23,8/14/23,Burst,4.1,84,U,,
+burst,,DeltaSmelt,HC,AES-2,8/8/23,8/15/23,Burst,2.2,72,U,,
+burst,,DeltaSmelt,HC,AES-2,8/8/23,8/15/23,Burst,4.6,97,U,,
+burst,,DeltaSmelt,HC,AES-2,8/8/23,8/15/23,Burst,3.5,80,U,,
+burst,,DeltaSmelt,HC,AES-2,8/8/23,8/16/23,Burst,3.2,80,U,,
+burst,,DeltaSmelt,HC,AES-2,8/8/23,8/16/23,Burst,2.1,68,U,,
+burst,,DeltaSmelt,HC,AES-8,8/11/23,8/17/23,Burst,2.1,68,U,,
+burst,,DeltaSmelt,HC,AES-8,8/11/23,8/17/23,Burst,3.9,77,U,,
+burst,,DeltaSmelt,HC,AES-8,8/11/23,8/17/23,Burst,4.6,87,U,,
+burst,,DeltaSmelt,HC,AES-8,8/11/23,8/18/23,Burst,4.3,86,U,,
+burst,,DeltaSmelt,HC,AES-8,8/11/23,8/19/23,Burst,3.8,76,U,,
+burst,,DeltaSmelt,HC,AES-8,8/11/23,8/18/23,Burst,3.4,81,U,,
+burst,,DeltaSmelt,HC,AES-8,8/11/23,8/19/23,Burst,4.4,84,U,,
+burst,,DeltaSmelt,HC,AES-8,8/11/23,8/19/23,Burst,3,76,U,,
+burst,,DeltaSmelt,FC,AES-1,8/8/23,8/14/23,Burst,2.9,74,U,,
+burst,,DeltaSmelt,FC,AES-1,8/8/23,8/14/23,Burst,4,82,U,,
+burst,,DeltaSmelt,FC,AES-1,8/8/23,8/14/23,Burst,3.2,77,U,,
+burst,,DeltaSmelt,FC,AES-1,8/8/23,8/15/23,Burst,3.3,82,U,,
+burst,,DeltaSmelt,FC,AES-1,8/8/23,8/15/23,Burst,2.6,71,U,,
+burst,,DeltaSmelt,FC,AES-1,8/8/23,8/15/23,Burst,5.5,102,U,,
+burst,,DeltaSmelt,FC,AES-1,8/8/23,8/16/23,Burst,2.9,74,U,,
+burst,,DeltaSmelt,FC,AES-1,8/8/23,8/16/23,Burst,3.8,75,U,,
+burst,,DeltaSmelt,FC,AES-7,8/11/23,8/17/23,Burst,4,81,U,,
+burst,,DeltaSmelt,FC,AES-7,8/11/23,8/17/23,Burst,3.7,78,U,,
+burst,,DeltaSmelt,FC,AES-7,8/11/23,8/17/23,Burst,3.4,77,U,,
+burst,,DeltaSmelt,FC,AES-7,8/11/23,8/18/23,Burst,6.2,87,U,,
+burst,,DeltaSmelt,FC,AES-7,8/11/23,8/18/23,Burst,5.1,84,U,,
+burst,,DeltaSmelt,FC,AES-7,8/11/23,8/18/23,Burst,3.1,74,U,,
+burst,,DeltaSmelt,FC,AES-7,8/11/23,8/19/23,Burst,4.1,84,U,,
+burst,,DeltaSmelt,FC,AES-7,8/11/23,8/19/23,Burst,3.3,74,U,,

@@ -1,0 +1,97 @@
+Number,TagID_Hex,spp,Rel_group,TankID,TagDate,MortDate,ExptMort,Mort_Mass_g,Mort_FL_mm,Sex,ReproIndex,ReproNotes
+28,04D8,DeltaSmelt,12T,AES-3,7/12/23,7/13/23,Natural,5.9,85,F,3, lots of eggs
+30,52,DeltaSmelt,12T,AES-3,7/12/23,7/13/23,Natural,3.4,77,F,3, lots of eggs
+32,033F,DeltaSmelt,12T,AES-3,7/12/23,7/13/23,Natural,2.6,69,F,0,
+26,37,DeltaSmelt,16T,AES-9,7/12/23,7/13/23,Natural,2.4,66,M,0,
+33,01F6,DeltaSmelt,16T,AES-9,7/12/23,7/14/23,Natural,5,86,F,2, eggs
+34,56,DeltaSmelt,16T,AES-9,7/12/23,7/14/23,Natural,4.6,82,F,2, eggs
+38,03FC,DeltaSmelt,12T,AES-3,7/12/23,7/14/23,Natural,4.5,86,F,2, eggs
+39,052F,DeltaSmelt,12T,AES-3,7/12/23,7/14/23,Natural,6.2,99,F,1, undeveloped eggs
+35,03C0,DeltaSmelt,16T,AES-9,7/12/23,7/14/23,Natural,5.1,83,F,0,
+40,012D,DeltaSmelt,16T,AES-9,7/12/23,7/16/23,Natural,5.4,88,F,2, eggs
+41,159,DeltaSmelt,16T,AES-9,7/12/23,7/17/23,Natural,4.6,78,M,0,
+42,360,DeltaSmelt,16T,AES-9,7/12/23,7/17/23,Natural,3.4,78,M,0,
+44,020A,DeltaSmelt,16T,AES-9,7/12/23,7/19/23,Natural,4.4,85,F,4, post-spawn
+1,260,DeltaSmelt,12T,AES-3,7/12/23,7/26/23,Euth,4.1,79,F,2, eggs: varying sizes some opaque some clear
+6,127,DeltaSmelt,12T,AES-3,7/12/23,7/26/23,Euth,7.3,93,F,3, gravid; big eggs
+9,02F2,DeltaSmelt,12T,AES-3,7/12/23,7/26/23,Euth,4.3,84,F,2, gravid
+11,131,DeltaSmelt,12T,AES-3,7/12/23,7/26/23,Euth,6.1,93,F,2, gravid/fat
+12,716,DeltaSmelt,12T,AES-3,7/12/23,7/26/23,Euth,4.4,87,F,4, some eggs that look very developed; post spawn?
+46,033E,DeltaSmelt,16T,AES-9,7/12/23,7/20/23,Natural,6.7,89,F,3, lots of eggs
+45,69,DeltaSmelt,16T,AES-9,7/12/23,7/20/23,Natural,2.3,70,M,0,
+47,00CB,DeltaSmelt,16T,AES-9,7/12/23,7/22/23,Natural,5,83,F,3, lots of eggs
+48,03DC,DeltaSmelt,16T,AES-9,7/12/23,7/22/23,Natural,5.5,85,F,3, lots of eggs
+14,07A0,DeltaSmelt,16T,AES-9,7/12/23,7/26/23,Euth,5.1,90,F,0,
+27,06FC,DeltaSmelt,12T,AES-3,7/12/23,7/13/23,Natural,2.5,71,M,0,
+29,355,DeltaSmelt,12T,AES-3,7/12/23,7/13/23,Natural,2.6,69,M,0,
+31,140,DeltaSmelt,12T,AES-3,7/12/23,7/13/23,Natural,2.7,66,M,0,
+36,076F,DeltaSmelt,12T,AES-3,7/12/23,7/14/23,Natural,3.3,69,M,0,
+37,04D2,DeltaSmelt,12T,AES-3,7/12/23,7/14/23,Natural,3.4,77,M,0,
+15,00C0,DeltaSmelt,16T,AES-9,7/12/23,7/26/23,Euth,4.7,86,F,1, undeveloped eggs
+17,03DD,DeltaSmelt,16T,AES-9,7/12/23,7/26/23,Euth,6.4,91,F,3, lots of eggs
+43,05FA,DeltaSmelt,12T,AES-3,7/12/23,7/17/23,Natural,2.9,73,M,0,
+20,257,DeltaSmelt,16T,AES-9,7/12/23,7/26/23,Euth,3.6,80,F,1, undeveloped eggs
+2,01F4,DeltaSmelt,12T,AES-3,7/12/23,7/26/23,Euth,3,75,M,3, enlarged and mostly empty teste
+3,03BC,DeltaSmelt,12T,AES-3,7/12/23,7/26/23,Euth,3,74,M,2, enlarged teste
+4,058F,DeltaSmelt,12T,AES-3,7/12/23,7/26/23,Euth,3.2,80,M,2, enlarged testes
+5,623,DeltaSmelt,12T,AES-3,7/12/23,7/26/23,Euth,3.1,78,M,2, enlarged teste
+7,22,DeltaSmelt,12T,AES-3,7/12/23,7/26/23,Euth,3.3,80,M,2, enlarged teste
+8,07BC,DeltaSmelt,12T,AES-3,7/12/23,7/26/23,Euth,2.1,70,M,2, enlarged teste
+10,03B5,DeltaSmelt,12T,AES-3,7/12/23,7/26/23,Euth,2.5,70,M,2, enlarged teste
+13,27,DeltaSmelt,12T,AES-3,7/12/23,7/26/23,Euth,2.8,75,M,3, really big teste
+16,022D,DeltaSmelt,16T,AES-9,7/12/23,7/26/23,Euth,2.7,76,M,2, enlarged testes
+18,495,DeltaSmelt,16T,AES-9,7/12/23,7/26/23,Euth,2.7,73,M,4, empty testes; lots of empty space in body cavity; post spawn?
+19,725,DeltaSmelt,16T,AES-9,7/12/23,7/26/23,Euth,3.3,80,M,1, normal sized teste
+21,017D,DeltaSmelt,16T,AES-9,7/12/23,7/26/23,Euth,3.6,84,M,2, enlarged teste
+22,06CE,DeltaSmelt,16T,AES-9,7/12/23,7/26/23,Euth,2.7,72,M,2, enlarged teste
+23,02C1,DeltaSmelt,16T,AES-9,7/12/23,7/26/23,Euth,1.9,68,M,2, enlarged teste
+24,00BE,DeltaSmelt,16T,AES-9,7/12/23,7/26/23,Euth,2.7,77,M,1, teste fused to incision
+25,00AB,DeltaSmelt,16T,AES-9,7/12/23,7/26/23,Euth,3.3,79,M,3, massive teste
+,CC01,DeltaSmelt,12C,AES-4,7/12/23,7/14/23,Natural,,,U,,
+,CC02,DeltaSmelt,12C,AES-4,7/12/23,7/16/23,Natural,,,U,,
+,CC03,DeltaSmelt,12C,AES-4,7/12/23,7/16/23,Natural,,,U,,
+,CC04,DeltaSmelt,12C,AES-4,7/12/23,7/26/23,Euth,,,U,,
+,CC05,DeltaSmelt,12C,AES-4,7/12/23,7/26/23,Euth,,,U,,
+,CC06,DeltaSmelt,12C,AES-4,7/12/23,7/26/23,Euth,,,U,,
+,CC07,DeltaSmelt,12C,AES-4,7/12/23,7/26/23,Euth,,,U,,
+,CC08,DeltaSmelt,12C,AES-4,7/12/23,7/26/23,Euth,,,U,,
+,CC09,DeltaSmelt,12C,AES-4,7/12/23,7/26/23,Euth,,,U,,
+,CC10,DeltaSmelt,12C,AES-4,7/12/23,7/26/23,Euth,,,U,,
+,CC11,DeltaSmelt,12C,AES-4,7/12/23,7/26/23,Euth,,,U,,
+,CC12,DeltaSmelt,12C,AES-4,7/12/23,7/26/23,Euth,,,U,,
+,CC13,DeltaSmelt,12C,AES-4,7/12/23,7/26/23,Euth,,,U,,
+,CC14,DeltaSmelt,12C,AES-4,7/12/23,7/26/23,Euth,,,U,,
+,CC15,DeltaSmelt,12C,AES-4,7/12/23,7/26/23,Euth,,,U,,
+,CC16,DeltaSmelt,12C,AES-4,7/12/23,7/26/23,Euth,,,U,,
+,CC17,DeltaSmelt,12C,AES-4,7/12/23,7/26/23,Euth,,,U,,
+,CC18,DeltaSmelt,12C,AES-4,7/12/23,7/26/23,Euth,,,U,,
+,CC19,DeltaSmelt,12C,AES-4,7/12/23,7/26/23,Euth,,,U,,
+,CC20,DeltaSmelt,12C,AES-4,7/12/23,7/26/23,Euth,,,U,,
+,CC21,DeltaSmelt,12C,AES-4,7/12/23,7/26/23,Euth,,,U,,
+,CC22,DeltaSmelt,12C,AES-4,7/12/23,7/26/23,Euth,,,U,,
+,CC23,DeltaSmelt,12C,AES-4,7/12/23,7/26/23,Euth,,,U,,
+,CC24,DeltaSmelt,12C,AES-4,7/12/23,7/26/23,Euth,,,U,,
+,WC01,DeltaSmelt,16C,AES-10,7/12/23,7/15/23,Natural,,,U,,
+,WC02,DeltaSmelt,16C,AES-10,7/12/23,7/15/23,Natural,,,U,,
+,WC03,DeltaSmelt,16C,AES-10,7/12/23,7/18/23,Natural,,,U,,
+,WC04,DeltaSmelt,16C,AES-10,7/12/23,7/18/23,Natural,,,U,,
+,WC05,DeltaSmelt,16C,AES-10,7/12/23,7/18/23,Natural,,,U,,
+,WC06,DeltaSmelt,16C,AES-10,7/12/23,7/22/23,Natural,,,U,,
+,WC07,DeltaSmelt,16C,AES-10,7/12/23,7/26/23,Euth,,,U,,
+,WC08,DeltaSmelt,16C,AES-10,7/12/23,7/26/23,Euth,,,U,,
+,WC09,DeltaSmelt,16C,AES-10,7/12/23,7/26/23,Euth,,,U,,
+,WC10,DeltaSmelt,16C,AES-10,7/12/23,7/26/23,Euth,,,U,,
+,WC11,DeltaSmelt,16C,AES-10,7/12/23,7/26/23,Euth,,,U,,
+,WC12,DeltaSmelt,16C,AES-10,7/12/23,7/26/23,Euth,,,U,,
+,WC13,DeltaSmelt,16C,AES-10,7/12/23,7/26/23,Euth,,,U,,
+,WC14,DeltaSmelt,16C,AES-10,7/12/23,7/26/23,Euth,,,U,,
+,WC15,DeltaSmelt,16C,AES-10,7/12/23,7/26/23,Euth,,,U,,
+,WC16,DeltaSmelt,16C,AES-10,7/12/23,7/26/23,Euth,,,U,,
+,WC17,DeltaSmelt,16C,AES-10,7/12/23,7/26/23,Euth,,,U,,
+,WC18,DeltaSmelt,16C,AES-10,7/12/23,7/26/23,Euth,,,U,,
+,WC19,DeltaSmelt,16C,AES-10,7/12/23,7/26/23,Euth,,,U,,
+,WC20,DeltaSmelt,16C,AES-10,7/12/23,7/26/23,Euth,,,U,,
+,WC21,DeltaSmelt,16C,AES-10,7/12/23,7/26/23,Euth,,,U,,
+,WC22,DeltaSmelt,16C,AES-10,7/12/23,7/26/23,Euth,,,U,,
+,WC23,DeltaSmelt,16C,AES-10,7/12/23,7/26/23,Euth,,,U,,
+,WC24,DeltaSmelt,16C,AES-10,7/12/23,7/26/23,Euth,,,U,,

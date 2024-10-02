@@ -1,0 +1,169 @@
+Fish#,Species,HatchDate,Source,ArrivalDate,f_status,Mort_date,TankID,Treat_group,Tag_date,Days_to_mort,ReasonMort,TagID_hex,ShedTag?,Mass_mort,FL_mort,Sex,ReproStatusNotes,IncNotes,TagPlaceNotes,GenAppNotes,OtherNotes,Photos?,PhotoFolder
+83,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/17/23,6,VT,12/13/23,4,natural,0010,no,4.32,76,female,,,,,,no,NA
+113,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/18/23,5,LT,12/13/23,5,natural,0013,no,3.2,76,female,,,,,,no,NA
+45,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/15/23,8,LT,12/11/23,4,natural,0018,no,2.55,74,male,large teste,,,lateral bruising,,no,NA
+76,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/16/23,12,VT,12/11/23,5,natural,002A,no,2.46,70,male,,,,,,no,NA
+116,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/18/23,9,VT,12/11/23,7,natural,0022,no,4.3,78,female,,,,,,no,NA
+120,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/19/23,3,VT,12/13/23,6,natural,0034,no,2.35,67,female,,,,,,no,NA
+103,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/18/23,3,VT,12/13/23,5,natural,0037,no,6.13,83,male,,,,,,no,NA
+22,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/14/23,9,VT,12/11/23,3,natural,003A,no,3.19,72,female,very gravid,open,none,significant lateral bruising,none,no,NA
+91,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/17/23,11,LT,12/11/23,6,natural,0051,no,3.3,76,male,,,,,,no,NA
+148,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/21/23,6,VT,12/13/23,8,natural,0056,no,2.37,69,male,,,,,,,
+99,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/18/23,11,LT,12/11/23,7,natural,0068,no,2.15,66,male,,,,,,no,NA
+48,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/15/23,9,VT,12/11/23,4,natural,0069,no,3.61,82,ukn,no sign of egg development or teste,,,,"not certain of sex, no gonad found so assumed to be immature female",no,NA
+28,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/14/23,12,VT,12/11/23,3,natural,006F,no,2.97,74,male,normal testes,none,none,none,none,no,NA
+139,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/20/23,2,LT,12/13/23,7,natural,0088,no,3.03,74,female,,,,,,no,NA
+58,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/16/23,2,LT,12/13/23,3,natural,00A0,no,3,72,male,,,,,,no,NA
+32,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/15/23,2,LT,12/13/23,2,natural,00A8,no,2.39,76,male,normal testes,open,dorsal,significant lateral bruising,none,no,NA
+70,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/16/23,6,VT,12/13/23,3,natural,00AB,no,3.42,76,male,,,,,,no,NA
+75,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/16/23,12,VT,12/11/23,5,natural,00B7,no,2.35,65,female,,,,,,no,NA
+65,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/16/23,5,LT,12/13/23,3,natural,00BC,no,1.15,78,male,,,,,,no,NA
+138,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/20/23,5,LT,12/13/23,7,natural,00C2,no,3.37,73,male,,,,,,no,NA
+124,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/19/23,2,LT,12/13/23,6,natural,00CB,no,2.64,72,male,,,,,,no,NA
+37,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/15/23,5,LT,12/13/23,2,natural,00DC,no,2.12,69,male,testes damaged by tag,,,significant lateral bruising,,no,NA
+53,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/15/23,11,LT,12/11/23,4,natural,00E8,no,2.97,81,female,gravid,,,lateral bruising,,no,NA
+145,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/21/23,6,VT,12/13/23,8,natural,00EE,no,2.2,68,female,,,,,,no,NA
+31,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/15/23,2,LT,12/13/23,2,natural,00F3,no,2.48,71,male,damaged teste,"open, bruising around incision",none,wound near operculum,none,no,NA
+38,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/15/23,5,LT,12/13/23,2,natural,01C9,no,2.88,75,male,large testes,,,,,no,NA
+101,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/18/23,11,LT,12/11/23,7,natural,010D,no,2.22,64,female,,,,,,no,NA
+47,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/15/23,8,LT,12/11/23,4,natural,0112,no,3.12,80,female,very gravid,,,,,no,NA
+69,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/16/23,6,VT,12/13/23,3,natural,0127,no,4.14,73,female,,,,,,no,NA
+11,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/13/23,11,LT,12/11/23,2,natural,012D,no,3.34,74,female,gravid,open,good,none,eggs not fully developed,no,NA
+84,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/17/23,6,VT,12/13/23,4,natural,012D,no,4.73,82,female,,,,,,no,NA
+89,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/17/23,8,LT,12/11/23,6,natural,012E,no,2.63,70,male,,,,,,no,NA
+49,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/15/23,9,VT,12/11/23,4,natural,013F,no,2.25,69,male,,tag visible through incision,,lateral bruising,,no,NA
+108,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/18/23,12,VT,12/11/23,7,natural,0141,no,2.56,68,female,,,,,,no,NA
+50,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/15/23,9,VT,12/11/23,4,natural,015C,no,4.63,89,female,very gravid,,,,,no,NA
+90,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/17/23,9,VT,12/11/23,6,natural,016D,no,4.19,72,female,,,,,,no,NA
+88,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/17/23,8,LT,12/11/23,6,natural,016F,no,2.39,68,male,,,,,,no,NA
+100,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/18/23,11,LT,12/11/23,7,natural,017E,no,2.61,74,male,,,,,,no,NA
+46,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/15/23,8,LT,12/11/23,4,natural,0183,no,2.59,73,male,large teste,,,,,no,NA
+142,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/20/23,6,VT,12/13/23,7,natural,0184,no,3.83,75,male,,,,,,no,NA
+74,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/16/23,12,VT,12/11/23,5,natural,01A0,no,2.11,65,male,,,,,,no,NA
+29,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/15/23,2,LT,12/13/23,2,natural,01A6,no,2.95,77,male,normal testes,"open, bruising around incision","dorsal, anterior",none,none,no,NA
+15,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/13/23,12,VT,12/11/23,2,natural,01AF,no,3.3,75,male,large teste,"open, anterior",anterior,none,none,no,NA
+40,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/15/23,6,VT,12/13/23,2,natural,01AF,no,2.62,78,male,tested damaged by tag,bruising around incision,,,,no,NA
+13,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/13/23,11,LT,12/11/23,2,natural,01C9,no,3.37,77,male,normal testes,open,none,significant internal bleeding,none,no,NA
+123,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/19/23,5,LT,12/13/23,6,natural,01FD,no,2.66,74,male,,,,,,no,NA
+73,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/16/23,8,LT,12/11/23,5,natural,0223,no,4.44,76,female,,,,,,no,NA
+98,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/18/23,11,LT,12/11/23,7,natural,0232,no,4.79,82,ukn,,,,,,no,NA
+35,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/15/23,3,VT,12/13/23,2,natural,0246,no,2.68,73,female,gravid,,,,,no,NA
+107,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/18/23,12,VT,12/11/23,7,natural,0247,no,2.41,67,male,,,,,,no,NA
+96,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/17/23,12,VT,12/11/23,6,natural,0269,no,2.77,70,female,,,,,,no,NA
+141,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/20/23,2,LT,12/13/23,7,natural,026A,no,2.33,69,male,,,,,,no,NA
+1,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/12/23,8,LT,12/11/23,1,natural,0295,no,3.53,75,male,normal testes,open,good,minimal bruising,air bubble in stomach,no,NA
+67,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/16/23,5,LT,12/13/23,3,natural,0295,no,4.13,77,male,,,,,,no,NA
+140,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/20/23,2,LT,12/13/23,7,natural,02A2,no,3.62,75,male,,,,,,no,NA
+111,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/18/23,5,LT,12/13/23,5,natural,02AC,no,2.54,69,female,,,,,,no,NA
+39,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/15/23,5,LT,12/13/23,2,natural,02AF,no,2.33,76,male,tested damaged by tag,,,,,no,NA
+44,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/15/23,8,LT,12/11/23,4,natural,02B9,no,2.76,76,male,,light bruising around incision,,,,no,NA
+55,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/15/23,11,VT,12/11/23,4,natural,02C7,no,2.72,74,ukn,no sign of egg development or teste,,,lateral bruising,"not certain of sex, no gonad found so assumed to be immature female",no,NA
+93,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/17/23,12,VT,12/11/23,6,natural,02CA,no,3.86,76,female,,,,,,no,NA
+34,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/15/23,3,VT,12/13/23,2,natural,02D2,no,2.87,76,male,NA,open,tag visible through incision,significant lateral bruising,none,no,NA
+110,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/18/23,8,LT,12/11/23,7,natural,02D3,no,2.85,70,male,,,,,,no,NA
+21,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/14/23,8,LT,12/11/23,3,natural,02D6,no,3.23,74,male,"small teste, pot post spawn",open,none,none,none,no,NA
+119,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/19/23,3,VT,12/13/23,6,natural,02E0,no,2.79,70,female,,,,,,no,NA
+92,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/17/23,11,LT,12/11/23,6,natural,02FA,no,2.01,66,male,,,,,,no,NA
+26,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/14/23,11,LT,12/11/23,3,natural,0304,no,2.5,70,male,normal testes,open,none,none,none,no,NA
+23,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/14/23,9,VT,12/11/23,3,natural,0315,no,2.92,71,female,gravid,open,none,none,none,no,NA
+64,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/16/23,5,LT,12/13/23,3,natural,031D,no,3.86,76,female,,,,,,no,NA
+78,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/17/23,2,LT,12/13/23,4,natural,0321,no,3.44,74,male,,,,,,no,NA
+104,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/18/23,3,VT,12/13/23,5,natural,0330,no,2.31,68,male,,,,,,no,NA
+2,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/12/23,9,VT,12/11/23,1,natural,0331,no,1.99,65,male,normal testes,open,good,lateral bruising,none,no,NA
+12,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/13/23,11,LT,12/11/23,2,natural,0332,no,3.86,75,male,"damaged teste, large teste",open,none,significant lateral bruising,none,no,NA
+122,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/19/23,5,LT,12/13/23,6,natural,0332,no,4.4,81,female,,,,,,no,NA
+109,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/18/23,8,LT,12/11/23,7,natural,033E,no,3.75,75,female,,,,,,no,NA
+8,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/13/23,8,LT,12/11/23,2,natural,0340,no,2.49,69,male,damaged teste,open,none,none,none,no,NA
+82,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/17/23,6,VT,12/13/23,4,natural,0340,no,5.48,86,female,,,,,,no,NA
+60,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/16/23,2,LT,12/13/23,3,natural,0344,no,3.6,72,male,,,,,,no,NA
+27,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/14/23,12,VT,12/11/23,3,natural,0346,no,2.15,65,ukn,no sign of egg development or teste,open,none,minimal bruising,"not certain of sex, no gonad found so assumed to be immature female",no,NA
+94,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/17/23,12,VT,12/11/23,6,natural,0355,no,2.72,69,male,,,,,,no,NA
+102,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/18/23,11,LT,12/11/23,7,natural,0358,no,3.06,75,male,,,,,,no,NA
+106,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/18/23,12,VT,12/11/23,7,natural,0360,no,5.18,81,female,,,,,,no,NA
+77,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/16/23,12,VT,12/11/23,5,natural,0365,no,2.27,66,female,,,,,,no,NA
+126,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/19/23,11,LT,12/11/23,8,natural,0368,no,3.61,79,female,,,,,,no,NA
+59,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/16/23,2,LT,12/13/23,3,natural,0371,no,4.33,80,female,,,,,,no,NA
+36,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/15/23,5,LT,12/13/23,2,natural,038F,no,3.76,81,male,,,,minor lateral bruising,,no,NA
+51,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/15/23,9,VT,12/11/23,4,natural,0392,no,3.13,80,male,,,,fatty,,no,NA
+143,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/20/23,3,VT,12/13/23,7,natural,03C0,no,1.99,64,male,,,,,,no,NA
+85,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/17/23,6,VT,12/13/23,4,natural,03C4,no,2.5,72,male,,,,,,no,NA
+54,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/15/23,11,LT,12/11/23,4,natural,03E2,no,2.73,74,female,very gravid,,,,,no,NA
+80,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/17/23,5,LT,12/13/23,4,natural,03E5,no,2.61,71,male,,,,,,no,NA
+62,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/16/23,3,VT,12/13/23,3,natural,03EC,no,2.55,70,male,,,,,,no,NA
+81,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/17/23,5,LT,12/13/23,4,natural,04D8,no,3.72,75,female,,,,,,no,NA
+7,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/13/23,8,LT,12/11/23,2,natural,045F,no,3.43,72,male,normal testes,open,good,significant lateral bruising,none,no,NA
+68,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/16/23,6,VT,12/13/23,3,natural,0466,no,2.7,70,male,,,,,,no,NA
+14,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/13/23,12,VT,12/11/23,2,natural,046F,no,2.65,70,male,normal testes,"open, teste protruding from incision",none,none,none,no,NA
+20,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/14/23,8,LT,12/11/23,3,natural,0491,no,2.93,72,male,normal testes,open,none,none,none,no,NA
+63,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/16/23,3,VT,12/13/23,3,natural,051E,no,2.32,69,male,,,,,,no,NA
+10,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/13/23,9,VT,12/11/23,2,natural,0570,no,2.83,69,male,normal testes,open,tag protruding from incision,none,none,no,NA
+41,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/15/23,6,VT,12/13/23,2,natural,0570,no,3.61,81,male,tested damaged by tag,,,,,no,NA
+144,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/21/23,5,LT,12/13/23,8,natural,058F,no,3.39,69,male,,,,,,no,NA
+79,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/17/23,2,LT,12/13/23,4,natural,05BB,no,5.1,79,female,,,,,,no,NA
+33,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/15/23,2,LT,12/13/23,2,natural,05C2,no,2.71,71,female,"gravid, early stage egg development",open,none,none,none,no,NA
+97,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/17/23,12,VT,12/11/23,6,natural,0612,no,2.35,69,male,,,,,,no,NA
+19,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/14/23,8,LT,12/11/23,3,natural,061C,no,2.94,73,male,damaged teste,open,none,significant lateral bruising,air bubbles in stomach,no,NA
+66,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/16/23,5,LT,12/13/23,3,natural,0669,no,3.66,77,female,,,,,,no,NA
+117,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/18/23,9,VT,12/11/23,7,natural,0677,no,3.94,79,male,,,,,,no,NA
+30,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/15/23,2,LT,12/13/23,2,natural,068D,no,3.71,82,female,gravid,open,none,none,none,no,NA
+95,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/17/23,12,VT,12/11/23,6,natural,06CB,no,2.55,67,female,,,,,,no,NA
+146,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/21/23,6,VT,12/13/23,8,natural,06FB,no,3.91,77,female,,,,,,no,NA
+61,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/16/23,3,VT,12/13/23,3,natural,0752,no,2.8,76,male,,,,,,no,NA
+137,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/20/23,5,LT,12/13/23,7,natural,0772,no,5,84,female,,,,,,no,NA
+9,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/13/23,9,VT,12/11/23,2,natural,0794,no,3.54,74,male,normal testes,open,good,none,none,no,NA
+125,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/19/23,2,LT,12/13/23,6,natural,0796,no,3.29,74,female,,,,,,no,NA
+147,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/21/23,6,VT,12/13/23,8,natural,0799,no,3.4,78,female,,,,,,no,NA
+105,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/18/23,6,VT,12/13/23,5,natural,07A1,no,2.54,67,male,,,,,,no,NA
+112,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/18/23,5,LT,12/13/23,5,natural,07A9,no,1.96,67,male,,,,,,no,NA
+127,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/19/23,12,VT,12/11/23,8,natural,07C8,no,3.79,77,female,,,,,,no,NA
+121,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/19/23,3,VT,12/13/23,6,natural,106D,no,2.44,72,male,,,,,,no,NA
+3,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/12/23,10,FC,12/11/23,1,natural,NA,NA,3.64,78,male,normal testes,NA,NA,none,none,no,NA
+4,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/13/23,7,FC,12/11/23,2,natural,NA,NA,1.83,65,male,normal testes,NA,NA,none,none,no,NA
+5,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/13/23,7,FC,12/11/23,2,natural,NA,NA,4.98,86,female,very gravid,NA,NA,none,none,no,NA
+6,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/13/23,7,FC,12/11/23,2,natural,NA,NA,2.82,69,male,normal testes,NA,NA,none,none,no,NA
+16,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/14/23,4,FC,12/13/23,1,natural,NA,NA,6.12,83,female,very gravid,NA,NA,none,none,no,NA
+17,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/14/23,7,FC,12/11/23,3,natural,NA,NA,2.48,70,male,normal testes,NA,NA,none,none,no,NA
+18,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/14/23,7,FC,12/11/23,3,natural,NA,NA,1.83,67,male,normal testes,NA,NA,none,none,no,NA
+24,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/14/23,10,FC,12/11/23,3,natural,NA,NA,2.89,77,male,normal testes,NA,NA,none,none,no,NA
+25,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/14/23,10,FC,12/11/23,3,natural,NA,NA,2.87,71,female,"gravid, early stage egg development",NA,NA,none,none,no,NA
+42,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/15/23,7,FC,12/11/23,4,natural,NA,NA,4.21,84,male,small teste,,,,,no,NA
+43,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/15/23,7,FC,12/11/23,4,natural,NA,NA,3.46,77,female,immature female,,,,,no,NA
+52,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/15/23,10,FC,12/11/23,4,natural,NA,NA,2.68,75,male,,,,,,no,NA
+57,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/16/23,1,FC,12/13/23,3,natural,NA,NA,3.85,79,female,,,,,,no,NA
+71,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/16/23,7,FC,12/11/23,5,natural,NA,NA,4.21,73,female,,,,,,no,NA
+72,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/16/23,7,FC,12/11/23,5,natural,NA,NA,2.41,67,male,,,,,,no,NA
+86,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/17/23,7,FC,12/11/23,6,natural,NA,NA,3.39,79,male,,,,,,no,NA
+87,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/17/23,7,FC,12/11/23,6,natural,NA,NA,1.89,64,female,,,,,,no,NA
+118,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/19/23,1,FC,12/13/23,6,natural,NA,NA,5.45,84,female,,,,,,no,NA
+128,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/19/23,10,FC,12/11/23,8,euth,NA,NA,3.17,78,male,,,,,,no,NA
+129,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/19/23,10,FC,12/11/23,8,euth,NA,NA,1.89,66,male,,,,,,no,NA
+130,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/19/23,10,FC,12/11/23,8,euth,NA,NA,2.34,71,male,,,,,,no,NA
+131,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/19/23,10,FC,12/11/23,8,euth,NA,NA,2.07,67,male,,,,,,no,NA
+132,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/19/23,10,FC,12/11/23,8,euth,NA,NA,2,63,male,,,,,,no,NA
+133,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/19/23,10,FC,12/11/23,8,euth,NA,NA,2.85,73,female,,,,,,no,NA
+134,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/19/23,10,FC,12/11/23,8,euth,NA,NA,5.08,84,female,,,,,,no,NA
+135,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/19/23,10,FC,12/11/23,8,euth,NA,NA,3.17,72,female,,,,,,no,NA
+136,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/20/23,1,FC,12/13/23,7,natural,NA,NA,4.55,82,male,,,,,,no,NA
+149,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/21/23,1,FC,12/13/23,8,euth,NA,NA,3.85,82,female,,,,,,no,NA
+150,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/21/23,1,FC,12/13/23,8,euth,NA,NA,2.29,70,male,,,,,,no,NA
+151,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/21/23,1,FC,12/13/23,8,euth,NA,NA,3.41,75,female,,,,,,no,NA
+152,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/21/23,1,FC,12/13/23,8,euth,NA,NA,1.71,65,male,,,,,,no,NA
+153,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/21/23,1,FC,12/13/23,8,euth,NA,NA,2.23,67,male,,,,,,no,NA
+154,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/21/23,1,FC,12/13/23,8,euth,NA,NA,2.09,69,male,,,,,,no,NA
+155,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/21/23,1,FC,12/13/23,8,euth,NA,NA,2.46,71,male,,,,,,no,NA
+156,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/21/23,1,FC,12/13/23,8,euth,NA,NA,1.91,69,male,,,,,,no,NA
+157,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/21/23,1,FC,12/13/23,8,euth,NA,NA,1.9,69,male,,,,,,no,NA
+158,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/21/23,1,FC,12/13/23,8,euth,NA,NA,4.42,81,female,,,,,,no,NA
+160,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/22/23,4,FC,12/13/23,9,euth,NA,NA,2.6,73,male,,,,,,no,NA
+161,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/22/23,4,FC,12/13/23,9,euth,NA,NA,1.82,66,male,,,,,,no,NA
+162,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/22/23,4,FC,12/13/23,9,euth,NA,NA,2.32,68,female,,,,,,no,NA
+163,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/22/23,4,FC,12/13/23,9,euth,NA,NA,1.83,64,male,,,,,,no,NA
+164,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/22/23,4,FC,12/13/23,9,euth,NA,NA,2.75,73,female,,,,,,no,NA
+165,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/22/23,4,FC,12/13/23,9,euth,NA,NA,3.67,77,female,,,,,,no,NA
+166,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/22/23,4,FC,12/13/23,9,euth,NA,NA,1.82,65,male,,,,,,no,NA
+167,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/22/23,4,FC,12/13/23,9,euth,NA,NA,1.83,65,female,,,,,,no,NA
+168,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/22/23,4,FC,12/13/23,9,euth,NA,NA,1.77,65,male,,,,,,no,NA
+56,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/15/23,12,VT,12/11/23,4,natural,SHED,yes,3.37,81,male,,,,,,no,NA
+114,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/18/23,9,VT,12/11/23,7,euth,SHED,yes,4.19,79,female,,,,,,no,NA
+115,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/18/23,9,VT,12/11/23,7,euth,SHED,yes,4.43,82,female,,,,,,no,NA
+159,DeltaSmelt,Jan-23,FCCL,11/28/23,f16,12/21/23,6,VT,12/13/23,8,euth,SHED,yes,3.19,76,female,,,,,,no,NA

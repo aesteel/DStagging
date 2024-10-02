@@ -19,10 +19,11 @@ library(MuMIn)
 ## Read in data
 ```{r read in dat}
 
-fishdat = read.csv("/Users/Anna/Documents/ResearchGit/DStagging/rawData/Expt1_DStagloc_All.csv")
+fishdat = read.csv("/Users/Anna/Documents/ResearchGit/DStagging/rawData/Tags_Morts/Expt1_DStagloc_TaggedFishMetadata.csv")
  # everything here in metadata except for:
  ## "CF","DrugTime","SurgTime"
  ## all of these are calculated from other data, and are done in realtime in the database during tagging to inform tagging efforts
+
  # add leading 0 back into TagID_Hex
  fishdat$TagID_Hex = str_pad(fishdat$TagID_Hex,4, pad="0")
 
@@ -33,21 +34,24 @@ fishdat = read.csv("/Users/Anna/Documents/ResearchGit/DStagging/rawData/Expt1_DS
   fishdat$TagRound = substr(str_pad(fishdat$Rel_group, 3, 
                                     pad="1", side="right"), 3,3)
  
-  
- 
-  
-morts = read.csv("/Users/Anna/Documents/ResearchGit/DStagging/rawData/Expt1_DStagloc_NecropsyNotes_asof20231207.csv")
+
+morts = read.csv("/Users/Anna/Documents/ResearchGit/DStagging/rawData/Tags_Morts/Expt1_DStagloc_MortRecord.csv")
  # add leading 0 back into TagID_Hex
  morts$TagID_Hex = str_pad(morts$TagID_Hex,4, pad="0")
  
- 
+```
+
+
+## Quick look at data for MS222 covariates
+```{r first data viz MS222}
+
  # extract only those with which received tags to evalaute MS222 effects by individual covariates  
  tagdat = fishdat[fishdat$Treatment %in% c("VT","LT"),]
    # check this worked: should bs 120
    nrow(tagdat)
    
  # add mort date to tagdat 
-tagdat2 = merge(tagdat, morts[,c("TagID_Hex","MortDate","ReasonforMort",
+tagdat2 = merge(tagdat, morts[,c("TagID_Hex","MortDate","ExptMort",
                                    "Mort_Mass_g","Mort_FL_mm","Sex","ReproIndex")], 
                  all.x=T)
  
@@ -67,20 +71,27 @@ Burst_morts = data.frame(trialdate = c(rep("2023-08-14",5), rep("2023-08-15",3),
 
  
 # make new binary columns for morts and shed tags
- tagdat2$ExptMort <- 0
-  # change this to a 1 if the fish was a mort
-  tagdat2$ExptMort[tagdat2$ReasonforMort=="Natural"] <- 1
- 
- tagdat2$ShedTag <- 0
-  tagdat2$ShedTag[tagdat2$ReasonforMort=="Shed"] <- 1
- 
+ # tagdat2$ExptMort <- 0
+ #  # change this to a 1 if the fish was a mort
+ #  tagdat2$ExptMort[tagdat2$ReasonforMort=="Natural"] <- 1
+ # 
+ # tagdat2$ShedTag <- 0
+ #  tagdat2$ShedTag[tagdat2$ReasonforMort=="Shed"] <- 1
+ # 
   
-# add column for recovery time
-tagdat2$RecovTime = as.numeric( difftime( as.POSIXct(paste(tagdat2$DateTagged, tagdat2$Time_recovered), format="%m/%d/%y %H:%M:%S", tz="America/Los_Angeles"), as.POSIXct(paste(tagdat2$DateTagged, tagdat2$Time_out_surgery), format="%m/%d/%y %H:%M:%S", tz="America/Los_Angeles") ) )
+# add columns for times
+tagdat2$Time_recovered = as.POSIXct(paste(tagdat2$DateTagged, tagdat2$Time_recovered), format="%m/%d/%Y %H:%M:%S")
+tagdat2$Time_out_surgery = as.POSIXct(paste(tagdat2$DateTagged, tagdat2$Time_out_surgery), format="%m/%d/%Y %H:%M:%S")
+tagdat2$Time_out_anac = as.POSIXct(paste(tagdat2$DateTagged, tagdat2$Time_out_anac), format="%m/%d/%Y %H:%M:%S")
+tagdat2$Time_in_ana = as.POSIXct(paste(tagdat2$DateTagged, tagdat2$Time_in_ana), format="%m/%d/%Y %H:%M:%S")
+
+tagdat2$DrugTime = as.numeric(difftime(tagdat2$Time_out_anac,tagdat2$Time_in_ana, units="secs"))
+tagdat2$SurgTime = as.numeric(difftime(tagdat2$Time_out_surgery,tagdat2$Time_out_anac, units="secs"))
+tagdat2$RecovTime = as.numeric(difftime(tagdat2$Time_recovered,tagdat2$Time_out_surgery, units="secs") )
 ```
   
   
-## Quick look at correlations within the data
+## Quick look at correlations of tagging process and survival
 ```{r cors}
 summary(tagdat$DrugTime)
 summary(tagdat$SurgTime)
@@ -110,8 +121,7 @@ ggplot(bleedtable, aes(x=factor(ExptMort), y=Freq, fill=factor(BleedScore))) +
 
 ```
 
-## Effect on mortality  
-### by size
+## Quick look at size effect on mortality  
 ```{r mort size effect, fig.height=3}
 
 surv.tags = tagdat2[tagdat2$ReasonforMort %in% c("Natural","Euth","Shed"),]
@@ -176,10 +186,7 @@ tagdat.noshed = surv.tags[surv.tags$ReasonforMort %in% c("Natural","Euth"),]
  #    geom_line(data=newdat, aes(x=Length, y=predicted))+
  #    theme_bw() 
 
-```
-  
-## stats on size and mort
-```{r size mort stats}
+### simple stats on size and mort 
 # mw = glm(ExptMort ~ Sex*Weight, family=binomial, data=tagdat)
 #  plot(mw)
 #  summary(mw)
@@ -208,7 +215,7 @@ tagdat.noshed = surv.tags[surv.tags$ReasonforMort %in% c("Natural","Euth"),]
 # 
 ```
   
-### by tagger
+## Quick look at tagger effects
 ```{r mort tagger effect, fig.height=3}
 
 taggermort = as.data.frame(table(surv.tags$ExptMort, surv.tags$Surgeon))
@@ -236,7 +243,7 @@ tagdat.noshed = surv.tags[surv.tags$ReasonforMort %in% c("Natural","Euth"),]
 ```
   
 
-### by temperature
+### Quick look at temperature
 ```{r mort tagger effect, fig.height=3}
 
 tempmort = as.data.frame(table(tagdat$ExptMort, tagdat$Rel_group))
@@ -259,7 +266,7 @@ mort.temp
 ```
     
   
-### by time in anaesthetic
+### Quick look at time in anaesthetic
 ```{r mort dope time effect, fig.height=4}
 
 dopetime.size.sex1 = ggplot(tagdat, aes(x=Length, y=DrugTime, group=factor(ExptMort), 
@@ -297,7 +304,7 @@ mort.dopetime.dot + dopetime.size.sex3 + dopetime.size.sex1 + dopetime.size.sex2
 
 ```
 
-### by time in surgery
+### Quick look at time in surgery
 ```{r mort surgery time effect, fig.height=4}
 
 
@@ -333,11 +340,18 @@ surgtime.mort.dot + surgtime.size.sex3 + surgtime.dopetime + surgtime.size.sex2 
 
 ```
 
-### by order tagged
+### Quick look at tagging order
 ```{r mort size effect, fig.height=3}
 
-mort.order = ggplot(tagdat, 
-                     aes(y=(ExptMort), x=OrderID, color=Sex) ) + 
+tagdat2 = tagdat2[order(tagdat2$Time_in_ana),]
+tagdat2$OrderID = 1:nrow(tagdat2)
+
+tagdat2$ExptMort_Num = NA
+ tagdat2$ExptMort_Num[tagdat2$ExptMort=="Natural"] <- 1
+ tagdat2$ExptMort_Num[tagdat2$ExptMort=="Euth"] <- 0
+
+mort.order = ggplot(tagdat2, 
+                     aes(y=(ExptMort_Num), x=OrderID))+#, color=Sex) ) + 
   geom_point(size=3) + 
   geom_smooth(method="lm", color="steelblue3") +
   scale_y_continuous(name="Mortality", breaks=c(0,1)) +

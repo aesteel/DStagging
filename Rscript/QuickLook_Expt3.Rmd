@@ -18,12 +18,12 @@ library(lme4)
 ## Read in data
 ```{r read data}
 
-metadat = read.csv("../rawData/Expt3_DSsublethal_TaggedFishMetadata.csv")
+metadat = read.csv("/Users/anna/Documents/ResearchGit/DStagging/rawData/Tags_Morts/Expt3_DSsublethal_30d_TaggedFishMetadata.csv")
  metadat$TagID_Hex = str_pad(metadat$TagID_Hex,5, pad="0")
  # I've manually added the re-tagged fish to this dataset, and added an x after the hex code for the fish that died before the second tagging day. So now all hex codes will be 5 digits long, padded at the front with 0 unless they were reused tags. Then the early morts have an x at the end and the second fish tagged with that ID have the true ID.
 
 
-morts = read.csv("../rawData/Expt3_DSsublethal_MortNecropsies.csv")
+morts = read.csv("/Users/anna/Documents/ResearchGit/DStagging/rawData/Tags_Morts/Expt3_DSsublethal_30d_MortRecord.csv")
  # add leading 0 back into TagID_Hex
  morts$TagID_Hex = str_pad(morts$TagID_Hex,5, pad="0")
   # remove morts without tags (can't trace to surgery)
@@ -31,24 +31,22 @@ morts = read.csv("../rawData/Expt3_DSsublethal_MortNecropsies.csv")
  
  
  # add mort date to tagdat 
- tagdat = merge(metadat, morts[,c("TagID_Hex","ExptMort","MortDate",                                   "Mort_Mass_g","Mort_FL_mm","Sex")], 
+ tagdat = merge(metadat, morts[,c("TagID_Hex","ExptMort","MortDate",                                   "Mort_mass_g","Mort_FL_mm","Sex","TankID")], 
                  all.x=T)
  
  # replace 'NA' in ExptMort with "surv"
- tagdat[is.na(tagdat$ExptMort),]$ExptMort <- "surv"
+ tagdat[is.na(tagdat$ExptMort),]$ExptMort <- "Euth"
  
- # remove rows that were test fish 
- tagdat = tagdat[!is.na(tagdat$Tank.Number),]
+ # add columns for times
+tagdat$Time_recovered = as.POSIXct(paste(tagdat$DateTagged, tagdat$Time_recovered), format="%m/%d/%Y %H:%M:%S")
+tagdat$Time_out_surgery = as.POSIXct(paste(tagdat$DateTagged, tagdat$Time_out_surgery), format="%m/%d/%Y %H:%M:%S")
+tagdat$Time_out_anac = as.POSIXct(paste(tagdat$DateTagged, tagdat$Time_out_anac), format="%m/%d/%Y %H:%M:%S")
+tagdat$Time_in_ana = as.POSIXct(paste(tagdat$DateTagged, tagdat$Time_in_ana), format="%m/%d/%Y %H:%M:%S")
 
- # correct data type for times
- tagdat$Time_in_ana = as.POSIXct(paste(tagdat$DateTagged, tagdat$Time_in_ana))
- tagdat$Time_out_anac = as.POSIXct(paste(tagdat$DateTagged, tagdat$Time_out_anac))
- tagdat$Time_out_surgery = as.POSIXct(paste(tagdat$DateTagged, tagdat$Time_out_surgery))
- tagdat$Time_recovered = as.POSIXct(paste(tagdat$DateTagged, tagdat$Time_recovered))
- 
-# add column for recovery time
-tagdat$RecovTime = as.numeric( difftime( tagdat$Time_recovered, 
-                                         tagdat$Time_out_surgery) )
+tagdat$DrugTime = as.numeric(difftime(tagdat$Time_out_anac,tagdat$Time_in_ana, units="secs"))
+tagdat$SurgTime = as.numeric(difftime(tagdat$Time_out_surgery,tagdat$Time_out_anac, units="secs"))
+tagdat$RecovTime = as.numeric(difftime(tagdat$Time_recovered,tagdat$Time_out_surgery, units="secs") )
+
 ```
   
 ## Quick look at correlations within the data
@@ -266,16 +264,20 @@ mort.loc
 ### by order tagged
 ```{r mort size effect, fig.height=3}
 
-tagdat.d1 = tagdat[tagdat$DateTagged == "2023-12-11",]
+#tagdat.d1 = tagdat[tagdat$DateTagged == "2023-12-11",]
 
-mort.order = ggplot(tagdat.d1, 
-                     aes(y=factor(ExptMort), x=Time_in_ana) ) + 
-  geom_point(pch=21, alpha=.5, size=3) + 
-  #geom_smooth(method="lm", color="steelblue3") +
-  #scale_y_continuous(name="Mortality", breaks=c(0,1)) +
-  #coord_cartesian(ylim = c(0,1))+
-  xlab("Surgery Start Time") +
- # scale_color_viridis_d()+ #"", labels= c("Survival", "Mortality"), 
+tagdat$ExptMort_Num = NA
+ tagdat$ExptMort_Num[tagdat$ExptMort=="Natural"] <- 1
+ tagdat$ExptMort_Num[tagdat$ExptMort=="Euth"] <- 0
+ 
+mort.order = 
+  ggplot(tagdat, aes(y=ExptMort_Num, x=OrderID))+#, color=Sex) ) + 
+  geom_point(size=3) + 
+  geom_smooth(method="lm", color="steelblue3") +
+  scale_y_continuous(name="",breaks=c(0,1), label=c("Survival","Mortality")) +
+  coord_cartesian(ylim = c(-0.1,1.1))+
+  xlab("Surgery Order") +
+  #scale_color_viridis_d()+ #"", labels= c("Survival", "Mortality"), 
                         #option="A", begin=.25, direction=-1) + 
   facet_wrap(~Surgeon, scales="free")+
   theme_bw() 

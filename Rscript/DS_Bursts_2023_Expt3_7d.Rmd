@@ -507,6 +507,8 @@ mean.topvels2$testgroup[!(mean.topvels2$trialID %in% paste0("T",61:115))] <- "7d
 mean.topvels2$treatment <- str_replace_all(mean.topvels2$treatment, " ", "")
 mean.topvels2$sex <- str_replace_all(mean.topvels2$sex, " ", "")
 
+write.csv(mean.topvels2, "../intermedData/Expt3_Burst_7d30d_compiledData.csv", row.names=F)
+
 ```
 
 ```{r plots to evaluate study design}
@@ -733,7 +735,13 @@ mean.topvels2$sex <- str_replace_all(mean.topvels2$sex, " ", "")
    
    
 ```{r report or paper plots}     
+
+    # filter dataset so treatment groups are simliar in fl and number, and only 7d
+     filt.mean.topvels2 = filter(mean.topvels2, fl_mm>65 & fl_mm<81 & testgroup=="7d")
+        table(filt.mean.topvels2$treatment, filt.mean.topvels2$testgroup)
+        
 # plot points for each fish, jittered around the log of the treatments; presents same dataset but with more information
+        
 # this is the plot used for Ken's bay delta poster
 set.seed(38)
 filt.mean.topvels2$random.offset = runif(n=nrow(filt.mean.topvels2), min = -0.25, max=0.25)
